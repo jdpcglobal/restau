@@ -1,0 +1,103 @@
+.login-popup {
+  background: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+.login-popup-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 350px;
+  max-width: 90%;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-popup-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.login-popup-title img {
+  cursor: pointer;
+}
+
+.login-popup-inputs {
+  margin: 15px 0;
+}
+
+.country-code-dropdown {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.country-code-dropdown select {
+    font-size: 14px;
+  margin-right: 10px;
+  border: 1px solid tomato;
+  padding: 7px;
+}
+
+.mobile-number-input input,
+.otp-input input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+p.otp-expiry-info{
+  font-size: 12px;
+    margin-top: 10px;
+}
+span.icon.success-icon{
+  margin-top: 10px;
+  
+}
+
+.button-container {
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-container button {
+  padding: 10px 15px;
+  background-color: tomato;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-container button:disabled {
+  background-color: #ccc;
+}
+
+.error {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.spinner {
+  width: 25px;
+  height: 25px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid tomato;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
