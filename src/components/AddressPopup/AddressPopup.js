@@ -13,15 +13,17 @@ const AddressPopup = ({
   landmark,
   setLandmark,
   onAddressSaved,
-  setSavedAddresses
+  setSavedAddresses,
+  adminLocation,
+  distanceThreshold
 }) => {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [marker, setMarker] = useState(null);
   const geocoder = useRef(null);
   const [isDeliverable, setIsDeliverable] = useState(true);
-  const [adminLocation, setAdminLocation] = useState('');
-  const [distanceThreshold, setDistanceThreshold] = useState(12); // Default distance in km
+  // const [adminLocation, setAdminLocation] = useState('');
+  // const [distanceThreshold, setDistanceThreshold] = useState(12); // Default distance in km
 
   // Validation state
   const [errors, setErrors] = useState({
@@ -29,31 +31,32 @@ const AddressPopup = ({
     flatNo: '',
     landmark: '',
   });
+console.log(adminLocation);
+  // Fetch admin settings for deliverability threshold
+  // useEffect(() => {
+  //   const fetchAdminSettings = async () => {
+  //     try {
+  //       const response = await axios.get('/api/adminSettings');
+  //       if (response.data.success) {
+  //         setAdminLocation(response.data.adminLocation); // Admin's saved address
+  //         setDistanceThreshold(response.data.distanceThreshold); // Max distance for delivery
+  //       } else {
+  //         console.error('Failed to fetch admin settings');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching admin settings:', error);
+  //     }
+  //   };
+  //   fetchAdminSettings();
+  // });
 
-  useEffect(() => {
-    const fetchAdminSettings = async () => {
-      try {
-        const response = await axios.get('/api/adminSettings');
-        if (response.data.success) {
-          setAdminLocation(response.data.adminLocation); // Admin's saved address
-          setDistanceThreshold(response.data.distanceThreshold); // Max distance for delivery
-        } else {
-          console.error('Failed to fetch admin settings');
-        }
-      } catch (error) {
-        console.error('Error fetching admin settings:', error);
-      }
-    };
-  
-    fetchAdminSettings();
-  }, []);
-  
+  // Load Google Maps API and initialize the map
   useEffect(() => {
     const loadGoogleMaps = () => {
       const existingScript = document.getElementById('googleMaps');
       if (!existingScript) {
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBmEtZLay8p86SOVVXBhKGDGUmPQUjnOTc&libraries=places`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCuro_Das6SA4HRZzGnqR6VHHgyfprryCg&libraries=places`;
         script.id = 'googleMaps';
         document.body.appendChild(script);
 
@@ -100,6 +103,7 @@ const AddressPopup = ({
     loadGoogleMaps();
   }, []);
 
+  // Update the address using Google Maps Geocoding
   const updateAddress = (location) => {
     if (geocoder.current) {
       geocoder.current.geocode({ location }, (results, status) => {
@@ -114,29 +118,26 @@ const AddressPopup = ({
     }
   };
 
-  const checkDeliverability = (userAddress) => {
+  // Check whether the user's address is within the deliverable range
+  const checkDeliverability = (userAddress1, location) => {
     if (window.google && adminLocation) {
       const service = new window.google.maps.DistanceMatrixService();
-  
-      // Geocode admin location to get its coordinates
+
       geocoder.current.geocode({ address: adminLocation }, (results, status) => {
         if (status === 'OK' && results[0]) {
           const adminLocationCoords = results[0].geometry.location;
-  
-          // Get the distance between admin and user location
+
           service.getDistanceMatrix(
             {
               origins: [adminLocationCoords],
-              
-              destinations: [userAddress],
+              destinations: [userAddress1],
               travelMode: window.google.maps.TravelMode.DRIVING,
             },
-            async (response, status) => {
+            (response, status) => {
               if (status === 'OK') {
                 const distanceInMeters = response.rows[0].elements[0].distance.value;
                 const distanceInKm = distanceInMeters / 1000;
-  
-                // Check if the distance is within the deliverable range
+
                 setIsDeliverable(distanceInKm <= distanceThreshold);
               } else {
                 console.error('Error calculating distance:', status);
@@ -154,6 +155,7 @@ const AddressPopup = ({
     }
   };
 
+  // Handle "Locate Me" button to get user's current location
   const handleLocateMe = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -179,8 +181,8 @@ const AddressPopup = ({
     }
   };
 
+  // Handle address saving after validation
   const handleSaveAddress = async () => {
-    // Validate inputs
     let hasError = false;
     const newErrors = { location: '', flatNo: '', landmark: '' };
 
@@ -199,12 +201,7 @@ const AddressPopup = ({
 
     setErrors(newErrors);
 
-    if (hasError) return;
-
-    if (!isDeliverable) {
-      alert('Delivery is not available for this location');
-      return;
-    }
+    if (hasError || !isDeliverable) return;
 
     const token = localStorage.getItem('token');
     if (!token) {
@@ -212,25 +209,17 @@ const AddressPopup = ({
       return;
     }
 
-    const addressData = {
-      token,
-      location,
-      flatNo,
-      landmark,
-    };
+    const addressData = { token, location, flatNo, landmark };
 
     try {
       const response = await axios.post('/api/address', addressData);
       if (response.data.success) {
         const newAddress = response.data.address;
-    
-        // Notify parent component
+
         if (onAddressSaved) onAddressSaved(newAddress);
-    
-        // Prepend the new address to show it at the top
-        setSavedAddresses(prevAddresses => [newAddress, ...prevAddresses]);
-    
-        // Reset fields and close the popup
+
+        setSavedAddresses((prevAddresses) => [newAddress, ...prevAddresses]);
+
         setLocation(''); 
         setFlatNo(''); 
         setLandmark(''); 
@@ -242,7 +231,6 @@ const AddressPopup = ({
       console.error('Error saving address:', error);
       alert('An unexpected error occurred');
     }
-    
   };
 
   return (
@@ -255,12 +243,8 @@ const AddressPopup = ({
         <div className="map-container">
           <div ref={mapRef} className="map"></div>
         </div>
-        {!isDeliverable && (
-          <p className="error-message">
-            Delivery is not available for this location.
-          </p>
-        )}
-        <p className='locate'>
+        {!isDeliverable && <p className="error-message">Delivery is not available for this location.</p>}
+        <p className="locate">
           <input
             type="text"
             placeholder="Enter Address"
@@ -268,9 +252,7 @@ const AddressPopup = ({
             onChange={(e) => setLocation(e.target.value)}
             className="input-field1"
           />
-          <button className="locate-me-btn" onClick={handleLocateMe}>
-            Locate Me
-          </button>
+          <button className="locate-me-btn" onClick={handleLocateMe}>Locate Me</button>
         </p>
         {errors.flatNo && <span className="error-text">{errors.flatNo}</span>}
         <input
@@ -281,7 +263,6 @@ const AddressPopup = ({
           className={`input-field ${errors.flatNo ? 'error-border' : ''}`}
           required
         />
-        
         {errors.landmark && <span className="error-text">{errors.landmark}</span>}
         <input
           type="text"
@@ -291,10 +272,7 @@ const AddressPopup = ({
           className={`input-field ${errors.landmark ? 'error-border' : ''}`}
           required
         />
-       
-        <button className="save-address-btn" onClick={handleSaveAddress}>
-          Save Address
-        </button>
+        <button className="save-address-btn" onClick={handleSaveAddress}>Save Address</button>
       </div>
     </div>
   );

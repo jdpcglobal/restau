@@ -25,6 +25,8 @@ const Order = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [cartTotal, setCartTotal] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [adminLocation, setAdminLocation] = useState('');
+  const [distanceThreshold, setDistanceThreshold] = useState(12); 
 
   const router = useRouter();
  // Replace with actual user ID
@@ -54,6 +56,24 @@ const Order = () => {
     setLoading(false);
   }
 };
+
+
+useEffect(() => {
+  const fetchAdminSettings = async () => {
+    try {
+      const response = await axios.get('/api/adminSettings');
+      if (response.data.success) {
+        setAdminLocation(response.data.adminLocation); // Admin's saved address
+        setDistanceThreshold(response.data.distanceThreshold); // Max distance for delivery
+      } else {
+        console.error('Failed to fetch admin settings');
+      }
+    } catch (error) {
+      console.error('Error fetching admin settings:', error);
+    }
+  };
+  fetchAdminSettings();
+});
 
 
 
@@ -289,6 +309,9 @@ const Order = () => {
                 landmark={landmark}
                 setLandmark={setLandmark}
                 setSavedAddresses = {setSavedAddresses}
+                adminLocation ={adminLocation}
+                distanceThreshold = {distanceThreshold}
+
               />
             )}
           </div>
