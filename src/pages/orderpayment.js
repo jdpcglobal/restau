@@ -72,20 +72,35 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      const token = localStorage.getItem('token'); // Retrieve token from storage
+  
       // Submit the order
-      const orderResponse = await axios.post('/api/order', {
-        token,
-        paymentMethod: selectedOption,
-        UTR: selectedOption === 'CashOnDelivery' ? null : inputValue,
-      });
-
+      const orderResponse = await axios.post(
+        '/api/order',
+        {
+          paymentMethod: selectedOption,
+          UTR: selectedOption === 'CashOnDelivery' ? null : inputValue,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Send token in headers
+          },
+        }
+      );
+  
       if (orderResponse.data.success) {
-        // Update coupon status in carttotal table
-        const couponResponse = await axios.post('/api/couponstatusupdate', {
-          token,
-          couponStatus: 'active',
-        });
-
+        // Update coupon status in cart total
+        const couponResponse = await axios.post(
+          '/api/couponstatusupdate',
+          {token,
+             couponStatus: 'active' },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Send token in headers
+            },
+          }
+        );
+  
         if (couponResponse.data.success) {
           router.push('/MyOrder');
         } else {
@@ -99,6 +114,7 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
       setError('An unexpected error occurred. Please try again later.');
     }
   };
+  
 
   const handleLogout = () => {
     localStorage.removeItem('token');

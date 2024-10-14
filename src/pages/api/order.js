@@ -1,9 +1,11 @@
-import dbConnect from '../../app/lib/dbconnect'; // Adjust path if necessary
-import OrderPayment from '../../../public/models/OrderPayment'; // Adjust path if necessary
-import Cart from '../../../public/models/Cart'; // Adjust path if necessary
-import Address from '../../../public/models/Address'; // Adjust path if necessary
-import Order from '../../../public/models/Order'; // Adjust path if necessary
+import dbConnect from '../../app/lib/dbconnect';
+import OrderPayment from '../../../public/models/OrderPayment';
+import Cart from '../../../public/models/Cart';
+import Address from '../../../public/models/Address';
+import Order from '../../../public/models/Order';
+import CartTotal from '../../../public/models/CartTotal';
 import jwt from 'jsonwebtoken';
+import { Console } from 'console';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -13,9 +15,10 @@ export default async function handler(req, res) {
   try {
     await dbConnect();
 
-    const { token, paymentMethod, UTR } = req.body;
+    const { paymentMethod, UTR } = req.body;
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
 
-    // Validate request body
     if (!token || !paymentMethod) {
       return res.status(400).json({ success: false, message: 'Missing required fields.' });
     }
@@ -30,79 +33,89 @@ export default async function handler(req, res) {
 
     const userId = decoded?.userId;
     if (!userId) {
-      return res.status(401).json({ success: false, message: 'Invalid token. User ID not found or invalid.' });
+      return res.status(401).json({ success: false, message: 'Invalid token. User ID not found.' });
     }
 
-    // Get cart items for the user
+    // Fetch user's cart items
     const cartItems = await Cart.find({ userId }).populate('foodId');
     if (cartItems.length === 0) {
       return res.status(400).json({ success: false, message: 'No items found in cart.' });
     }
 
-    // Calculate total amount
-    const calculatedTotalAmount = cartItems.reduce((acc, cartItem) => {
-      return acc + (cartItem.foodId.price *(cartItem.foodId.discount / 100)* cartItem.quantity);
-    }, 0);
-
-    // Validate total amount
-    if (calculatedTotalAmount <= 0) {
-      return res.status(400).json({ success: false, message: 'Total amount does not match calculated amount.' });
-    }
-
-    // Get the selected address from the user's orders
+    // Get the user's latest order
     const existingOrder = await Order.findOne({ user: userId }).sort({ date: -1 });
+console.log( existingOrder);
     if (!existingOrder || !existingOrder.selectedAddress) {
-      return res.status(400).json({ success: false, message: 'No address found for user.' });
+      return res.status(400).json({ success: false, message: 'No address found for the user.' });
     }
 
-    const selectedAddressId = existingOrder.selectedAddress;
+    const { selectedAddress: selectedAddressId, carttotal: cartTotalId } = existingOrder;
+
+    // Verify that the selected address exists
     const address = await Address.findById(selectedAddressId);
     if (!address) {
       return res.status(400).json({ success: false, message: 'Selected address not found.' });
     }
 
-    // Validate UTR if payment method is UPI
+    // Verify that the cart total exists
+    const cartTotal = await CartTotal.findById(cartTotalId);
+    if (!cartTotal) {
+      console.error(`CartTotal with ID ${cartTotalId} not found.`);
+      return res.status(400).json({ success: false, message: `CartTotal with ID ${cartTotalId} not found.` });
+    }
+console.log("cartTotal",cartTotal);
+    const totalAmount = cartTotal. total; // Correctly access the total amount
+
+    // Validate UPI payment
     if (paymentMethod === 'UPI') {
       if (!UTR || UTR.length !== 12) {
-        return res.status(400).json({ success: false, message: 'For UPI payments, a valid 12-digit UTR number is required.' });
+        return res.status(400).json({
+          success: false,
+          message: 'A valid 12-digit UTR number is required for UPI payments.',
+        });
       }
 
-      // Check if UTR exists in the database for any user
+      // Check if UTR already exists
       const existingUTR = await OrderPayment.findOne({ UTR });
       if (existingUTR) {
-        return res.status(400).json({ success: false, message: 'UTR already exists. Please enter a valid UTR.' });
+        return res.status(400).json({
+          success: false,
+          message: 'UTR already exists. Please provide a valid UTR.',
+        });
       }
     }
 
-    // Create a new OrderPayment
+    // Create new order payment
     const newOrderPayment = new OrderPayment({
       user: userId,
       selectedAddress: selectedAddressId,
-      items: cartItems.map(cartItem => ({
+      items: cartItems.map((cartItem) => ({
         foodId: cartItem.foodId._id,
         quantity: cartItem.quantity,
         price: cartItem.foodId.price,
       })),
-      totalAmount: calculatedTotalAmount,
+      totalAmount,
       paymentMethod,
-      UTR: paymentMethod === 'CashOnDelivery' ? null : UTR, // UTR is null for CashOnDelivery
+      UTR: paymentMethod === 'CashOnDelivery' ? null : UTR,
       paymentStatus: paymentMethod === 'CashOnDelivery' ? 'Cash on Delivery' : 'Paid',
     });
 
-    // Save the order payment to the database
     await newOrderPayment.save();
 
-    // Clear the cart
+    // Clear the user's cart
     await Cart.deleteMany({ userId });
 
     return res.status(201).json({
       success: true,
-      message: 'Order payment created successfully',
+      message: 'Order payment created successfully.',
       orderPayment: newOrderPayment,
     });
 
   } catch (error) {
     console.error('Error in order payment API:', error);
-    return res.status(500).json({ success: false, message: 'Failed to create order payment. Please try again later.' });
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to create order payment. Please try again later.',
+    });
   }
 }

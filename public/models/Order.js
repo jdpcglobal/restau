@@ -10,6 +10,10 @@ const OrderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Address',
   },
+  carttotal: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CartTotal',
+  },
   
 });
 

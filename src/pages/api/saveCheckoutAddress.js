@@ -7,13 +7,17 @@ export default async function handler(req, res) {
     await dbConnect();
 
     try {
-      const { addressId } = req.body;
+      const { addressId, cartTotalId } = req.body; // Include cartTotalId in destructuring
 
       // Extract token from the Authorization header
       const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
       if (!addressId) {
         return res.status(400).json({ success: false, message: 'Address ID is required.' });
+      }
+
+      if (!cartTotalId) { // Check if cartTotalId is provided
+        return res.status(400).json({ success: false, message: 'Cart Total ID is required.' });
       }
 
       if (!token) {
@@ -36,13 +40,14 @@ export default async function handler(req, res) {
 
       console.log('User ID:', userId);
 
-      // Update or create order with the selected address ID
+      // Update or create order with the selected address ID and cart total ID
       let order = await Order.findOne({ user: userId });
       
       if (!order) {
-        order = new Order({ user: userId, selectedAddress: addressId }); // Create new order
+        order = new Order({ user: userId, selectedAddress: addressId, carttotal: cartTotalId }); // Create new order with cart total
       } else {
         order.selectedAddress = addressId; // Update existing order
+        order.carttotal = cartTotalId; // Update cart total
       }
       
       await order.save();

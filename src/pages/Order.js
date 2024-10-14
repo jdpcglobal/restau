@@ -25,7 +25,7 @@ const Order = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [cartTotal, setCartTotal] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [selectedCartTotalId, setSelectedCartTotalId] = useState(null);
   const router = useRouter();
  // Replace with actual user ID
 
@@ -100,6 +100,32 @@ const Order = () => {
       setError('Error fetching cart items');
     }
   };
+// After fetching the cart total, you might want to set the ID
+useEffect(() => {
+  const fetchCartTotal = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token found');
+
+      const response = await axios.get('/api/getCartInfo', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.data.success) {
+        setCartTotal(response.data.cartTotal);
+        setSelectedCartTotalId(response.data.cartTotal._id); // Assuming cartTotal has an _id field
+      } else {
+        setError(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching cart total:', error);
+      setError('Error fetching cart total');
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchCartTotal();
+}, []);
 
   const handleSaveAddress = (newAddress) => {
     setSavedAddresses((prevAddresses) => [newAddress, ...prevAddresses]);
@@ -135,6 +161,7 @@ const Order = () => {
   
       const response = await axios.post('/api/saveCheckoutAddress', {
         addressId: selectedAddress._id,
+        cartTotalId: selectedCartTotalId, // Include cart total ID
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
