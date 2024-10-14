@@ -1,0 +1,231 @@
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: tomato;
+  color: white;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Button Styling */
+button {
+  background-color: tomato;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  margin-top: -9px;
+}
+
+button:hover {
+  background-color: rgb(248, 38, 1);
+}
+
+/* Switch Styling */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: tomato;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Popup Styling */
+/* .popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  max-width: 500px;
+  width: 100%;
+} */
+
+/* Form Styling */
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.form-row label {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.form-row input, .form-row textarea {
+  flex: 2;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  /* Stack form elements on smaller screens */
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-row label {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+
+  
+
+  button {
+    margin-bottom: 5px;
+  }
+
+  /* Table responsiveness */
+  table, .popup-content {
+    width: 95%; /* Ensures it fits better on small screens */
+  }
+
+  /* Make table scrollable horizontally on smaller screens */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Adjust text for mobile */
+  th, td {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 10px; /* Add padding to prevent the popup from touching the screen edges */
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh; /* Max height to fit within the viewport */
+  overflow-y: auto; /* Enable scrolling if content exceeds viewport height */
+  box-sizing: border-box;
+}
+
+/* Responsive Design for Popup */
+@media (max-width: 768px) {
+  .popup-content {
+    max-width: 95%; /* Adjust the width for smaller screens */
+    max-height: 85vh; /* Adjust max height for smaller screens */
+  }
+}
+
+/* Ensure no gaps at the top and bottom when scrolling */
+.popup-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popup-content::-webkit-scrollbar-thumb {
+  background-color: tomato;
+  border-radius: 4px;
+}
+
+.popup-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
