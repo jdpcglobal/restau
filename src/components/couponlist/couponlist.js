@@ -111,21 +111,20 @@ const CouponList = () => {
         <p>Error: {error}</p>
       ) : (
         <div className='container-coupon'>
-      <table>
-        <thead>
-          <tr>
-            <th>Coupon Code</th>
-            <th>Discount(%)</th>
-            {/* <th>Maximum Discount</th> */}
-            <th>Create/Expiry</th>
-            <th>Usage Limit</th>
-            <th>Min Cart Price</th>
-            <th>Status</th>
-            <th>Actions</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+      
+        
+          <div className='coupon-title'>
+            <b>Coupon Code</b>
+            <b>Discount(%)</b>
+            {/* <b>Maximum Discount</b> */}
+            <b>Create/Expiry</b>
+            <b>Usage Limit</b>
+            <b>Min Cart Price</b>
+            <b>Status</b>
+            <b>Actions</b>
+            <b>Actions</b>
+          </div>
+        <div className='list-coupon'>
           {coupons.map((coupon) => (
             <tr key={coupon._id}>
               <td>{coupon.code}</td>
@@ -152,15 +151,15 @@ const CouponList = () => {
                 </label>
               </td>
               <td>
-                <button onClick={() => handleEdit(coupon)}>Edit</button>
+                <button className='button-copuon' onClick={() => handleEdit(coupon)}>Edit</button>
               </td>
               <td>
-                <button onClick={() => handleDelete(coupon._id)}>Delete</button>
+                <button className='button-copuon' onClick={() => handleDelete(coupon._id)}>Delete</button>
               </td>
             </tr>
           ))}
-        </tbody>
-      </table>
+        </div>
+      
       </div>
       )}
       

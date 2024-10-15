@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSyncAlt } from '@fortawesome/free-solid-svg-icons'; // Import the refresh icon
+import { faSyncAlt ,faMobileAlt,faPhone} from '@fortawesome/free-solid-svg-icons'; // Import the refresh icon
 import './orders.css';
 import '../../app/globals.css';
 
@@ -121,7 +121,8 @@ const Orders = () => {
                   <p>{order.selectedAddress.flatNo}, {order.selectedAddress.landmark}</p>
                   <p>{order.selectedAddress.location}</p>
                 </div>
-                <p>{order.user.mobileNumber}</p>
+                <p className='mobile-number'>  <FontAwesomeIcon icon={faPhone} className="mobile-icon" />
+                     {order.user.mobileNumber}</p>
                 <p className='order-item-date'>
                   {new Date(order.date).toLocaleString('en-IN', {
                     year: 'numeric',
@@ -138,7 +139,7 @@ const Orders = () => {
                 Items: {order.items.length}
               </p>
               <p className='order-item-total-amount'>
-                ₹ {order.totalAmount}
+                <span className='mobile-icon1'>₹</span>{order.totalAmount}
               </p>
               <p>
                 <select

@@ -1,63 +1,78 @@
-/* General Styling */
+/* Global Styles */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
 }
 
 h1 {
   text-align: center;
+  margin: 20px 0;
   color: #333;
-  margin-bottom: 20px;
 }
 
-/* Table Styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+/* Container Styling */
+.container-coupon {
+  width: 90%;
+  margin: auto;
+  max-width: 1200px;
+  background: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
 }
 
-th, td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
+/* Coupon Header */
+.coupon-title {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 10px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-bottom: 2px solid #ddd;
   background-color: tomato;
-  color: white;
 }
 
-tr:hover {
-  background-color: #f1f1f1;
+/* List Styling */
+.list-coupon tr {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-/* Button Styling */
-button {
-  background-color: tomato;
-  color: white;
+.list-coupon tr:hover {
+  background-color: #f7f7f7;
+}
+
+.button-copuon {
+  padding: 6px 12px;
   border: none;
-  padding: 10px 15px;
+  border-radius: 4px;
   cursor: pointer;
-  border-radius: 5px;
+  margin-top: 0px !important;
   transition: background-color 0.3s;
-  margin-top: -9px;
 }
 
-button:hover {
-  background-color: rgb(248, 38, 1);
+.button-copuon:hover {
+  background-color: tomato;
+  color: white;
+}
+
+.button-copuon:active {
+  transform: scale(0.98);
 }
 
 /* Switch Styling */
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 40px;
+  height: 20px;
 }
 
 .switch input {
@@ -74,114 +89,55 @@ button:hover {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  transition: .4s;
   border-radius: 34px;
+  transition: 0.4s;
 }
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
+.button-group{
+  display: flex;
+  justify-content: space-between;
 }
 
 input:checked + .slider {
   background-color: tomato;
 }
 
-input:checked + .slider:before {
-  transform: translateX(26px);
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider::before {
+  transform: translateX(20px);
 }
 
 /* Popup Styling */
-/* .popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
 
-.popup-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-  max-width: 500px;
-  width: 100%;
-} */
-
-/* Form Styling */
-.form-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-
-.form-row label {
-  flex: 1;
-  margin-right: 10px;
-}
-
-.form-row input, .form-row textarea {
-  flex: 2;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.button-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 15px;
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  /* Stack form elements on smaller screens */
-  .form-row {
-    flex-direction: column;
+  .coupon-title, .list-coupon tr {
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
   }
 
-  .form-row label {
-    margin-right: 0;
-    margin-bottom: 5px;
-  }
-
-  
-
-  button {
-    margin-bottom: 5px;
-  }
-
-  /* Table responsiveness */
-  table, .popup-content {
-    width: 95%; /* Ensures it fits better on small screens */
-  }
-
-  /* Make table scrollable horizontally on smaller screens */
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  /* Adjust text for mobile */
-  th, td {
-    font-size: 14px;
-    padding: 8px;
-  }
+ 
 }
+
+@media (max-width: 480px) {
+  .container-coupon {
+    padding: 10px;
+  }
+
+ 
+}
+
 .popup {
   position: fixed;
   top: 0;

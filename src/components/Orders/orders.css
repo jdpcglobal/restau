@@ -11,6 +11,23 @@
   
 
 }
+.mobile-icon {
+    font-size: 13px;
+    color: tomato; /* Elegant green */
+    margin-right: 5px;
+   
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  .mobile-icon1{
+    font-size: 15px;
+    color: tomato; /* Elegant green */
+    margin-right: 5px;
+  }
+  
+ 
+  .mobile-number{
+    margin-bottom: 5px;
+  }
 
 .order-item-food .order-item-name{
     font-weight: 600;
