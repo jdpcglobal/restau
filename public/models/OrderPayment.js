@@ -36,8 +36,8 @@ const OrderPaymentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Accept','Pending', 'Processing', 'Delivered', 'Cancelled'],
-    default: 'Accept',
+    enum: ['Order Processing','Accepted','Preparing','Pending', 'Processing', 'Delivered', 'Cancelled'],
+    default: 'Order Processing',
   },
   date: {
     type: Date,

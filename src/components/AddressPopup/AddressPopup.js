@@ -12,91 +12,68 @@ const AddressPopup = ({
   setFlatNo,
   landmark,
   setLandmark,
-  onAddressSaved,
-  setSavedAddresses
+  adminLocation,
+  distanceThreshold,
+  setSavedAddresses,
 }) => {
   const mapRef = useRef(null);
   const [map, setMap] = useState(null);
   const [marker, setMarker] = useState(null);
   const geocoder = useRef(null);
   const [isDeliverable, setIsDeliverable] = useState(true);
-  const [adminLocation, setAdminLocation] = useState('');
-  const [distanceThreshold, setDistanceThreshold] = useState(12); // Default distance in km
+  const [errors, setErrors] = useState({ location: '', flatNo: '', landmark: '' });
 
-  // Validation state
-  const [errors, setErrors] = useState({
-    location: '',
-    flatNo: '',
-    landmark: '',
-  });
+  let googleMapsLoaded = false;
+
+  // Load Google Maps only once
+  const loadGoogleMaps = () => {
+    if (googleMapsLoaded) return;
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCuro_Das6SA4HRZzGnqR6VHHgyfprryCg&libraries=places`;
+    script.async = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      googleMapsLoaded = true;
+      initMap();
+    };
+  };
+
+  const initMap = () => {
+    if (window.google && mapRef.current) {
+      const defaultLocation = { lat: 26.9124, lng: 75.7873 }; // Example: Jaipur, India
+      const googleMap = new window.google.maps.Map(mapRef.current, {
+        center: defaultLocation,
+        zoom: 12,
+      });
+
+      setMap(googleMap);
+      geocoder.current = new window.google.maps.Geocoder();
+
+      const mapMarker = new window.google.maps.Marker({
+        position: defaultLocation,
+        map: googleMap,
+        draggable: true,
+      });
+
+      setMarker(mapMarker);
+
+      // Handle click on map
+      googleMap.addListener('click', (event) => {
+        const clickedLocation = event.latLng;
+        mapMarker.setPosition(clickedLocation);
+        updateAddress(clickedLocation);
+      });
+
+      // Handle marker drag end
+      mapMarker.addListener('dragend', () => {
+        const newPosition = mapMarker.getPosition();
+        updateAddress(newPosition);
+      });
+    }
+  };
 
   useEffect(() => {
-    const fetchAdminSettings = async () => {
-      try {
-        const response = await axios.get('/api/adminSettings');
-        if (response.data.success) {
-          setAdminLocation(response.data.adminLocation); // Admin's saved address
-          setDistanceThreshold(response.data.distanceThreshold); // Max distance for delivery
-        } else {
-          console.error('Failed to fetch admin settings');
-        }
-      } catch (error) {
-        console.error('Error fetching admin settings:', error);
-      }
-    };
-  
-    fetchAdminSettings();
-  }, []);
-  
-  useEffect(() => {
-    const loadGoogleMaps = () => {
-      const existingScript = document.getElementById('googleMaps');
-      if (!existingScript) {
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBmEtZLay8p86SOVVXBhKGDGUmPQUjnOTc&libraries=places`;
-        script.id = 'googleMaps';
-        document.body.appendChild(script);
-
-        script.onload = () => {
-          initMap();
-        };
-      } else {
-        initMap();
-      }
-    };
-
-    const initMap = () => {
-      if (window.google && mapRef.current) {
-        const defaultLocation = { lat: 26.9124, lng: 75.7873 }; // Default map center
-        const googleMap = new window.google.maps.Map(mapRef.current, {
-          center: defaultLocation,
-          zoom: 12,
-        });
-
-        setMap(googleMap);
-        geocoder.current = new window.google.maps.Geocoder();
-
-        const mapMarker = new window.google.maps.Marker({
-          position: defaultLocation,
-          map: googleMap,
-          draggable: true,
-        });
-
-        setMarker(mapMarker);
-
-        googleMap.addListener('click', (event) => {
-          const clickedLocation = event.latLng;
-          mapMarker.setPosition(clickedLocation);
-          updateAddress(clickedLocation);
-        });
-
-        mapMarker.addListener('dragend', () => {
-          const newPosition = mapMarker.getPosition();
-          updateAddress(newPosition);
-        });
-      }
-    };
-
     loadGoogleMaps();
   }, []);
 
@@ -105,53 +82,43 @@ const AddressPopup = ({
       geocoder.current.geocode({ location }, (results, status) => {
         if (status === 'OK' && results[0]) {
           const formattedAddress = results[0].formatted_address;
-          setLocation(formattedAddress); // Set user's location
-          checkDeliverability(formattedAddress, location); // Check distance from admin's address
+          setLocation(formattedAddress);
+          checkDeliverability(location); // Pass coordinates
         } else {
-          alert('Failed to retrieve address');
+          alert('Failed to retrieve address. Please try again.');
         }
       });
     }
   };
 
-  const checkDeliverability = (userAddress) => {
-    if (window.google && adminLocation) {
-      const service = new window.google.maps.DistanceMatrixService();
-  
-      // Geocode admin location to get its coordinates
-      geocoder.current.geocode({ address: adminLocation }, (results, status) => {
-        if (status === 'OK' && results[0]) {
-          const adminLocationCoords = results[0].geometry.location;
-  
-          // Get the distance between admin and user location
-          service.getDistanceMatrix(
-            {
-              origins: [adminLocationCoords],
-              
-              destinations: [userAddress],
-              travelMode: window.google.maps.TravelMode.DRIVING,
-            },
-            async (response, status) => {
-              if (status === 'OK') {
-                const distanceInMeters = response.rows[0].elements[0].distance.value;
-                const distanceInKm = distanceInMeters / 1000;
-  
-                // Check if the distance is within the deliverable range
-                setIsDeliverable(distanceInKm <= distanceThreshold);
-              } else {
-                console.error('Error calculating distance:', status);
-                alert('Failed to calculate distance. Please try again later.');
-              }
+  const checkDeliverability = (userLocation) => {
+    if (!window.google || !adminLocation) return;
+    const service = new window.google.maps.DistanceMatrixService();
+
+    geocoder.current.geocode({ address: adminLocation }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        const adminCoords = results[0].geometry.location;
+
+        service.getDistanceMatrix(
+          {
+            origins: [adminCoords],
+            destinations: [userLocation],
+            travelMode: window.google.maps.TravelMode.DRIVING,
+          },
+          (response, status) => {
+            if (status === 'OK') {
+              const distanceInMeters = response.rows[0].elements[0].distance.value;
+              const distanceInKm = distanceInMeters / 1000;
+              setIsDeliverable(distanceInKm <= distanceThreshold);
+            } else {
+              alert('Error calculating distance');
             }
-          );
-        } else {
-          console.error('Failed to retrieve admin location:', status);
-          alert('Failed to retrieve admin location. Please check the admin settings.');
-        }
-      });
-    } else {
-      alert('Admin location is not set or invalid.');
-    }
+          }
+        );
+      } else {
+        alert('Failed to retrieve admin location');
+      }
+    });
   };
 
   const handleLocateMe = () => {
@@ -180,9 +147,8 @@ const AddressPopup = ({
   };
 
   const handleSaveAddress = async () => {
-    // Validate inputs
-    let hasError = false;
     const newErrors = { location: '', flatNo: '', landmark: '' };
+    let hasError = false;
 
     if (!location) {
       newErrors.location = 'Please fill this field';
@@ -198,7 +164,6 @@ const AddressPopup = ({
     }
 
     setErrors(newErrors);
-
     if (hasError) return;
 
     if (!isDeliverable) {
@@ -212,29 +177,17 @@ const AddressPopup = ({
       return;
     }
 
-    const addressData = {
-      token,
-      location,
-      flatNo,
-      landmark,
-    };
+    const addressData = { token, location, flatNo, landmark };
 
     try {
       const response = await axios.post('/api/address', addressData);
       if (response.data.success) {
         const newAddress = response.data.address;
-    
-        // Notify parent component
-        if (onAddressSaved) onAddressSaved(newAddress);
-    
-        // Prepend the new address to show it at the top
-        setSavedAddresses(prevAddresses => [newAddress, ...prevAddresses]);
-    
-        // Reset fields and close the popup
-        setLocation(''); 
-        setFlatNo(''); 
-        setLandmark(''); 
-        setShowPopup(false); // Hide the popup on success
+        setSavedAddresses((prev) => [newAddress, ...prev]);
+        setLocation('');
+        setFlatNo('');
+        setLandmark('');
+        setShowPopup(false);
       } else {
         alert(`Error: ${response.data.message}`);
       }
@@ -242,7 +195,6 @@ const AddressPopup = ({
       console.error('Error saving address:', error);
       alert('An unexpected error occurred');
     }
-    
   };
 
   return (
@@ -255,12 +207,8 @@ const AddressPopup = ({
         <div className="map-container">
           <div ref={mapRef} className="map"></div>
         </div>
-        {!isDeliverable && (
-          <p className="error-message">
-            Delivery is not available for this location.
-          </p>
-        )}
-        <p className='locate'>
+        {!isDeliverable && <p className="error-message">Delivery is not available for this location.</p>}
+        <p className="locate">
           <input
             type="text"
             placeholder="Enter Address"
@@ -268,9 +216,7 @@ const AddressPopup = ({
             onChange={(e) => setLocation(e.target.value)}
             className="input-field1"
           />
-          <button className="locate-me-btn" onClick={handleLocateMe}>
-            Locate Me
-          </button>
+          <button className="locate-me-btn" onClick={handleLocateMe}>Locate Me</button>
         </p>
         {errors.flatNo && <span className="error-text">{errors.flatNo}</span>}
         <input
@@ -279,9 +225,7 @@ const AddressPopup = ({
           value={flatNo}
           onChange={(e) => setFlatNo(e.target.value)}
           className={`input-field ${errors.flatNo ? 'error-border' : ''}`}
-          required
         />
-        
         {errors.landmark && <span className="error-text">{errors.landmark}</span>}
         <input
           type="text"
@@ -289,12 +233,8 @@ const AddressPopup = ({
           value={landmark}
           onChange={(e) => setLandmark(e.target.value)}
           className={`input-field ${errors.landmark ? 'error-border' : ''}`}
-          required
         />
-       
-        <button className="save-address-btn" onClick={handleSaveAddress}>
-          Save Address
-        </button>
+        <button className="save-address-btn" onClick={handleSaveAddress}>Save Address</button>
       </div>
     </div>
   );

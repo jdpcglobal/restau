@@ -26,64 +26,38 @@ const Order = () => {
   const [cartTotal, setCartTotal] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCartTotalId, setSelectedCartTotalId] = useState(null);
+  const [adminLocation, setAdminLocation] = useState('');
+  const [distanceThreshold, setDistanceThreshold] = useState(12);
   const router = useRouter();
  // Replace with actual user ID
-
- const fetchCartTotal = async () => {
-  try {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-    if (!token) {
-      throw new Error('No token found');
-    }
-    
-    const response = await axios.get('/api/getCartInfo', {
-      headers: {
-        Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-      },
-    });
-
-    if (response.data.success) {
-      setCartTotal(response.data.cartTotal);
-    } else {
-      setError(response.data.message);
-    }
-  } catch (error) {
-    console.error('Error fetching cart total:', error);
-    setError('Error fetching cart total');
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('/api/getAddresses', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response.data.success) {
-          setSavedAddresses(response.data.deliveries);
-        }
-      } catch (error) {
-        console.error('Error fetching saved addresses:', error);
+ 
+ useEffect(() => {
+  const fetchAdminSettings = async () => {
+    try {
+      const response = await axios.get('/api/adminSettings');
+      if (response.data.success) {
+        setAdminLocation(response.data.adminLocation);
+        setDistanceThreshold(response.data.distanceThreshold);
+      } else {
+        console.error('Failed to fetch admin settings');
       }
-    };
-
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchCartItems(token);
-      setIsLoggedIn(true);
-      fetchAddresses();
-    } else {
-      setShowLogin(true);
+    } catch (error) {
+      console.error('Error fetching admin settings:', error);
     }
-    fetchCartTotal();
-  }, []);
+  };
+
+  const fetchAddresses = async (token) => {
+    try {
+      const response = await axios.get('/api/getAddresses', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data.success) {
+        setSavedAddresses(response.data.deliveries);
+      }
+    } catch (error) {
+      console.error('Error fetching saved addresses:', error);
+    }
+  };
 
   const fetchCartItems = async (token) => {
     try {
@@ -100,8 +74,7 @@ const Order = () => {
       setError('Error fetching cart items');
     }
   };
-// After fetching the cart total, you might want to set the ID
-useEffect(() => {
+
   const fetchCartTotal = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -124,8 +97,21 @@ useEffect(() => {
       setLoading(false);
     }
   };
+
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    setIsLoggedIn(true);
+    fetchAddresses(token);
+    fetchCartItems(token);
+  } else {
+    setShowLogin(true);
+  }
+
   fetchCartTotal();
+  fetchAdminSettings();
 }, []);
+
 
   const handleSaveAddress = (newAddress) => {
     setSavedAddresses((prevAddresses) => [newAddress, ...prevAddresses]);
@@ -182,6 +168,7 @@ useEffect(() => {
       }
     }
   };
+  
   
   const subtotal = cartTotal ? cartTotal.subtotal : 0;
   const itemDiscount= cartTotal ? cartTotal.itemDiscount : 0;
@@ -306,17 +293,18 @@ useEffect(() => {
             </div>
 
             {showPopup && (
-              <AddressPopup
-                setShowPopup={setShowPopup}
-                handleSaveAddress={handleSaveAddress}
-                location={location}
-                setLocation={setLocation}
-                flatNo={flatNo}
-                setFlatNo={setFlatNo}
-                landmark={landmark}
-                setLandmark={setLandmark}
-                setSavedAddresses = {setSavedAddresses}
-              />
+               <AddressPopup
+               setShowPopup={setShowPopup}
+               location={location}
+               setLocation={setLocation}
+               flatNo={flatNo}
+               setFlatNo={setFlatNo}
+               landmark={landmark}
+               setLandmark={setLandmark}
+               adminLocation={adminLocation}
+               distanceThreshold={distanceThreshold}
+               setSavedAddresses={setSavedAddresses}
+             />
             )}
           </div>
         </div>
