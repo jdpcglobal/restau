@@ -145,11 +145,10 @@ const Orders = () => {
                   value={order.status}
                   onChange={(e) => handleStatusChange(order._id, e.target.value)}
                 >
-                   <option value='Food Accepted'>Order Processing</option>
-                   <option value='Food Accepted'>Accepted</option>
-                   <option value='Food Processing'>Preparing</option>
-                  <option value='Food Processing'>Food Processing</option>
-                  <option value='Out for delivery'>Out for delivery</option>
+                   <option value='Order Processing'>Order Processing</option>
+                   <option value='Accepted'>Accepted</option>
+                   <option value='Food Processing'>Food Preparing</option>
+                <option value='Out for delivery'>Out for delivery</option>
                   <option value='Delivered'>Delivered</option>
                   <option value='Cancelled'>Cancelled</option>
                 </select>
