@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './adminaddres.css';
-import '../orders/orders.css';
+// import '../orders/orders.css';
 
 const AdminPage = () => {
   const [adminLocation, setAdminLocation] = useState('');

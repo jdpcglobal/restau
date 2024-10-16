@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AdminNavbar from '../components/adminnavbar/adminnavbar';
+
 import Sidebar from '../components/sidebar/sidebar';
 import AddItems from '../components/additems/additems';
 import ListItems from '../components/listitems/listitems';
@@ -13,7 +13,7 @@ import Admin from '../components/adminaddress/admin';
 import Gst from '../components/gst/gst';
 import Coupon from '../components/coupon/coupon';
 import Couponlist from '../components/couponlist/couponlist';
-
+import AdminNavbar from '../components/adminnavbar/adminnavbar';
 
 const AdminPanel = () => {
   const [selectedComponent, setSelectedComponent] = useState(''); // State to track the selected component
