@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AdminNavbar from '../components/navbar/navbar';
+import AdminNavbar from '../components/adminnavbar/adminnavbar';
 import Sidebar from '../components/sidebar/sidebar';
 import AddItems from '../components/additems/additems';
 import ListItems from '../components/listitems/listitems';
