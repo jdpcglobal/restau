@@ -1,10 +1,10 @@
 // app/page.js
 'use client';
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar/navbar.js';
+import Navbar from '../components/navbar/navbar.js';
 import '../app/globals.css';
-import Footer from '../components/Footer/footer.js';
-import LoginPopup from '../components/LoginPopup/loginpopup.js';
+import Footer from '../components/footer/footer.js';
+import LoginPopup from '../components/loginpopup/loginpopup.js';
 import './TermsAndConditions.css';
 import './AboutUs.css';
 

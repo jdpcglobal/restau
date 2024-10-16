@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AdminNavbar from '../components/adminNavbar/adminnavmar';
+import AdminNavbar from '../components/adminnavbar/adminnavbar';
 import Sidebar from '../components/sidebar/sidebar';
 import AddItems from '../components/addItems/addItems';
 import ListItems from '../components/listItems/listItems';
@@ -7,7 +7,7 @@ import Orders from '../components/orders/orders';
 import './adminpanel.css';
 import { ToastContainer } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
-import AddCategory from '../components/addCategory/addCategory';
+import AddCategory from '../components/addcategory/addCategory';
 import Payment from '../components/payment/payment';
 import Admin from '../components/adminaddress/admin';
 import Gst from '../components/gst/gst';

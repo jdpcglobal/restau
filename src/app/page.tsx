@@ -7,7 +7,7 @@ import Exploremenu from '../components/explorMenu/exploremenu.js'; // Fixed typo
 import FoodDisplay from '../components/foodDisplay/fooddisplay.js';
 import Footer from '../components/footer/footer.js';
 import LoginPopup from '../components/loginpopup/loginpopup.js';
-import CartPopup from '../components/CartPopup/cartpopup.js';
+import CartPopup from '../components/cartPopup/cartpopup.js';
 
 const Page = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -41,7 +41,7 @@ const Page = () => {
         <CartPopup
           cartItems={cartItems}
           setShowCart={setShowCart}
-          handleRemoveClick={(itemId) => setCartItems(cartItems.filter(item => item._id !== itemId))}
+          handleRemoveClick={(itemId:any) => setCartItems(cartItems.filter(item => 'item._id' !== itemId))}
         />
       )}
       {showLogin && !isLoggedIn && (

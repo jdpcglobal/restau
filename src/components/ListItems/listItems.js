@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import './listItems.css';
+import './listitems.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import EditPopup from '../editPopup/editPopup';
+import EditPopup from '../editpopup/editpopup';
 
 export default function Home() {
   const [data, setData] = useState([]);
