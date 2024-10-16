@@ -1,4 +1,4 @@
-import dbConnect from '../../app/lib/dbConnect';  // Ensure the correct path for dbConnect
+import dbConnect from '../../app/lib/dbconnect';  // Ensure the correct path for dbConnect
 import AdminSettings from '../../../public/models/AdminSettings';
 
 export default async function handler(req, res) {
