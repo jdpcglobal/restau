@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import AdminNavbar from '../components/AdminNavbar/adminnavmar';
+import AdminNavbar from '../components/adminNavbar/adminnavmar';
 import Sidebar from '../components/Sidebar/sidebar';
-import AddItems from '../components/AddItems/addItems';
-import ListItems from '../components/ListItems/listItems';
-import Orders from '../components/Orders/orders';
+import AddItems from '../components/addItems/addItems';
+import ListItems from '../components/listItems/listItems';
+import Orders from '../components/orders/orders';
 import './adminpanel.css';
 import { ToastContainer } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
-import AddCategory from '../components/AddCategory/addCategory';
+import AddCategory from '../components/addCategory/addCategory';
 import Payment from '../components/Payment/payment';
 import Admin from '../components/adminaddress/admin';
-import Gst from '../components/GST/gst';
+import Gst from '../components/gst/gst';
 import Coupon from '../components/coupon/coupon';
 import Couponlist from '../components/couponlist/couponlist';
 

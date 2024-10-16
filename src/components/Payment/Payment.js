@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './payment.css';
-import '../AddCategory/addCategory.css';
+import '../addCategory/addCategory.css';
 
 const Payment = () => {
   const [items, setItems] = useState([]);

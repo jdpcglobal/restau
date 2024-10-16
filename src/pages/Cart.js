@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar/navbar';
-import Footer from '../components/Footer/footer';
-import LoginPopup from '../components/LoginPopup/loginpopup';
+import Navbar from '../components/navbar/navbar';
+import Footer from '../components/footer/footer';
+import LoginPopup from '../components/loginpopup/loginpopup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../components/cartpopup/cartpopup.css';
