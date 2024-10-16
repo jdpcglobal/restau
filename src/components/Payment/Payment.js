@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Payment.css';
+import './payment.css';
 import '../AddCategory/addCategory.css';
 
 const Payment = () => {
