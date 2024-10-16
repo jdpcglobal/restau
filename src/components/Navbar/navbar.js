@@ -37,17 +37,17 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout, setShowCart }) => {
             </a>
           </li>
           <li>
-            <a 
-              href='#explore-menu' 
-              onClick={() => setMenu("Menu")} 
-              className={menu === "Menu" ? "active" : ""}
-            >
-              Menu
-            </a>
-          </li>
+  <a 
+    href='About-us' 
+    onClick={() => setMenu("About us")} 
+    className={menu === "About us" ? "active" : ""}
+  >
+    About us
+  </a>
+</li>
           <li>
             <a 
-              href='#' 
+              href='/' 
               onClick={() => setMenu("Blog")} 
               className={menu === "Blog" ? "active" : ""}
             >

@@ -5,7 +5,6 @@ import Navbar from '../components/Navbar/navbar.js';
 import '../app/globals.css';
 import Footer from '../components/Footer/footer.js';
 import LoginPopup from '../components/LoginPopup/loginpopup.js';
-
 import './RefundReturnPolicy.css';
 
 const TermsAndConditions = () => {
