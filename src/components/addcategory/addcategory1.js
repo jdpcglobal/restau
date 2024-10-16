@@ -1,6 +1,6 @@
 // components/AddCategory.js
 import React, { useState, useEffect } from 'react';
-import './addcategory.css';
+import './addcategory2.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import './adminnavbar.css';
+import './adminnavbar2.css';
 
 const index = () => {
   return (

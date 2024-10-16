@@ -1,5 +1,5 @@
 import React from 'react';
-import './footer.css';
+import './footer2.css';
 import { useRouter } from 'next/navigation';
 
 const Footer = () => {
