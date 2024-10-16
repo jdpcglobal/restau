@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 
-import Sidebar from '../components/sidebar/sidebar';
-import AddItems from '../components/additems/additems';
-import ListItems from '../components/listitems/listitems';
-import Orders from '../components/orders/orders';
+import Sidebar from '../components/sidebar/sidebar1';
+import AddItems from '../components/additems/additems1';
+import ListItems from '../components/listitems/listitems1';
+import Orders from '../components/orders/orders1';
 import './adminpanel.css';
 import { ToastContainer } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
-import AddCategory from '../components/addcategory/addcategory';
-import Payment from '../components/payment/payment';
+import AddCategory from '../components/addcategory/addcategory1';
+import Payment from '../components/payment/payment1';
 import Admin from '../components/adminaddress/admin';
-import Gst from '../components/gst/gst';
-import Coupon from '../components/coupon/coupon';
-import Couponlist from '../components/couponlist/couponlist';
-import AdminNavbar from '../components/adminnavbar/adminnavbar';
+import Gst from '../components/gst/gst1';
+import Coupon from '../components/coupon/coupon1';
+import Couponlist from '../components/couponlist/couponlist1';
+import AdminNavbar from '../components/adminnavbar/adminnavbar1';
 
 const AdminPanel = () => {
   const [selectedComponent, setSelectedComponent] = useState(''); // State to track the selected component

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
-import LoginPopup from '../components/LoginPopup/LoginPopup';
-import ReviewPopup from '../components/starpopup/star'; // Import the new ReviewPopup component
+import Navbar from '../components/navbar/navbar1';
+import Footer from '../components/footer/footer1';
+import LoginPopup from '../components/loginpopup/loginpopup1';
+import ReviewPopup from '../components/starpopup/star1'; // Import the new ReviewPopup component
 import '../components/cartpopup/cartpopup.css';
 import '../app/globals.css';
 import './order.css';

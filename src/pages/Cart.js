@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import Navbar from '../components/navbar/navbar';
-import Footer from '../components/footer/footer';
-import LoginPopup from '../components/loginpopup/loginpopup';
+import Navbar from '../components/navbar/navbar1';
+import Footer from '../components/footer/footer1';
+import LoginPopup from '../components/loginpopup/loginpopup1';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../components/cartpopup/cartpopup.css';
 import '../app/globals.css';
 import { toast } from 'react-toastify';
-import PromoCodePopup from '../components/promocodepopu/promocodepopup';
+import PromoCodePopup from '../components/promocodepopu/promocodepopup1';
 
 const CartPage = () => {
   const [userId, setUserId] = useState(null);

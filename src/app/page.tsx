@@ -1,13 +1,13 @@
 // app/page.js
 'use client';
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/navbar/navbar.js';
-import Header from '../components/header/header.js';
-import Exploremenu from '../components/explormenu/exploremenu.js'; // Fixed typo
-import FoodDisplay from '../components/fooddisplay/fooddisplay.js';
-import Footer from '../components/footer/footer.js';
-import LoginPopup from '../components/loginpopup/loginpopup.js';
-import CartPopup from '../components/cartPopup/cartpopup.js';
+import Navbar from '../components/navbar/navbar1.js';
+import Header from '../components/header/header1.js';
+import Exploremenu from '../components/explormenu/exploremenu1.js'; // Fixed typo
+import FoodDisplay from '../components/fooddisplay/fooddisplay1.js';
+import Footer from '../components/footer/footer1.js';
+import LoginPopup from '../components/loginpopup/loginpopup1.js';
+import CartPopup from '../components/cartpopup/cartpopup1.js';
 
 const Page = () => {
   const [showLogin, setShowLogin] = useState(false);

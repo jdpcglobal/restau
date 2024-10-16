@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import Navbar from '../components/Navbar/Navbar';
-import Footer from '../components/Footer/Footer';
-import LoginPopup from '../components/LoginPopup/LoginPopup';
+import Navbar from '../components/navbar/navbar1';
+import Footer from '../components/footer/footer1';
+import LoginPopup from '../components/loginpopup/loginpopup1';
 
 import './orderpayment.css';
 import '../components/cartpopup/cartpopup.css';
