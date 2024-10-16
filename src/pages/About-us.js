@@ -5,7 +5,7 @@ import Navbar from '../components/navbar/navbar.js';
 import '../app/globals.css';
 import Footer from '../components/footer/footer.js';
 import LoginPopup from '../components/loginpopup/loginpopup.js';
-import './TermsAndConditions.css';
+import './termsandconditions.css';
 import './AboutUs.css';
 
 const TermsAndConditions = () => {

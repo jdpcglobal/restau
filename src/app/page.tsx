@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/navbar/navbar.js';
 import Header from '../components/header/header.js';
-import Exploremenu from '../components/explorMenu/exploremenu.js'; // Fixed typo
-import FoodDisplay from '../components/foodDisplay/fooddisplay.js';
+import Exploremenu from '../components/explormenu/exploremenu.js'; // Fixed typo
+import FoodDisplay from '../components/fooddisplay/fooddisplay.js';
 import Footer from '../components/footer/footer.js';
 import LoginPopup from '../components/loginpopup/loginpopup.js';
 import CartPopup from '../components/cartPopup/cartpopup.js';
