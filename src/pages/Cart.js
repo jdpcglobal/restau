@@ -9,7 +9,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../components/cartpopup/cartpopup.css';
 import '../app/globals.css';
 import { toast } from 'react-toastify';
-import PromoCodePopup from '../components/PromoCodepopu/promoCodePopup';
+import PromoCodePopup from '../components/promoCodepopu/promoCodePopup';
 
 const CartPage = () => {
   const [userId, setUserId] = useState(null);
