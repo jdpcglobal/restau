@@ -119,7 +119,7 @@ const CouponList = () => {
             {/* <b>Maximum Discount</b> */}
             <b>Create/Expiry</b>
             <b>Usage Limit</b>
-            <b>Min Cart Price</b>
+            <b>Min Price</b>
             <b>Status</b>
             <b>Actions</b>
             <b>Actions</b>

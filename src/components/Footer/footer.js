@@ -6,14 +6,23 @@ const Footer = () => {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push('/');
+    router.push('TermsAndConditions');
+  };
+  const handleClick1 = () => {
+    router.push('MyOrder');
+  };
+  const handleClick2 = () => {
+    router.push('Privacy-policy');
+  };
+  const handleClick3 = () => {
+    router.push('Refund-and-Return-Policy');
   };
 
   return (
     <div className="footer" id="footer">
       <div className="footer-content">
         <div className="footer-content-left">
-          <img src="/logo.png" alt="Logo" />
+        <a href='http://localhost:3000/'>   <img src="/logo.png" alt="Logo" /></a>
           <p>
             Welcome to our food website, where we bring you an exquisite collection 
             of mouth-watering dishes that cater to every taste. Explore our diverse 
@@ -29,11 +38,13 @@ const Footer = () => {
         <div className="footer-content-center">
           <h2>COMPANY</h2>
           <ul>
-            <li onClick={handleClick}>Home</li>
-            <li>About us</li>
-            <li>Delivery</li>
-            <li>Privacy policy</li>
+          <li onClick={handleClick1}>My Order</li>
+            
+            <li  onClick={handleClick}>  Terms and Conditions</li>
+            <li onClick={handleClick2}>Privacy policy</li>
+            <li  onClick={handleClick3}> Refund and Return Policy</li>
           </ul>
+         
         </div>
         <div className="footer-content-right">
           <h2>GET IN TOUCH</h2>
@@ -45,7 +56,7 @@ const Footer = () => {
       </div>
       <hr />
       <p className="footer-copyright">
-        Copyright 2024 © Tomato.com - All Right Reserved.
+        Copyright 2024 ©<a href='http://localhost:3000/'> Tomato.com</a> - All Right Reserved.
       </p>
     </div>
   );

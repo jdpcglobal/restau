@@ -16,31 +16,21 @@ const Page = () => {
   const [showCart, setShowCart] = useState(false);
   const [cartItems, setCartItems] = useState([]);
 
-  // Check if the token is valid or expired
-  const isTokenExpired = (expiration) => {
-    return new Date().getTime() > expiration;
-  };
-
   useEffect(() => {
     const userToken = localStorage.getItem('token');
-    const tokenExpiration = localStorage.getItem('tokenExpiration'); // Store expiration during login
-
-    if (userToken && tokenExpiration && !isTokenExpired(tokenExpiration)) {
+    if (userToken) {
       setIsLoggedIn(true);
     } else {
-      localStorage.removeItem('token'); // Clear invalid token
-      localStorage.removeItem('tokenExpiration'); // Clear expiration
       const timer = setTimeout(() => {
-        setShowLogin(true); // Show login popup after delay
+        setShowLogin(true);
       }, 3000);
-      return () => clearTimeout(timer); // Cleanup timer on unmount
+      return () => clearTimeout(timer);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
-    localStorage.removeItem('tokenExpiration'); // Remove expiration on logout
     setIsLoggedIn(false);
     setShowLogin(true);
   };
@@ -51,9 +41,7 @@ const Page = () => {
         <CartPopup
           cartItems={cartItems}
           setShowCart={setShowCart}
-          handleRemoveClick={(itemId) => 
-            setCartItems(cartItems.filter(item => item._id !== itemId))
-          }
+          handleRemoveClick={(itemId) => setCartItems(cartItems.filter(item => item._id !== itemId))}
         />
       )}
       {showLogin && !isLoggedIn && (
@@ -77,7 +65,7 @@ const Page = () => {
           cartItems={cartItems} 
           setShowCart={setShowCart} 
           isLoggedIn={isLoggedIn} 
-          setShowLogin={setShowLogin} 
+          setShowLogin={setShowLogin} // Pass setShowLogin to FoodDisplay
         />
       </div>
       <Footer />
