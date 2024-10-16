@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar/navbar.js';
 import '../app/globals.css';
 import Footer from '../components/Footer/footer.js';
-import LoginPopup from '../components/LoginPopup/loginpopup.js';
+import LoginPopup from '../components/loginPopup/loginpopup.js';
 import './TermsAndConditions.css';
 import './AboutUs.css';
 

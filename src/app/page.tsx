@@ -1,12 +1,12 @@
 // app/page.js
 'use client';
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar/navbar.js';
+import Navbar from '../components/navbar/navbar.js';
 import Header from '../components/Header/header.js';
 import Exploremenu from '../components/EexplorMenu/exploremenu.js'; // Fixed typo
 import FoodDisplay from '../components/FoodDisplay/fooddisplay.js';
-import Footer from '../components/Footer/footer.js';
-import LoginPopup from '../components/LoginPopup/loginpopup.js';
+import Footer from '../components/footer/footer.js';
+import LoginPopup from '../components/loginpopup/loginpopup.js';
 import CartPopup from '../components/CartPopup/cartpopup.js';
 
 const Page = () => {
