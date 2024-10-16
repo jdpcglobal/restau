@@ -96,7 +96,7 @@ const AddCategory = () => {
     <div className='category1'>
       <div className='add-category'>
         <h3>Add New Category</h3>
-        <div className='flex-row'>
+        <div className='flex-row1'>
           <img
             src={newCategory.image ? URL.createObjectURL(newCategory.image) : '/upload_area.png'}
             alt='Upload Preview'
@@ -121,7 +121,7 @@ const AddCategory = () => {
             required
           /></p>
         </div>
-        <button1 className='add-item-btn1' onClick={handleAddCategory}>Add Category</button1>
+        <button className='add-item-btn1' onClick={handleAddCategory}>Add Category</button>
       </div>
       <div className='category-list'>
         <h3>Category List</h3>
@@ -147,7 +147,7 @@ const AddCategory = () => {
                         className='category-image'
                       />
                       <span>{category.name}</span>
-                      <button1 onClick={() => handleDeleteCategory(category.name)}>Delete</button1>
+                      <button onClick={() => handleDeleteCategory(category.name)}>Delete</button>
                     </li>
                   ))
                 ) : (

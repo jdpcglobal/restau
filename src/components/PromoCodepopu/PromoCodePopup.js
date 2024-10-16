@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './prome.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import ConfirmationPopup from '../ConfirmationPopup';
+import ConfirmationPopup from '../../components/ConfirmationPopup';
 
 const PromoCodePopup = ({ isVisible, onClose, onApplyCoupon, subtotal }) => {
   const [coupons, setCoupons] = useState([]);

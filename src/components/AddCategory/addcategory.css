@@ -23,7 +23,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
   
-  .flex-row {
+  .flex-row1 {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -116,7 +116,7 @@
     color: #555;
   }
   
-  .table-category button1 {
+  .table-category button {
     background-color: #dc3545;
     color: #fff;
     border: none;
@@ -127,7 +127,7 @@
     transition: background-color 0.3s ease;
   }
   
-  .table-category button1:hover {
+  .table-category button:hover {
     background-color: #c82333;
   }
   
@@ -142,7 +142,7 @@
       max-width: 120px;
     }
   
-    .add-item-btn1 {
+    .add-item-btn {
       padding: 8px 15px;
       font-size: 0.9rem;
     }
@@ -166,12 +166,8 @@
       max-width: 100px;
     }
   
-    .add-item-btn1 {
-      padding: 1px 10px;
-      font-size: 0.8rem;
-      
-    }
-    .table-category button1{
+    
+    .table-category button{
       margin-top: 5px;
     }
     .add-category input[type='text']{

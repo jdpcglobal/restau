@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import './navbar.css';
-import { assets } from '../../assets/assets';
+import { assets } from '../../../src/assets/assets';
 import { useRouter } from 'next/navigation';
 
 const Navbar = ({ isLoggedIn, setShowLogin, handleLogout, setShowCart }) => {
