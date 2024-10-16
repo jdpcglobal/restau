@@ -7,8 +7,8 @@ import LoginPopup from '../components/loginpopup/loginpopup1';
 import ReviewPopup from '../components/starpopup/star1'; // Import the new ReviewPopup component
 import '../components/cartpopup/cartpopup2.css';
 import '../app/globals.css';
-import './order.css';
-import './MyOrder.css';
+import './order2.css';
+import './MyOrder2.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 

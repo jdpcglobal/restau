@@ -5,7 +5,7 @@ import Navbar from '../components/navbar/navbar1.js';
 import '../app/globals.css';
 import Footer from '../components/footer/footer1.js';
 import LoginPopup from '../components/loginpopup/loginpopup1.js';
-import './refundreturnpolicy.css';
+import './refundreturnpolicy2.css';
 
 const TermsAndConditions = () => {
   const [showLogin, setShowLogin] = useState(false);

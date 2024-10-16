@@ -4,7 +4,7 @@ import Sidebar from '../components/sidebar/sidebar1';
 import AddItems from '../components/additems/additems1';
 import ListItems from '../components/listitems/listitems1';
 import Orders from '../components/orders/orders1';
-import './adminpanel.css';
+import './adminpanel2.css';
 import { ToastContainer } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import AddCategory from '../components/addcategory/addcategory1';

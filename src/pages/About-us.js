@@ -6,7 +6,7 @@ import '../app/globals.css';
 import Footer from '../components/footer/footer1.js';
 import LoginPopup from '../components/loginpopup/loginpopup1.js';
 
-import './AboutUs.css';
+import './AboutUs2.css';
 
 const TermsAndConditions = () => {
   const [showLogin, setShowLogin] = useState(false);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarkerAlt, faPlus, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import './order1.css';
-import './order.css';
+import './order2.css';
 import Navbar from '../components/navbar/navbar1';
 import Footer from '../components/footer/footer1';
 import AddressPopup from '../components/addresspopup/addresspopup1';

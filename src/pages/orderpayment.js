@@ -10,7 +10,7 @@ import LoginPopup from '../components/loginpopup/loginpopup1';
 import './orderpayment.css';
 import '../components/cartpopup/cartpopup2.css';
 import '../app/globals.css';
-import './order.css';
+import './order2.css';
 
 const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) => {
   const [payments, setPayments] = useState([]);
