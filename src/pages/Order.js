@@ -9,7 +9,7 @@ import AddressPopup from '../components/addresspopup/addresspopup1';
 import LoginPopup from '../components/loginpopup/loginpopup1';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import '../components/cartpopup/cartpopup.css';
+import '../components/cartpopup/cartpopup2.css';
 import '../app/globals.css';
 
 const Order = () => {

@@ -6,7 +6,7 @@ import Footer from '../components/footer/footer1';
 import LoginPopup from '../components/loginpopup/loginpopup1';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import '../components/cartpopup/cartpopup.css';
+import '../components/cartpopup/cartpopup2.css';
 import '../app/globals.css';
 import { toast } from 'react-toastify';
 import PromoCodePopup from '../components/promocodepopu/promocodepopup1';

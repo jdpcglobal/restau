@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './coupon.css';
+import './coupon2.css';
 
 const Coupon = () => {
   const [couponCode, setCouponCode] = useState('');

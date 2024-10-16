@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './confirmationPopup.css';
+import './confirmationPopup2.css';
 
 const AppliedCouponCard = ({ coupon, discount, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);

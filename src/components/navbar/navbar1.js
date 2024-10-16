@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import './navbar.css';
+import './navbar2.css';
 import { assets } from '../../assets/assets';
 import { useRouter } from 'next/navigation';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import './cartpopup.css';
+import './cartpopup2.css';
 
 const CartPopup = ({ setShowCart }) => {
   const [cartItems, setCartItems] = useState([]);

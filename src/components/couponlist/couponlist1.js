@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './couponlist.css'; // CSS for styling
+import './couponlist2.css'; // CSS for styling
 
 const CouponList = () => {
   const [coupons, setCoupons] = useState([]);

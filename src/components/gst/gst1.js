@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './gst.css';
+import './gst2.css';
 
 const Gst = () => {
   const [gstName, setGstName] = useState('');

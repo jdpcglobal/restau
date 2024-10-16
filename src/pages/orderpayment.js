@@ -8,7 +8,7 @@ import Footer from '../components/footer/footer1';
 import LoginPopup from '../components/loginpopup/loginpopup1';
 
 import './orderpayment.css';
-import '../components/cartpopup/cartpopup.css';
+import '../components/cartpopup/cartpopup2.css';
 import '../app/globals.css';
 import './order.css';
 

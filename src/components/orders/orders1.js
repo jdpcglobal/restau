@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt ,faMobileAlt,faPhone} from '@fortawesome/free-solid-svg-icons'; // Import the refresh icon
-import './orders.css';
+import './orders2.css';
 import '../../app/globals.css';
 
 const Orders = () => {

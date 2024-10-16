@@ -1,5 +1,5 @@
 import React from 'react';
-import './sidebar.css';
+import './sidebar2.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCreditCard ,faMapMarkerAlt,faFileInvoiceDollar,faTag} from '@fortawesome/free-solid-svg-icons';
 

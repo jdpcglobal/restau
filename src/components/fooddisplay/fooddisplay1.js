@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './fooddisplay.css';
+import './fooddisplay2.css';
 
 const FoodDisplay = ({ category, setCartItems, cartItems, setShowCart, isLoggedIn, setShowLogin }) => {
   const [foodItems, setFoodItems] = useState([]);

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './prome.css';
+import './prome2.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import ConfirmationPopup from '../confirmationPopup';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './exploremenu.css';
+import './exploremenu2.css';
 
 const ExploreMenu = ({ category, setCategory }) => {
   const [categories, setCategories] = useState([]);

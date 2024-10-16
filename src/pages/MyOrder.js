@@ -5,7 +5,7 @@ import Navbar from '../components/navbar/navbar1';
 import Footer from '../components/footer/footer1';
 import LoginPopup from '../components/loginpopup/loginpopup1';
 import ReviewPopup from '../components/starpopup/star1'; // Import the new ReviewPopup component
-import '../components/cartpopup/cartpopup.css';
+import '../components/cartpopup/cartpopup2.css';
 import '../app/globals.css';
 import './order.css';
 import './MyOrder.css';
