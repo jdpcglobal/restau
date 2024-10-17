@@ -12,7 +12,7 @@ if (!uri) {
 export default async function dbConnect() {
   if (cachedDb) {
     console.log('Using cached database connection');
-    return cachedDb;
+    return 'Using cached database connection';
   }
 
   try {
@@ -38,9 +38,9 @@ export default async function dbConnect() {
     // Cache the database connection
     cachedDb = db;
 
-    return db;
+    return 'Successfully connected to MongoDB';
   } catch (error) {
     console.error('Error connecting to MongoDB:', error.message);
-    throw error; // Rethrow the error to let the caller handle it
+    return `Error connecting to MongoDB: ${error.message}`; // Return full error message as a string
   }
 }

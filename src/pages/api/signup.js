@@ -1,7 +1,7 @@
 import dbConnect from '../../../src/app/lib/dbconnect';
 import User from '../../../public/models/user';
 
-dbConnect();
+
 
 export default async function handler(req, res) {
   const { name, email, password } = req.body;
@@ -15,6 +15,8 @@ export default async function handler(req, res) {
   if (password.length < 6) {
     return res.status(400).json({ error: 'Password must be at least 6 characters long' });
   }
+  const result = await dbConnect();
+  console.log(result); // Logs the connection message or error message
 
   try {
     let user = await User.findOne({ email });
