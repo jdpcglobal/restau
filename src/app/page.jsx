@@ -41,7 +41,7 @@ const Page = () => {
         <CartPopup
           cartItems={cartItems}
           setShowCart={setShowCart}
-          handleRemoveClick={(itemId:any) => setCartItems(cartItems.filter(item => 'item._id' !== itemId))}
+          handleRemoveClick={(itemId) => setCartItems(cartItems.filter(item => 'item._id' !== itemId))}
         />
       )}
       {showLogin && !isLoggedIn && (
