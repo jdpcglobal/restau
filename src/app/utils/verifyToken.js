@@ -1,7 +1,7 @@
 // utils/verifyToken.js
 import jwt from 'jsonwebtoken';
 
-export function verifyToken(token) {
+export default function verifyToken(token) {
   if (!token) return null; // Handle absence of token
 
   try {
