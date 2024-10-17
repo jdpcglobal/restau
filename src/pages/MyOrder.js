@@ -195,8 +195,8 @@ const CartPage = () => {
                   <div key={order._id} className='my-orders-order'>
                     <img src='/parcel_icon.png' alt='parcel icon' />
                     <p>{itemNames}</p>
-                    <p>₹ {order.totalAmount}</p>
-                    <p>Items: {order.items.length}</p>
+                    <p> <span className='tometo'>₹ </span>{order.totalAmount}</p>
+                    <p>Items<span className='tometo'>:</span> {order.items.length}</p>
                     <p><span>&#x25cf;</span> <b>{order.status}</b></p>
                     <button onClick={() => handleStatusUpdate(order._id)}>Track Order</button>
 
