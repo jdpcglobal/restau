@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Navbar from '../components/navbar/navbar1';
 import Footer from '../components/footer/footer1';
 import LoginPopup from '../components/loginpopup/loginpopup1';
@@ -22,10 +22,10 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch available payment methods
     const fetchPayments = async () => {
       try {
         const response = await axios.get('/api/paymentshow');
@@ -41,7 +41,6 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
 
     fetchPayments();
 
-    // Check and set token from localStorage
     if (typeof window !== 'undefined') {
       const localStorageToken = localStorage.getItem('token');
       if (localStorageToken) {
@@ -71,10 +70,9 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true); // Start loading
     try {
-      const token = localStorage.getItem('token'); // Retrieve token from storage
-  
-      // Submit the order
+      const token = localStorage.getItem('token'); 
       const orderResponse = await axios.post(
         '/api/order',
         {
@@ -83,24 +81,22 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Send token in headers
+            Authorization: `Bearer ${token}`, 
           },
         }
       );
-  
+
       if (orderResponse.data.success) {
-        // Update coupon status in cart total
         const couponResponse = await axios.post(
           '/api/couponstatusupdate',
-          {token,
-             couponStatus: 'active' },
+          { token, couponStatus: 'active' },
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Send token in headers
+              Authorization: `Bearer ${token}`,
             },
           }
         );
-  
+
         if (couponResponse.data.success) {
           router.push('/MyOrder');
         } else {
@@ -112,9 +108,10 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
     } catch (error) {
       console.error('Error during submission:', error);
       setError('An unexpected error occurred. Please try again later.');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
-  
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -145,7 +142,7 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
             setShowLogin={setShowLogin}
             handleLogout={handleLogout}
           />
-           <div className="back-arrow">
+          <div className="back-arrow">
             <FontAwesomeIcon 
               icon={faArrowLeft} 
               className="back-arrow-icon" 
@@ -222,8 +219,12 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
                 </div>
               )}
               {selectedOption && (
-                <button onClick={handleSubmit} className='submit-button'>
-                  Submit
+                <button
+                  onClick={handleSubmit}
+                  className='submit-button'
+                  disabled={loading} // Disable button during loading
+                >
+                  {loading ? 'Processing...' : 'Proceed to Submit'}
                 </button>
               )}
               {error && <p className='error-message'>{error}</p>}

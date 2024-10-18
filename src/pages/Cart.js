@@ -221,6 +221,7 @@ const CartPage = () => {
     if (cartItems.length === 0) {
         setError('Please add items to the cart before proceeding to checkout.');
     } else {
+      setLoading(true);
         try {
             await saveCartTotal(); // Attempt to save the cart total
             router.push('/Order'); // Redirect to the order page only if save is successful
@@ -255,7 +256,11 @@ const saveCartTotal = async () => {
   
     try {
       const token = localStorage.getItem('token'); // Get the token from local storage or wherever you're storing it
-  
+      if (!token) {
+        setError('No token found');
+        setLoading(false); // Stop loading if no token is found
+        return;
+      }
       const response = await fetch('/api/saveCartTotal', {
         method: 'POST',
         headers: {
@@ -273,6 +278,8 @@ const saveCartTotal = async () => {
       }
     } catch (error) {
       console.error('Error saving cart total:', error);
+    }finally {
+      setLoading(false); // Reset loading state
     }
   };
   

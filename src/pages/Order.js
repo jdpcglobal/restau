@@ -133,26 +133,28 @@ const Order = () => {
       alert('Please select a delivery address.');
       return;
     }
-  
+
+    setLoading(true); // Set loading to true when the button is clicked
+
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         setError('No token found');
+        setLoading(false); // Stop loading if no token is found
         return;
       }
-  
-      // Log the token and addressId for debugging purposes
-      console.log('Token:', token);
-      console.log('Selected Address ID:', selectedAddress._id);
-  
-      const response = await axios.post('/api/saveCheckoutAddress', {
-        addressId: selectedAddress._id,
-        cartTotalId: selectedCartTotalId, // Include cart total ID
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-  
-      // Check if the response is successful
+
+      const response = await axios.post(
+        '/api/saveCheckoutAddress',
+        {
+          addressId: selectedAddress._id,
+          cartTotalId: selectedCartTotalId,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       if (response.data.success) {
         router.push('/orderpayment');
       } else {
@@ -160,16 +162,11 @@ const Order = () => {
       }
     } catch (error) {
       console.error('Error during checkout:', error);
-      // Check if there's a response from the server
-      if (error.response) {
-        setError(error.response.data.message || 'Error during checkout');
-      } else {
-        setError('Network error, please try again later.');
-      }
+      setError(error.response?.data.message || 'Network error, please try again later.');
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
-  
-  
   const subtotal = cartTotal ? cartTotal.subtotal : 0;
   const itemDiscount= cartTotal ? cartTotal.itemDiscount : 0;
   const  couponDiscount= cartTotal ? cartTotal.couponDiscount : 0;
@@ -285,7 +282,8 @@ const Order = () => {
                       className="checkout-button"
                       disabled={cartItems.length === 0}
                     >
-                      PROCEED TO PAYMENT
+                     {loading ? 'Processing...' : 'Proceed to payment'.toUpperCase()}
+                     
                     </button>
                   </div>
                 </div>
