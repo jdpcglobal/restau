@@ -279,7 +279,7 @@ const saveCartTotal = async () => {
     } catch (error) {
       console.error('Error saving cart total:', error);
     }finally {
-      setLoading(false); // Reset loading state
+      setLoading(false); 
     }
   };
   
@@ -441,7 +441,7 @@ const saveCartTotal = async () => {
   </div>
               <div className='cart-promocode'>
                 <div>
-                  <p>If you want promo code list, enter it here:</p>
+                  <p>If you want coupon code list, enter it here:</p>
                   <div className='cart-promocode-input'>
   {appliedCoupon ? (
     <>
