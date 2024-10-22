@@ -449,12 +449,12 @@ const saveCartTotal = async () => {
         type='text'
         value={appliedCoupon.code}
         placeholder='Promo code'
-        readOnly // Prevent editing the applied code
+        readOnly 
       />
       <img
         src='/cross_icon.png'
         alt='Remove'
-        onClick={() => setAppliedCoupon(null)} // Remove the coupon
+        onClick={() => setAppliedCoupon(null)} 
         className='remove-icon'
       />
     </>
@@ -462,7 +462,7 @@ const saveCartTotal = async () => {
     <input
       type='text'
       placeholder='Enter promo code'
-      onClick={handlePromoClick} // Open promo code popup if needed
+      onClick={handlePromoClick} 
     />
   )}
   <button >Apply Coupon</button>

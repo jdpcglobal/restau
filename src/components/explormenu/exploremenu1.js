@@ -3,6 +3,7 @@ import './exploremenu2.css';
 
 const ExploreMenu = ({ category, setCategory }) => {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true); // Track loading state
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -12,6 +13,8 @@ const ExploreMenu = ({ category, setCategory }) => {
         setCategories(data);
       } catch (error) {
         console.error('Failed to fetch categories:', error);
+      } finally {
+        setLoading(false); // Stop loading after fetching data
       }
     };
 
@@ -25,18 +28,24 @@ const ExploreMenu = ({ category, setCategory }) => {
         Choose from a diverse menu featuring a delectable array of dishes. Our mission is to satisfy your craving and elevate
         your dining experience, one delicious meal at a time.
       </p>
-      <div className='explore-menu-list'>
-        {categories.map(categoryItem => (
-          <div
-            key={categoryItem.name}
-            className={`explore-menu-list-item ${category === categoryItem.name ? 'active' : ''}`}
-            onClick={() => setCategory(prev => (prev === categoryItem.name ? 'All' : categoryItem.name))}
-          >
-            <img src={categoryItem.imageUrl} alt={categoryItem.name} className='img' />
-            <p className='explore-menu-text'>{categoryItem.name}</p>
-          </div>
-        ))}
-      </div>
+
+      {loading ? (
+        <div className="loading">Loading...</div> 
+      ) : (
+        <div className='explore-menu-list'>
+          {categories.map(categoryItem => (
+            <div
+              key={categoryItem.name}
+              className={`explore-menu-list-item ${category === categoryItem.name ? 'active' : ''}`}
+              onClick={() => setCategory(prev => (prev === categoryItem.name ? 'All' : categoryItem.name))}
+            >
+              <img src={categoryItem.imageUrl} alt={categoryItem.name} className='img' />
+              <p className='explore-menu-text'>{categoryItem.name}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
       <hr />
     </div>
   );

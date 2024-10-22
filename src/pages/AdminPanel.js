@@ -14,6 +14,7 @@ import Gst from '../components/gst/gst1';
 import Coupon from '../components/coupon/coupon1';
 import Couponlist from '../components/couponlist/couponlist1';
 import AdminNavbar from '../components/adminnavbar/adminnavbar1';
+import Headerimage from '../components/headerback/headerimage';
 
 const AdminPanel = () => {
   const [selectedComponent, setSelectedComponent] = useState(''); // State to track the selected component
@@ -40,6 +41,8 @@ const AdminPanel = () => {
             return <Coupon />;
             case 'Couponlist':
               return <Couponlist />;
+              case 'headerimage':
+                return <Headerimage />;
       default:
         return ;
     }

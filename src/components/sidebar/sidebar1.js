@@ -28,7 +28,7 @@ const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
           onClick={() => setSelectedComponent('ListItems')}
         >
           <img src='/order_icon.png' alt="List Items" />
-          <p>List Items</p>
+          <p>Item List</p>
         </div>
         
         <div
@@ -36,7 +36,7 @@ const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
           onClick={() => setSelectedComponent('Orders')}
         >
           <img src='/order_icon.png' alt="Orders Items" />
-          <p>Orders Items</p>
+          <p>Item Orders</p>
         </div>
 
         <div
@@ -161,6 +161,30 @@ const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
          
           
           <p>Coupon List</p>
+        </div>
+        <div
+          className={`sidebar-option ${selectedComponent === 'headerimage' ? 'active' : ''}`}
+          onClick={() => setSelectedComponent('headerimage')}
+        >
+          <svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width="24"
+  height="24"
+  fill="none"
+  stroke="currentColor"
+  strokeWidth="2"
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  className="feather feather-list"
+>
+  <path d="M4 6h16M4 12h16M4 18h16" />
+  <path d="M2 6h2v2H2zm0 6h2v2H2zm0 6h2v2H2z" />
+</svg>
+          {/* <img src='/Coupon.png' alt="Orders Items" /> */}
+         
+          
+          <p>Header Image</p>
         </div>
         
         
