@@ -65,7 +65,11 @@ console.log( existingOrder);
     }
 console.log("cartTotal",cartTotal);
     const totalAmount = cartTotal. total; // Correctly access the total amount
-
+    const itemDiscount = cartTotal. itemDiscount;
+    const couponDiscount = cartTotal. couponDiscount;
+    const totalGst = cartTotal. totalGst;
+    const deliveryFee = cartTotal. deliveryFee;
+    const subtotal = cartTotal.subtotal;
     // Validate UPI payment
     if (paymentMethod === 'UPI') {
       if (!UTR || UTR.length !== 12) {
@@ -95,7 +99,12 @@ console.log("cartTotal",cartTotal);
         price: cartItem.foodId.price,
       })),
       totalAmount,
+      totalGst,
+      couponDiscount,
+      itemDiscount,
       paymentMethod,
+      deliveryFee,
+      subtotal,
       UTR: paymentMethod === 'CashOnDelivery' ? null : UTR,
       paymentStatus: paymentMethod === 'CashOnDelivery' ? 'Cash on Delivery' : 'Paid',
     });

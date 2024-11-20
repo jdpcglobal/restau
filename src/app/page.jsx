@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/navbar/navbar1.js';
 import Header from '../components/header/header1.js';
-import Exploremenu from '../components/explormenu/exploremenu1.js'; // Fixed typo
+import Exploremenu from '../components/explormenu/exploremenu1.js'; 
 import FoodDisplay from '../components/fooddisplay/fooddisplay1.js';
 import Footer from '../components/footer/footer1.js';
 import LoginPopup from '../components/loginpopup/loginpopup1.js';

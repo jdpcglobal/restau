@@ -106,5 +106,28 @@ width: 40px;
   .refresh{
     text-align: center;
   }
+  .pdf-button {
+   
+    color: black;
+   
+    
+    
+    cursor: pointer;
+    margin-top: 10px;
+    background-color: #ffe8e4;
+    border: 1px solid tomato;
+    width: max(14vw,120px);
+    padding:7px;
+    outline: none;
+    font-size: 14px;
+    font-weight: 300;
+  }
+  
+  .pdf-button:hover {
+    background-color: #fc9482;
+  }
+
+  
+  
   
   

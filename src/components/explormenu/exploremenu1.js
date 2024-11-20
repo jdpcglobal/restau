@@ -14,7 +14,7 @@ const ExploreMenu = ({ category, setCategory }) => {
       } catch (error) {
         console.error('Failed to fetch categories:', error);
       } finally {
-        setLoading(false); // Stop loading after fetching data
+        setLoading(false); 
       }
     };
 
@@ -39,7 +39,7 @@ const ExploreMenu = ({ category, setCategory }) => {
               className={`explore-menu-list-item ${category === categoryItem.name ? 'active' : ''}`}
               onClick={() => setCategory(prev => (prev === categoryItem.name ? 'All' : categoryItem.name))}
             >
-              <img src={categoryItem.imageUrl} alt={categoryItem.name} className='img' />
+              <img src={categoryItem.imageUrl} alt={categoryItem.name} className='img'/>
               <p className='explore-menu-text'>{categoryItem.name}</p>
             </div>
           ))}

@@ -19,6 +19,11 @@ const OrderPaymentSchema = new mongoose.Schema({
     },
   ],
   totalAmount: { type: Number, required: true },
+  itemDiscount: { type: Number, required: true },
+  couponDiscount: { type: Number, required: true },
+  totalGst: { type: Number, required: true },
+  deliveryFee: { type: Number, required: true },
+  subtotal: { type: Number, required: true },
   paymentMethod: {
     type: String,
     enum: ['UPI', 'CashOnDelivery'],
