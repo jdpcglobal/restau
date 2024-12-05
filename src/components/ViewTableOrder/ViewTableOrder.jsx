@@ -17,7 +17,10 @@ const AddTableContent = () => {
         const response = await fetch("/api/findtables");
         const data = await response.json();
         if (response.ok) {
+        
           setTables(data);
+         
+
         } else {
           setError(data.message || "Something went wrong");
         }
@@ -31,29 +34,64 @@ const AddTableContent = () => {
     fetchTables();
   }, []);
 
-  const handleStatusChange = async (tableId, newStatus) => {
-    try {
-      const response = await fetch(`/api/updatestatus`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tableId, status: newStatus }),
-      });
 
-      if (response.ok) {
-        setTables((prevTables) =>
-          prevTables.map((table) =>
-            table._id === tableId ? { ...table, status: newStatus } : table
-          )
-        );
-        toast.success("Status updated successfully!");
-      } else {
-        const data = await response.json();
-        toast.error(data.message || "Failed to update status");
+  const handleStatusChange = async (tableId, tableName, newStatus) => {
+    const previousStatus = tables.find((table) => table._id === tableId)?.status;
+  
+    try {
+      // Optimistically update the UI
+      setTables((prevTables) =>
+        prevTables.map((table) =>
+          table._id === tableId ? { ...table, status: newStatus } : table
+        )
+      );
+  
+      // API call to update the status in the database
+      const response = await fetch("/api/orderstatus", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tableName: tableName,
+          status: newStatus,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to update status in the database.");
       }
-    } catch (err) {
-      toast.error("Error updating status");
+  
+      const data = await response.json();
+      console.log("Updated table data:", data);
+  
+      // Show success toast after a successful API call
+      toast.success("Table status updated successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } catch (error) {
+      console.error("Error updating table status:", error);
+  
+      // Revert the status back if the update fails
+      setTables((prevTables) =>
+        prevTables.map((table) =>
+          table._id === tableId ? { ...table, status: previousStatus } : table
+        )
+      );
+  
+      // Show error toast
+      toast.error("Failed to update table status. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
+  
+  
+  
+  
+  
 
   const formatDate = (date) => {
     const newDate = new Date(date);
@@ -75,7 +113,7 @@ const AddTableContent = () => {
   const handleUpdate = (updatedTable) => {
     setTables((prevTables) =>
       prevTables.map((table) =>
-        table._id === updatedTable._id ? { ...table, ...updatedTable } : table
+        tables._id === updatedTable._id ? { ...table, ...updatedTable } : table
       )
     );
     setShowPopup(false); // Close the popup
@@ -106,6 +144,7 @@ const AddTableContent = () => {
           .slice()
           .reverse()
           .map((table, index) => (
+         
             <div key={table._id} className="table-row1">
               <div>{tables.length - index}</div>
               <div>{table.customerName}</div>
@@ -113,15 +152,18 @@ const AddTableContent = () => {
               <div>{formatDate(table.createdAt)}</div>
               <div>{table.totalPrice}</div>
               <div>
-                <select
-                  value={table.status}
-                  onChange={(e) => handleStatusChange(table._id, e.target.value)}
-                  className="status-dropdown"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="processing">Processing</option>
-                  <option value="completed">Completed</option>
-                </select>
+             <select
+  value={table.status} // Binds the current status to the dropdown
+  onChange={(e) => handleStatusChange(table._id, table.tableNumber, e.target.value)} // Calls the handler on change
+  className="status-dropdown" // Adds a class for styling
+>
+ 
+  <option value="occupied">Occupied</option>
+ <option value="reserved">Reserved</option>
+  <option value="available">Available</option>
+</select>
+
+
               </div>
               <div>
                 <button
@@ -137,7 +179,7 @@ const AddTableContent = () => {
             </div>
           ))}
       </div>
-
+ 
       {/* Render the UpdatePopup when showPopup is true */}
       {showPopup && (
         <UpdatePopup

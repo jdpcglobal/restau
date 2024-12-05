@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         maxPax,
         orderItems,
         totalPrice,
-        status,
+        
       } = req.body;
 
       // Validate tableNumber
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
         maxPax,
         orderItems,
         totalPrice,
-        status,
+        
       });
 
       const savedOrder = await newOrder.save();

@@ -15,18 +15,14 @@ const TablesaveSchema = new mongoose.Schema(
         quantity: { type: Number, default: 1 },
         itemstatus: {
           type: String,
-          enum: ["pending", "Preparing", "Ready", "Served", "Cancelled"],
-          default: "pending",
+          enum: ["Pending", "Preparing", "Ready", "Served", "Cancelled"],
+          default: "Pending",
         },
         total: { type: Number, required: true },
       },
     ],
     totalPrice: { type: Number, required: true },
-    status: {
-      type: String,
-      enum: ["pending", "processing", "completed" ],
-      default: "pending",
-    },
+   
     createdDate: { type: Date, default: Date.now },
   },
   { timestamps: true }

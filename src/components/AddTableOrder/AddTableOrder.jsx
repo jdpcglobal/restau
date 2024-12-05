@@ -115,7 +115,7 @@ const AddTableOrder = ({ selectedTable, totalSeats, onClose, onPlaceOrder }) => 
       setCustomerNameError(true);
       return;
     }
-
+  
     const orderData = {
       customerName,
       mobileNumber,
@@ -125,7 +125,7 @@ const AddTableOrder = ({ selectedTable, totalSeats, onClose, onPlaceOrder }) => 
       orderItems,
       totalPrice: calculateTotalPrice(),
     };
-
+  
     try {
       setLoading(true);
       const response = await fetch("/api/savetable", {
@@ -135,39 +135,56 @@ const AddTableOrder = ({ selectedTable, totalSeats, onClose, onPlaceOrder }) => 
         },
         body: JSON.stringify(orderData),
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
-        toast.success("Order added successfully!", {
-       
-          autoClose: 3000,
+        // Update table status to "occupied"
+        const updateResponse = await fetch("/api/updatestatus1", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            tableName: selectedTable,
+            status: "occupied",
+          }),
         });
-
-        // Close the popup and reset the form
-        onClose();
-        onPlaceOrder(data);
-        setCustomerName("");
-        setMobileNumber("");
-        setSeatNumber("");
-        setOrderItems([]);
+  
+        const updateData = await updateResponse.json();
+  
+        if (updateResponse.ok) {
+          toast.success("Order added and table status updated successfully!", {
+            autoClose: 3000,
+          });
+  
+          // Reset form and close popup
+          onClose();
+          onPlaceOrder(data);
+          setCustomerName("");
+          setMobileNumber("");
+          setSeatNumber("");
+          setOrderItems([]);
+        } else {
+          toast.error(updateData.error || "Failed to update table status", {
+            autoClose: 3000,
+          });
+        }
       } else {
         toast.error(data.message || "Failed to place the order", {
-        
           autoClose: 3000,
         });
       }
     } catch (error) {
       console.error("Error placing order:", error);
       toast.error("An error occurred while placing the order", {
-       
-
         autoClose: 3000,
       });
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="popup-overlay">

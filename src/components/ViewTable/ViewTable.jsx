@@ -28,10 +28,13 @@ const ViewTableContent = ({ onTableSelect }) => {
     fetchTables();
   }, []);
 
-  const handleTableClick = (tableId, totalSeats) => {
-    const newSelection = selectedTable === tableId ? null : tableId;
-    setSelectedTable(newSelection);
-    onTableSelect(newSelection, totalSeats); // Pass both table ID and total seats
+  const handleTableClick = (tableId, totalSeats, status) => {
+    // Only allow selecting available tables
+    if (status === "available") {
+      const newSelection = selectedTable === tableId ? null : tableId;
+      setSelectedTable(newSelection);
+      onTableSelect(newSelection, totalSeats); // Pass both table ID and total seats
+    }
   };
 
   if (loading) return <div className="loading">Loading...</div>;
@@ -42,15 +45,23 @@ const ViewTableContent = ({ onTableSelect }) => {
       <div className="table-row-order">
         {tables.map((table) => (
           <div
-            key={table._id} // Use table's unique ID from the database
-            className={`table-item-order ${selectedTable === table.tableName ? "selected" : ""}`}
-            onClick={() => handleTableClick(table.tableName, table.seatNumber)}
+            key={table._id}
+            className={`table-item-order 
+              ${selectedTable === table.tableName ? "selected" : ""} 
+              ${table.status === "occupied" ? "occupied" : ""}
+              ${table.status === "reserved" ? "reserved" : ""}
+              ${table.status === "available" ? "available" : ""}`}
+            onClick={() => handleTableClick(table.tableName, table.seatNumber, table.status)}
           >
             <span className="table-label">{table.tableName}</span>
-          
+
             <FontAwesomeIcon
               icon={faUserGroup}
-              className={`people-icon ${selectedTable === table.tableName ? "selected-icon" : ""}`}
+              className={`people-icon 
+                ${selectedTable === table.tableName ? "selected-icon" : ""}
+                ${table.status === "occupied" ? "occupied-icon" : ""}
+                ${table.status === "reserved" ? "reserved-icon" : ""}
+                ${table.status === "available" ? "available-icon" : ""}`}
             />
           </div>
         ))}
