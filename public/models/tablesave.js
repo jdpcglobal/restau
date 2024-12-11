@@ -9,8 +9,10 @@ const TablesaveSchema = new mongoose.Schema(
     maxPax: { type: Number, required: true },
     orderItems: [
       {
-        itemId: { type: mongoose.Schema.Types.ObjectId, ref: "Item" },
+        itemId: { type: mongoose.Schema.Types.ObjectId, ref: "Item" ,required:true},
         name: { type: String, required: true },
+        discount: { type: Number, required: true },
+        gstRate: { type: Number, required: true },
         price: { type: Number, required: true },
         quantity: { type: Number, default: 1 },
         itemstatus: {

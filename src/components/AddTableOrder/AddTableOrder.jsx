@@ -77,6 +77,9 @@ const AddTableOrder = ({ selectedTable, totalSeats, onClose, onPlaceOrder }) => 
         price: selectedItem.price,
         quantity: 1,
         total: selectedItem.price,
+        itemId: selectedItem._id,
+        discount:selectedItem.discount,
+        gstRate:selectedItem.gstRate,
       };
       setOrderItems((prevItems) => [...prevItems, newItem]);
     }

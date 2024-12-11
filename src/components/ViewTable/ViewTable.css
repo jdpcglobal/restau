@@ -99,7 +99,7 @@
 }
 
 .table-item-order.occupied .people-icon {
-  color: #149214;
+  color:aliceblue;
 }
 
 .table-item-order.reserved .people-icon {
@@ -125,7 +125,7 @@
 
 @media (max-width: 768px) {
   .table-row-order {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns on small screens */
+    grid-template-columns: repeat(5, 1fr); /* 2 columns on small screens */
   }
 
   .table-item-order {
@@ -145,8 +145,13 @@
 
 @media (max-width: 480px) {
   .table-row-order {
-    grid-template-columns: repeat(1, 1fr); /* 1 column on very small screens */
+    grid-template-columns: repeat(3, 1fr);
+    /* 1 column on very small screens */
   }
+  .table-container{
+    margin: 0px 0px;
+  }
+ 
 
   .table-item-order {
     width: 100%;
@@ -166,8 +171,8 @@
 
 /* Specific Styles for Different Statuses */
 .table-item-order.occupied {
-  background-color: #47df47;
-  border-color: #47df47;
+  background-color: green;
+  border-color: darkgreen;
 }
 
 .table-item-order.reserved {

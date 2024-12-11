@@ -154,11 +154,19 @@ body {
   .table-row {
     grid-template-columns: repeat(2, 1fr);
   }
+  .table-item{
+    width: 100%;
+    height: auto;
+  }
 }
 
 @media (max-width: 768px) {
   .table-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(4,1fr);
+  }
+  .table-item{
+    width: 100%;
+    height: auto;
   }
 
   .table-item {
@@ -180,13 +188,17 @@ body {
   body {
     padding: 10px;
   }
+  .table-item{
+    width: 100%;
+    height: auto;
+  }
 
   .table-container {
     padding: 10px;
   }
 
   .table-row {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2,1fr);
     gap: 10px;
   }
 

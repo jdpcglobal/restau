@@ -56,11 +56,15 @@ const UpdatePopup = ({ table, onClose, onUpdate }) => {
     if (!selectedItem) return;
 
     const newItem = {
+      itemId: selectedItem._id,
       name: selectedItem.name,
       price: selectedItem.price,
       quantity: 1,
       total: selectedItem.price,
-      itemstatus: "Pending", // Default status
+      itemstatus: "Pending", 
+      discount: selectedItem.discount,
+      gstRate:selectedItem.gstRate,
+      
     };
 
     setOrderItems((prevItems) => {
@@ -118,7 +122,10 @@ const UpdatePopup = ({ table, onClose, onUpdate }) => {
         body: JSON.stringify({
           tableId: table._id, // Table ID
           itemId: orderItems[index]._id, // Item ID
-          newStatus, // New status selected by the user
+          newStatus,
+          
+          
+           // New status selected by the user
         }),
       });
   
@@ -146,12 +153,12 @@ const UpdatePopup = ({ table, onClose, onUpdate }) => {
       orderItems,
       totalPrice: calculateTotalPrice(),
     };
-
+  
     if (!table._id) {
       console.error("Table ID is missing");
       return;
     }
-
+  
     try {
       setLoading(true);
       const response = await fetch("/api/updatetable", {
@@ -164,14 +171,14 @@ const UpdatePopup = ({ table, onClose, onUpdate }) => {
           updatedOrderData,
         }),
       });
-
+  
       const result = await response.json();
       setLoading(false);
-
+  
       if (response.ok) {
         toast.success("Order updated successfully!", { autoClose: 3000 });
-        onUpdate(result.table);
-        onClose();
+        onUpdate(result.table); // Update parent component state with the latest data
+        onClose(); // Close the popup
       } else {
         console.error(result.message || "Failed to update the order");
       }
@@ -180,6 +187,7 @@ const UpdatePopup = ({ table, onClose, onUpdate }) => {
       console.error("Error updating order:", error);
     }
   };
+  
 
   return (
     <div className="popup-overlay">

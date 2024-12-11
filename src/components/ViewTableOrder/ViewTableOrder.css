@@ -154,6 +154,12 @@
   border: 1px solid tomato;
   color: #f44336;
 }
+.btn.edit-btn:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
 
 
 @keyframes pulse {

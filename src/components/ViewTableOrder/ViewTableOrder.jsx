@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import UpdatePopup from "../../components/updatetable"; // Ensure the path to UpdatePopup is correct
 import "react-toastify/dist/ReactToastify.css"; // Import styles for react-toastify
-import "./ViewTableOrder.css"; // Ensure your CSS file path is correct
+import "./ViewTableOrder.css"; // Ensure your CSS file path is correct\\
+import BillPopup from "../../components/ViewBill/ViewBillPopup";
 
 const AddTableContent = () => {
   const [tables, setTables] = useState([]);
@@ -10,6 +11,7 @@ const AddTableContent = () => {
   const [error, setError] = useState(null);
   const [selectedTable, setSelectedTable] = useState(null); // For the update popup
   const [showPopup, setShowPopup] = useState(false); // Toggle the update popup visibility
+  const [showBillPopup, setShowBillPopup] = useState(false);
 
   useEffect(() => {
     const fetchTables = async () => {
@@ -109,6 +111,14 @@ const AddTableContent = () => {
   const handlePopupClose = () => {
     setShowPopup(false); // Close the popup
   };
+  const handleViewBills = (table) => {
+    setSelectedTable(table);
+    setShowBillPopup(true);
+  };
+
+  const handleBillPopupClose = () => {
+    setShowBillPopup(false);
+  };
 
   const handleUpdate = (updatedTable) => {
     setTables((prevTables) =>
@@ -166,15 +176,19 @@ const AddTableContent = () => {
 
               </div>
               <div>
-                <button
-                  className="btn edit-btn"
-                  onClick={() => handleUpdateClick(table)} // Trigger the update popup
-                >
-                  Update
-                </button>
+               <button
+  className="btn edit-btn"
+  onClick={() => table.status !== "available" && handleUpdateClick(table)} // Only trigger if status is not 'available'
+  disabled={table.status === "available"} // Disable the button if status is 'available'
+>
+  Update
+</button>
+
               </div>
               <div>
-                <button className="btn view-btn">View Bills</button>
+              <button className="btn view-btn" onClick={() => handleViewBills(table)}>
+                View Bills
+              </button>
               </div>
             </div>
           ))}
@@ -187,6 +201,11 @@ const AddTableContent = () => {
           onClose={handlePopupClose}
           onUpdate={handleUpdate} // Pass the update handler to the popup
         />
+        
+      )}
+      
+       {showBillPopup && (
+        <BillPopup table={selectedTable} onClose={handleBillPopupClose} />
       )}
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
     </div>
