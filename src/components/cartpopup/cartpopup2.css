@@ -19,6 +19,10 @@
   display: flex; /* Arrange items in a row */
   align-items: center;
   gap: 5px; /* Align vertically in the center */
+  justify-content: center;
+}
+.quantity-item {
+  text-align: -webkit-center;
 }
 
 .original-price2 {

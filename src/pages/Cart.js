@@ -312,10 +312,10 @@ const saveCartTotal = async () => {
               <div className='cart-header1'>
                 <span>Item</span>
                 <span>Title</span>
-                <span>Price</span>
-                <span>Quantity</span>
+                <span>Rate</span>
+                <span>Qty</span>
                 <span>Tax</span>
-                 <span>Total</span> 
+                 <span>Amount</span> 
                 <span>Remove</span>
                
               </div>
@@ -334,18 +334,22 @@ const saveCartTotal = async () => {
         <div className='cart-item-details'>
           <h3>{item.foodId ? item.foodId.name : 'Unknown Item'}</h3>
         </div>
+       
         <div className='cart-item-price1'>
           {/* Original Price with Strikethrough */}
           <p className='original-price2'>₹{item.foodId ? item.foodId.price: 'N/A'}</p>
+         
           <p className='discounted-price3'>
             ₹{item.foodId ? (item.foodId.price - (item.foodId.price * (item.foodId.discount / 100))) : 'N/A'}
           </p>
         </div>
-
+       
+<div className='quantity-item'>
         <div className='cart-item-quantity'>
           <button onClick={() => decrementQuantity(item._id, item.quantity)}>-</button>
           <p>{item.quantity}</p>
           <button onClick={() => incrementQuantity(item._id, item.quantity)}>+</button>
+        </div>
         </div>
         <div className='cart-item-price'>
           <p>{item.foodId ? item.foodId.gstRate : 'N/A'}%</p>
