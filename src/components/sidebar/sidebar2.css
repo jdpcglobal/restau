@@ -3,7 +3,14 @@
     height: 100vh; /* Full viewport height */
     overflow: hidden; /* Prevent overflow on the container */
 }
+.sidebar-option:hover svg {
+    stroke: white;
+  }
 
+  .sidebar-option svg {
+    stroke: black;
+  }
+  
 /* Sidebar styling */
 .sidebar {
     width: 18%;

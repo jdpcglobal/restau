@@ -140,6 +140,37 @@ const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
           <p>Coupon</p>
         </div>
         <div
+  className={`sidebar-option ${selectedComponent === 'Settable' ? 'active' : ''}`}
+  onClick={() => setSelectedComponent('Settable')}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    fill="none"
+    stroke={selectedComponent === 'Settable' ? 'black' : '#007BFF'} /* Black stroke when active, white stroke on hover */
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-layout"
+  >
+    <rect x="3" y="3" width="18" height="18" fill="none" stroke="currentColor" />
+    <path d="M3 9h18M9 3v18M15 3v18" />
+  </svg>
+  <p>Manage Table</p>
+</div>
+
+
+
+
+
+
+
+
+
+       
+        <div
           className={`sidebar-option ${selectedComponent === 'Couponlist' ? 'active' : ''}`}
           onClick={() => setSelectedComponent('Couponlist')}
         >
@@ -187,7 +218,7 @@ const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
   </svg>
   <p>Header Image</p>
 </div>
-        
+ 
         
       </div>
     </div>

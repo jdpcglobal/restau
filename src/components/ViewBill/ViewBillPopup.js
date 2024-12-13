@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./ViewBillPopup.css";
 
 const ViewBillPopup = ({ table, onClose }) => {
@@ -17,10 +18,8 @@ const ViewBillPopup = ({ table, onClose }) => {
 
     const discountedTotal = table.totalPrice - totalDiscount;
 
-    // Extra discount on the already discounted total
     const extraDiscountAmount = (discountedTotal * extraDiscount) / 100;
 
-    // GST on the final discounted amount
     const gstAmount = table.orderItems.reduce((gstTotal, item) => {
       const itemPrice = item.price * item.quantity;
       const itemDiscountedPrice = itemPrice - (itemPrice * item.discount) / 100;
@@ -28,7 +27,6 @@ const ViewBillPopup = ({ table, onClose }) => {
       return gstTotal + (itemExtraDiscountedPrice * item.gstRate) / 100;
     }, 0);
 
-    // Final price calculation
     const calculatedFinalPrice = discountedTotal - extraDiscountAmount + gstAmount;
     setFinalPrice(calculatedFinalPrice);
   };
@@ -42,6 +40,140 @@ const ViewBillPopup = ({ table, onClose }) => {
     const discountedPrice = itemPrice - (itemPrice * item.discount) / 100;
     return gstTotal + (discountedPrice * item.gstRate) / 100;
   }, 0);
+
+  const handleTableStatusUpdate = async () => {
+    try {
+      // Update table status to "available"
+      const response = await axios.put('/api/updateTableStatus', {
+        tableName: table.tableNumber,
+        status: "available"
+      });
+
+      if (response.status === 200) {
+        // Print bill after successfully updating the table status
+        printBill();
+      } else {
+        console.error('Failed to update table status');
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+    }
+  };
+
+  const printBill = () => {
+    // Logic to prepare the bill
+    const billContent = `
+    <div style="font-family: Arial, sans-serif; font-size: 14px; padding: 10px; line-height: 1.4; max-width: 300px; margin: 0 auto;">
+      <h2 style="text-align: center; margin-bottom: 10px;">Restaurant Table Order</h2>
+      <div style="text-align: center; margin-bottom: 10px;">
+        Restaurant Address, City, State, ZIP
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12px;">
+        <div>Customer: ${table.customerName}</div>
+        <div>Table: ${table.tableNumber}</div>
+        <div>Date: ${new Date(table.createdAt).toLocaleDateString()}</div>
+      </div>
+       <div style="border-bottom: 1px dotted #000; margin-top: 10px; margin-bottom: 10px;"></div>
+      <div style="margin-bottom: 10px; font-weight: bold; font-size: 12px;">
+        <div style="display: flex; justify-content: space-between; text-align: center;">
+          <span style="flex: 2;">Item Name</span>
+          <span style="flex: 1;">Qty</span>
+          <span style="flex: 1;">Price</span>
+          <span style="flex: 1;">Total</span>
+        </div>
+      </div>
+      <div style="border-bottom: 1px dotted #000; margin-bottom: 10px;"></div>
+      ${table.orderItems
+        .map(
+          (item) => `
+        <div style="display: flex; justify-content: space-between; text-align: center; font-size: 12px;">
+          <span style="flex: 2;">${item.name}</span>
+          <span style="flex: 1;">${item.quantity}</span>
+          <span style="flex: 1;">₹${item.price.toFixed(2)}</span>
+          <span style="flex: 1;">₹${(item.price * item.quantity).toFixed(2)}</span>
+        </div>`
+        )
+        .join('')}
+      <div style="border-bottom: 1px dotted #000; margin-top: 10px; margin-bottom: 10px;"></div>
+      <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 14px;">
+       <span>Total Price:</span>
+      <span>₹
+      ${table.totalPrice}
+      </span>
+      </div>
+       <div style="border-bottom: 1px dotted #000; margin-top: 10px; margin-bottom: 10px;"></div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px;">
+        <span>Extra Discount:</span>
+        <span>-₹${table.orderItems
+          .reduce(
+            (total, item) =>
+              total + (item.price * item.quantity * item.discount) / 100,
+            0
+          )
+          .toFixed(2)}</span>
+      </div>
+       <div style="display: flex; justify-content: space-between; font-size: 12px;">
+        <span>Total GST:</span>
+          <span>+₹${(
+          table.orderItems.reduce((gstTotal, item) => {
+            const itemPrice = item.price * item.quantity;
+            const discountedPrice = itemPrice - (itemPrice * item.discount) / 100;
+            return gstTotal +  (discountedPrice * item.gstRate) / 100; 
+          }, 0)
+        ).toFixed(2)}</span>
+      </div>
+     
+      <div style="border-bottom: 1px dotted #000; margin-top: 10px; margin-bottom: 10px;"></div>
+     
+     
+      <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 14px;">
+        <span>Final Price:</span>
+        <span>₹${(
+          table.totalPrice -
+          table.orderItems.reduce(
+            (total, item) => (item.price * item.quantity * item.discount) / 100,
+            0
+          ) +
+          table.orderItems.reduce((gstTotal, item) => {
+            const itemPrice = item.price * item.quantity;
+            const discountedPrice = itemPrice - (itemPrice * item.discount) / 100;
+            return gstTotal + (discountedPrice * item.gstRate) / 100;
+          }, 0)
+        ).toFixed(2)}</span>
+      </div>
+      <div style="display: flex; align-items: center; font-weight: bold; font-size: 14px; margin-top: 10px; margin-bottom: 20px;">
+  <div style="flex: 1; border-top: 1px dotted #000;"></div>
+  <div style="padding: 0 10px; text-align: center;">
+ HAVE A NICE DAY
+  </div>
+  <div style="flex: 1; border-top: 1px dotted #000;"></div>
+</div>
+
+   
+   </div>
+    `;
+  
+    // Open a new window for printing
+    const printWindow = window.open('', '', 'width=350,height=600');
+    printWindow.document.write(`<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Bill</title>
+    </head>
+    <body>
+      ${billContent}
+    </body>
+    </html>`);
+    printWindow.document.close();
+    printWindow.print();
+  };
+  
+ 
+  
+  
+  
 
   return (
     <div className="popup-overlay1">
@@ -116,18 +248,6 @@ const ViewBillPopup = ({ table, onClose }) => {
             <strong className="customer-name1">Discount:</strong>
             <span className="customer-name"> -₹{totalDiscount.toFixed(2)}</span>
           </div>
-          <div className="extra-item">
-            <strong className="customer-name1">Extra Discount:</strong>
-            <span className="customer-name">
-              -₹{(
-                ((table.totalPrice - totalDiscount) * extraDiscount) / 100
-              ).toFixed(2)}
-            </span>
-          </div>
-          <div className="extra-item">
-            <strong className="customer-name1">GST:</strong>
-            <span className="customer-name"> +₹{gstOnDiscountedPrice.toFixed(2)}</span>
-          </div>
           <div className="extra-item extra-discount">
             <input
               type="number"
@@ -138,11 +258,25 @@ const ViewBillPopup = ({ table, onClose }) => {
               style={{ width: "150px" }}
             />
           </div>
+          <div className="extra-item">
+            <strong className="customer-name1">Extra Discount:</strong>
+            <span className="customer-name">
+              -₹{(
+                ((table.totalPrice - totalDiscount) * extraDiscount) / 100
+              ).toFixed(2)}
+            </span>
+          </div>
+          
+          <div className="extra-item">
+            <strong className="customer-name1">GST:</strong>
+            <span className="customer-name"> +₹{gstOnDiscountedPrice.toFixed(2)}</span>
+          </div>
+         
         </div>
 
         {/* Footer Section */}
         <div className="popup-footer">
-          <button className="print-btn" onClick={() => window.print()}>
+          <button className="print-btn" onClick={handleTableStatusUpdate}>
             Print Bill
           </button>
           <div className="final-total">

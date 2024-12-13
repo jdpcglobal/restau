@@ -6,7 +6,8 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      const tables = await Table.find(); // Fetch all tables
+      // Fetch only tables with tablestatus set to "active"
+      const tables = await Table.find({ tablestatus: "active" }); 
       return res.status(200).json({ tables });
     } catch (error) {
       console.error("Error fetching tables:", error);

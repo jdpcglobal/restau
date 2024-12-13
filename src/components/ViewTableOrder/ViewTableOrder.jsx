@@ -1,3 +1,4 @@
+// viewtableorder
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import UpdatePopup from "../../components/updatetable"; // Ensure the path to UpdatePopup is correct
@@ -121,9 +122,10 @@ const AddTableContent = () => {
   };
 
   const handleUpdate = (updatedTable) => {
+    console.log("updatedTable",updatedTable);
     setTables((prevTables) =>
       prevTables.map((table) =>
-        tables._id === updatedTable._id ? { ...table, ...updatedTable } : table
+        table._id === updatedTable._id ? { ...table, ...updatedTable } : table
       )
     );
     setShowPopup(false); // Close the popup

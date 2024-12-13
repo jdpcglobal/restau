@@ -18,6 +18,12 @@ const TableSchema = new mongoose.Schema(
       enum: ["occupied", "reserved","available"], // Define allowed values
       default: "available", // Set default value
     },
+    tablestatus: {
+      type: String,
+      required: true,
+      enum: ["active", "inactive"], // Define allowed values
+      default: "active", // Set default value
+    },
   },
   {
     timestamps: true,

@@ -114,7 +114,7 @@
 }
 
 .print-btn {
-  background: tomato;
+  background: rgb(243, 65, 34);
   color: #fff;
   border: none;
   padding: 8px 15px;
@@ -166,6 +166,7 @@
     padding: 6px 8px;
   }
 }
+
 .extra-section {
   border: 1px solid #ccc;
   padding: 5px;
@@ -177,6 +178,7 @@
   border-top: none;
  
 }
+
 
 .extra-item {
   display: flex;

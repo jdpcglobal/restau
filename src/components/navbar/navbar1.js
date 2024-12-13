@@ -7,15 +7,21 @@ import { useRouter } from 'next/navigation';
 
 const Navbar = ({ isLoggedIn, setShowLogin, handleLogout, setShowCart }) => {
   const [menu, setMenu] = useState("Home");
+  const [isLoading, setIsLoading] = useState(false); // State for loading spinner
   const router = useRouter();
 
-  const handleCheckoutClick = () => {
-    if (!isLoggedIn) {
-      setShowLogin(true); // Show login popup if not logged in
-    } else {
-      router.push('/Cart'); // Redirect to cart page if logged in
-    }
+  const handleCheckoutClick = async () => {
+    setIsLoading(true); // Show spinner
+    setTimeout(async () => { // Simulate a delay for loading
+      if (!isLoggedIn) {
+        setShowLogin(true); // Show login popup if not logged in
+      } else {
+        await router.push('/Cart'); // Redirect to cart page if logged in
+      }
+      setIsLoading(false); // Hide spinner after navigation
+    }, 1500); // Adjust delay as necessary
   };
+
   const handleOrderClick = () => {
     router.push('/MyOrder'); // Replace '/order' with the actual path to your order page
   };
@@ -37,14 +43,14 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout, setShowCart }) => {
             </a>
           </li>
           <li>
-  <a 
-    href='About-us' 
-    onClick={() => setMenu("About us")} 
-    className={menu === "About us" ? "active" : ""}
-  >
-    About us
-  </a>
-</li>
+            <a 
+              href='About-us' 
+              onClick={() => setMenu("About us")} 
+              className={menu === "About us" ? "active" : ""}
+            >
+              About us
+            </a>
+          </li>
           <li>
             <a 
               href='/' 
@@ -69,13 +75,19 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout, setShowCart }) => {
         <Image src={assets.search_icon} alt="Search" className="searchButton" />
       </div>
       <div className='navbar-search-icon'>
-        <Image 
-          src={assets.basket_icon} 
-          alt='Cart' 
-          onClick={handleCheckoutClick}
-          className="basketIcon"
-        />
-        <div className='dot'></div>
+        {isLoading ? (
+          <div className="spinner"></div> // Show spinner when loading
+        ) : (
+          <>
+            <Image 
+              src={assets.basket_icon} 
+              alt='Cart' 
+              onClick={handleCheckoutClick}
+              className="basketIcon"
+            />
+            <div className='dot'></div>
+          </>
+        )}
       </div>
 
       {isLoggedIn ? (
