@@ -43,8 +43,13 @@
 
 .login-popup-title img {
   cursor: pointer;
+  
 }
 
+.login-popup-title img:hover{
+  transform: scale(1.3);
+
+}
 .login-popup-inputs {
   margin: 15px 0;
 }
@@ -167,13 +172,15 @@ span.icon.success-icon{
   color: #007bff; /* Primary color for clickable text */
   font-weight: bold;
   cursor: pointer;
-
+  text-decoration: underline;
   margin-left: 3px;
+  
 }
+
 
 .resend-otp .request-again:hover {
   color: #0056b3; /* Darker shade on hover */
-  text-decoration: underline;
+ text-decoration: none;
 }
 
 /* Disable interaction if resend is on cooldown */
