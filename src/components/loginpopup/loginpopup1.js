@@ -10,7 +10,7 @@ const countryCodes = [
   { code: '+44', flag: '🇬🇧' },
 ];
 
-const OTP_EXPIRY_TIME = 30; // For OTP expiration countdown
+const OTP_EXPIRY_TIME = 30*2; // For OTP expiration countdown
 const TOKEN_EXPIRY_TIME = 3600 * 9000000000; // Token expires in 1 hour (3600 seconds)
 
 const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
@@ -227,21 +227,32 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
           {currentState === "Enter details" && !isOtpSent && (
             <button type="submit">Send OTP</button>
           )}
-          {isOtpSent && (
-            <>
-              <span className='icon success-icon'>✔️</span>
-              <button type="submit" disabled={loading}>Verify OTP</button>
-              <p className='otp-expiry-info'>
-                {otpExpiry > 0 ? `Expires in: ${otpExpiry} seconds` : "OTP expired"}
-              </p>
-              {otpExpiry <= 0 && (
-                <button type="button" onClick={handleResendOtp} disabled={loading}>
-                  Resend OTP
-                </button>
-              )}
-            </>
-          )}
-        </div>
+         {isOtpSent && (
+  <>
+    
+    <button type="submit" disabled={loading}>Verify OTP</button>
+    <p className='otp-expiry-info'>
+      {otpExpiry > 0 ? `Expires in: ${otpExpiry} seconds` : ""}
+    </p>
+  </>
+)}
+</div>
+{isOtpSent && otpExpiry <= 0 && (
+  <div className="resend-otp-container">
+    <p className="resend-otp">
+      Didn’t receive code? 
+      <span 
+        className='request-again' 
+        onClick={handleResendOtp} 
+        disabled={loading}
+      >
+        Request again
+      </span>
+    </p>
+  </div>
+)}
+
+        
       </form>
     </div>
   );
