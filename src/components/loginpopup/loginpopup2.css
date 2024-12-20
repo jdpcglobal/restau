@@ -64,7 +64,8 @@
     font-size: 14px;
   margin-right: 10px;
   border: 1px solid tomato;
-  padding: 7px;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .mobile-number-input input,
@@ -78,6 +79,7 @@
 p.otp-expiry-info{
   font-size: 12px;
     margin-top: 10px;
+    color: gray;
 }
 span.icon.success-icon{
   margin-top: 10px;
@@ -97,6 +99,9 @@ span.icon.success-icon{
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+.button-container button:hover{
+  background-color: rgb(247, 41, 5);
 }
 
 .button-container button:disabled {
@@ -133,6 +138,7 @@ span.icon.success-icon{
   font-size: 0.9rem;
   color: #555; /* Muted text color */
   margin: 0;
+  margin-top: 10px;
   
 }
 .otp-input input {
@@ -174,6 +180,7 @@ span.icon.success-icon{
   cursor: pointer;
   text-decoration: underline;
   margin-left: 3px;
+ 
   
 }
 
@@ -188,4 +195,54 @@ span.icon.success-icon{
   color: #aaa;
   cursor: not-allowed;
   text-decoration: none;
+}
+
+/* OTP Input Styles */
+.otp-container {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  margin-top: 10px;
+}
+
+.otp-input {
+  width: 45px;
+  height: 45px;
+  font-size: 18px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.otp-input:focus {
+  border-color: tomato; /* Green border on focus */
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.otp-input:disabled {
+  background-color: #f5f5f5; /* Light gray for disabled state */
+  border-color: #ddd;
+  cursor: not-allowed;
+}
+
+.otp-container .otp-input:not(:last-child) {
+  margin-right: 5px;
+}
+
+@media (max-width: 768px) {
+  .otp-input {
+    width: 35px;
+    height: 35px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .otp-input {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
 }
