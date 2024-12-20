@@ -135,6 +135,7 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
           <button onClick={closePopup}>Close</button>
         </div>
       )}
+      <div className='back-navbar'>
       <div className='app'>
         <div className="navbar-fixed">
           <Navbar
@@ -150,6 +151,9 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
             />
           </div>
         </div>
+        </div>
+        </div>
+        <div className='app'>
         <div className='order-payment-wrapper'>
           <div className='order-payment-container'>
             <div className='column options-column'>

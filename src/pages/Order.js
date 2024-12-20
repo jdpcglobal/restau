@@ -183,6 +183,7 @@ const Order = () => {
       {showLogin && !isLoggedIn && (
         <LoginPopup setShowLogin={setShowLogin} setIsLoggedIn={setIsLoggedIn} />
       )}
+      <div className='back-navbar'>
       <div className="app">
         <div className="navbar-fixed">
           <Navbar
@@ -198,6 +199,9 @@ const Order = () => {
             />
           </div>
         </div>
+        </div>
+        </div>
+        <div className="app">
         <div className="cart-page">
           <div className="back-arrow">
             <FontAwesomeIcon

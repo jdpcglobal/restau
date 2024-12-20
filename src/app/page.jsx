@@ -47,7 +47,7 @@ const Page = () => {
       {showLogin && !isLoggedIn && (
         <LoginPopup setShowLogin={setShowLogin} setIsLoggedIn={setIsLoggedIn} />
       )}
-      
+      <div className='back-navbar'>
       <div className='app'>
         <div className="navbar-fixed">
           <Navbar 
@@ -56,7 +56,10 @@ const Page = () => {
             handleLogout={handleLogout} 
             setShowCart={setShowCart} 
           />
+          </div>
         </div>
+        </div>
+        <div className='app'>
         <Header />
         <Exploremenu category={category} setCategory={setCategory} />
         <FoodDisplay 

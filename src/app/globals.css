@@ -40,6 +40,13 @@ a{
 .app{
   padding-top: 60px;
 }
+.back-navbar{
+  background-color: #fff;
+  z-index: 5;
+  position: fixed;
+  width: 100%;
+  height: 80px;
+}
 @media (max-width: 768px) {
   .app {
     padding-top: 30px;

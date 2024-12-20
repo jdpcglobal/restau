@@ -164,6 +164,7 @@ const CartPage = () => {
           <button onClick={closePopup}>Close</button>
         </div>
       )}
+      <div className='back-navbar'>
       <div className='app'>
         <div className="navbar-fixed">
           <Navbar 
@@ -179,7 +180,9 @@ const CartPage = () => {
             />
           </div>
         </div>
-
+        </div>
+        </div>
+        <div className='app'>
         <div className='my-orders'>
           <h2>My Orders</h2>
           {error && <p className="error">{error}</p>}

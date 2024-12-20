@@ -289,6 +289,7 @@ const saveCartTotal = async () => {
       {showLogin && !isLoggedIn && (
         <LoginPopup setShowLogin={setShowLogin} setIsLoggedIn={setIsLoggedIn} />
       )}
+      <div className='back-navbar'>
       <div className='app'>
         <div className="navbar-fixed">
           <Navbar 
@@ -304,6 +305,9 @@ const saveCartTotal = async () => {
             />
           </div>
         </div>
+        </div>
+        </div>
+        <div className='app'>
         <div className="cart-page">
           
           <div className='cart-container'>
