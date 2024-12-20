@@ -39,6 +39,38 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     }
   }, [isOtpSent, otpExpiry]);
 
+  useEffect(() => {
+    if (isOtpSent) {
+      detectOtpAutomatically();
+    }
+  }, [isOtpSent]);
+
+  const detectOtpAutomatically = async () => {
+    try {
+      if (!('OTPCredential' in window)) {
+        console.log('WebOTP API not supported in this browser');
+        return;
+      }
+
+      const otp = await navigator.credentials.get({
+        otp: { transport: ['sms'] },
+      });
+
+      if (otp?.code) {
+        const otpArray = otp.code.split('');
+        setFormData({ ...formData, otp: otpArray });
+        otpArray.forEach((digit, index) => {
+          if (otpInputRefs.current[index]) {
+            otpInputRefs.current[index].value = digit;
+          }
+        });
+        toast.success('OTP auto-filled successfully');
+      }
+    } catch (err) {
+      console.error('Failed to auto-detect OTP:', err);
+    }
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -49,7 +81,6 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
       updatedOtp[index] = value;
       setFormData({ ...formData, otp: updatedOtp });
 
-      // Move to the next input box if value is entered
       if (value && index < formData.otp.length - 1) {
         otpInputRefs.current[index + 1].focus();
       }
@@ -79,13 +110,11 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     if (e.key === 'Backspace') {
       const updatedOtp = [...formData.otp];
       if (formData.otp[index] === '') {
-        // If the current box is empty, move to the previous box and clear it
         if (index > 0) {
           otpInputRefs.current[index - 1].focus();
           updatedOtp[index - 1] = '';
         }
       } else {
-        // Clear the current box
         updatedOtp[index] = '';
       }
       setFormData({ ...formData, otp: updatedOtp });
@@ -161,45 +190,6 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     }
   };
 
-  const handleResendOtp = async () => {
-    if (otpExpiry > 0) {
-      toast.info('Please wait until the OTP expires');
-      return;
-    }
-
-    if (resendAttempts >= 3) {
-      setOtpExpiry(EXTENDED_EXPIRY_TIME);
-      toast.warning('Too many attempts. Please try again after 15 minutes.');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await fetch('/api/send-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mobileNumber: `${formData.countryCode}${formData.mobileNumber}`,
-        }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to resend OTP');
-      }
-
-      setOtpExpiry(OTP_EXPIRY_TIME);
-      setResendAttempts((prev) => prev + 1);
-      toast.success('OTP resent successfully');
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = timeInSeconds % 60;
@@ -268,21 +258,26 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
         </div>
         <div className='button-container'>
           {loading && <div className='spinner'></div>}
-          {!isOtpSent && <button type='submit'  disabled={loading}>
-            {loading ? 'Sending...' : 'Send OTP'}
-            </button>}
-          {isOtpSent && <button type='submit' disabled={loading}>
-            {loading ? 'Verifying...' : 'Verify OTP'}
-            </button>}
+          {!isOtpSent && (
+            <button type='submit' disabled={loading}>
+              {loading ? 'Sending...' : 'Send OTP'}
+            </button>
+          )}
+          {isOtpSent && (
+            <button type='submit' disabled={loading}>
+              {loading ? 'Verifying...' : 'Verify OTP'}
+            </button>
+          )}
           {isOtpSent && otpExpiry > 0 && (
-           <p className='otp-expiry-info'>Resend OTP: {formatTime(otpExpiry)}</p>
-        )}
+            <p className='otp-expiry-info'>Resend OTP: {formatTime(otpExpiry)}</p>
+          )}
         </div>
-       
         {isOtpSent && otpExpiry === 0 && (
           <p className='resend-otp'>
             Didn’t receive code?{' '}
-            <span className='request-again' onClick={handleResendOtp}>Request again</span>
+            <span className='request-again' onClick={handleResendOtp}>
+              Request again
+            </span>
           </p>
         )}
       </form>
