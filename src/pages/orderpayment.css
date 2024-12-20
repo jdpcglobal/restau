@@ -109,9 +109,9 @@ body {
     font-size: 16px;
   }
   
-  .submit-button {
+  .submit-button1 {
     display: block;
-    width: 50%;
+    
     padding: 15px;
     background-color: tomato;
     color: white;
@@ -119,11 +119,11 @@ body {
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
-    margin-top: 20px;
+    margin-top: 20px ;
     transition: background-color 0.3s;
   }
   
-  .submit-button:hover {
+  .submit-button1:hover {
     background-color: rgb(250, 43, 7);
   }
   

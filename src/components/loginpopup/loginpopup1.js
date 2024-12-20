@@ -39,38 +39,6 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     }
   }, [isOtpSent, otpExpiry]);
 
-  useEffect(() => {
-    if (isOtpSent) {
-      detectOtpAutomatically();
-    }
-  }, [isOtpSent]);
-
-  const detectOtpAutomatically = async () => {
-    try {
-      if (!('OTPCredential' in window)) {
-        console.log('WebOTP API not supported in this browser');
-        return;
-      }
-
-      const otp = await navigator.credentials.get({
-        otp: { transport: ['sms'] },
-      });
-
-      if (otp?.code) {
-        const otpArray = otp.code.split('');
-        setFormData({ ...formData, otp: otpArray });
-        otpArray.forEach((digit, index) => {
-          if (otpInputRefs.current[index]) {
-            otpInputRefs.current[index].value = digit;
-          }
-        });
-        toast.success('OTP auto-filled successfully');
-      }
-    } catch (err) {
-      console.error('Failed to auto-detect OTP:', err);
-    }
-  };
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -183,6 +151,45 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
         setIsLoggedIn(true);
         setShowLogin(false);
       }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    if (otpExpiry > 0) {
+      toast.info('Please wait until the OTP expires');
+      return;
+    }
+
+    if (resendAttempts >= 3) {
+      setOtpExpiry(EXTENDED_EXPIRY_TIME);
+      toast.warning('Too many attempts. Please try again after 15 minutes.');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mobileNumber: `${formData.countryCode}${formData.mobileNumber}`,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to resend OTP');
+      }
+
+      setOtpExpiry(OTP_EXPIRY_TIME);
+      setResendAttempts((prev) => prev + 1);
+      toast.success('OTP resent successfully');
     } catch (error) {
       setError(error.message);
     } finally {

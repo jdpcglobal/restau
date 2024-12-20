@@ -51,7 +51,7 @@ const TermsAndConditions = () => {
       {showLogin && !isLoggedIn && (
         <LoginPopup setShowLogin={setShowLogin} setIsLoggedIn={setIsLoggedIn} />
       )}
-      
+      <div className='back-navbar'>
       <div className='app'>
         <div className="navbar-fixed">
           <Navbar 
@@ -61,6 +61,9 @@ const TermsAndConditions = () => {
            
           />
         </div>
+        </div>
+        </div>
+        <div className='app'>
         <div className="about-container">
       <header className="about-header">
         <h1>Welcome to Foodie Haven</h1>

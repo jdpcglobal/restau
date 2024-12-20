@@ -186,7 +186,7 @@ const FoodDisplay = ({ category, setCartItems, cartItems, setShowCart, isLoggedI
     <div>
       <h2 className='title'>Top dishes near you</h2>
       {loading ? (
-        <p>Loading...</p>
+         <div className="loading">Loading...</div> 
       ) : error ? (
         <p>{error}</p>
       ) : (

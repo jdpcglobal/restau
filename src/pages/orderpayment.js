@@ -225,7 +225,7 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
               {selectedOption && (
                 <button
                   onClick={handleSubmit}
-                  className='submit-button'
+                  className='submit-button1'
                   disabled={loading} // Disable button during loading
                 >
                   {loading ? 'Processing...' : 'Proceed to Submit'}
