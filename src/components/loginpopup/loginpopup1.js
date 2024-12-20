@@ -276,7 +276,7 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
             </button>
           )}
           {isOtpSent && otpExpiry > 0 && (
-            <p className='otp-expiry-info'>Resend OTP: {formatTime(otpExpiry)}</p>
+            <p className='otp-expiry-info'>Resend OTP in:{formatTime(otpExpiry)}</p>
           )}
         </div>
         {isOtpSent && otpExpiry === 0 && (
