@@ -251,7 +251,7 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
                 <input
                   key={index}
                   className='otp-input'
-                  type='text'
+                  type='number'
                   value={digit}
                   maxLength={1}
                   onChange={(e) => handleOtpChange(index, e.target.value)}
