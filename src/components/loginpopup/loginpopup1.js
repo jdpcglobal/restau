@@ -28,7 +28,6 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
   const [resendAttempts, setResendAttempts] = useState(0);
 
   const otpInputRefs = useRef([]);
-  
 
   useEffect(() => {
     if (isOtpSent && otpExpiry > 0) {
@@ -57,10 +56,25 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     }
   };
 
+  const handlePaste = (e) => {
+    const pastedData = e.clipboardData.getData('Text');
+    if (/^\d{6}$/.test(pastedData)) {
+      const otpArray = pastedData.split('');
+      setFormData({ ...formData, otp: otpArray });
+      otpArray.forEach((digit, index) => {
+        if (otpInputRefs.current[index]) {
+          otpInputRefs.current[index].value = digit;
+        }
+      });
+    } else {
+      toast.error('Please paste a valid 6-digit OTP');
+    }
+  };
 
   const handleOtpFocus = (index) => {
     otpInputRefs.current[index].select();
   };
+
   const handleKeyDown = (index, e) => {
     if (e.key === 'Backspace') {
       const updatedOtp = [...formData.otp];
@@ -186,11 +200,11 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     }
   };
 
- const formatTime = (timeInSeconds) => {
-  const minutes = Math.floor(timeInSeconds / 60);
-  const seconds = timeInSeconds % 60;
-  return minutes > 0 ? `${minutes}m:${seconds}s` : `${seconds}s`;
-};
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    return minutes > 0 ? `${minutes}m:${seconds}s` : `${seconds}s`;
+  };
 
   return (
     <div className='login-popup'>
@@ -221,36 +235,35 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
                   ))}
                 </select>
                 <div className='mobile-number-input'>
-                <input
-                
-                  type='number'
-                  name='mobileNumber'
-                  placeholder='Your mobile number'
-                  value={formData.mobileNumber}
-                  onChange={handleChange}
-                  disabled={isOtpSent}
-                  required
-                />
+                  <input
+                    type='number'
+                    name='mobileNumber'
+                    placeholder='Your mobile number'
+                    value={formData.mobileNumber}
+                    onChange={handleChange}
+                    disabled={isOtpSent}
+                    required
+                  />
                 </div>
               </div>
             </>
           )}
           {isOtpSent && (
-               <div className='otp-container'>
-      {formData.otp.map((digit, index) => (
-        <input
-          key={index}
-          className='otp-input'
-          type='text'
-          value={digit}
-          maxLength={1}
-          onChange={(e) => handleOtpChange(index, e.target.value)}
-          onFocus={() => handleOtpFocus(index)}
-          onKeyDown={(e) => handleKeyDown(index, e)}
-          ref={(el) => (otpInputRefs.current[index] = el)}
-        />
-      ))}
-    </div>
+            <div className='otp-container' onPaste={handlePaste}>
+              {formData.otp.map((digit, index) => (
+                <input
+                  key={index}
+                  className='otp-input'
+                  type='text'
+                  value={digit}
+                  maxLength={1}
+                  onChange={(e) => handleOtpChange(index, e.target.value)}
+                  onFocus={() => handleOtpFocus(index)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  ref={(el) => (otpInputRefs.current[index] = el)}
+                />
+              ))}
+            </div>
           )}
         </div>
         <div className='button-container'>
