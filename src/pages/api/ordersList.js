@@ -1,6 +1,6 @@
-import dbConnect from '../../app/lib/dbconnect'; // Adjust path if necessary
-import OrderPayment from '../../../public/models/OrderPayment'; // Adjust path if necessary
-import User from '../../../public/models/user'; // Adjust path if necessary
+import dbConnect from '../../app/lib/dbconnect'; 
+import OrderPayment from '../../../public/models/OrderPayment'; 
+import User from '../../../public/models/user'; 
 import Address from '../../../public/models/Address'
 
 export default async function handler(req, res) {

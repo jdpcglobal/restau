@@ -84,9 +84,7 @@ width: 40px;
         padding: 10px;
         margin-left: 20px;
     }
-    p.order-item-total-items {
-        margin-top: -20px;
-    }
+   
     p.order-item-total-amount{
         margin-top: -20px;
     }

@@ -271,12 +271,15 @@
   }
 
   .cart-item {
-    grid-template-columns: 1fr 2fr 1fr; /* Adjust columns for mobile */
+    grid-template-columns: 1fr 2fr 1fr ; /* Adjust columns for mobile */
   }
 
   .cart-item-img img {
     width: 40px; /* Slightly smaller image on mobile */
     height: 40px;
+  }
+  .cart-item-price{
+    display: none;
   }
 
   span {

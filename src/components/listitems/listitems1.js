@@ -77,7 +77,7 @@ export default function Home() {
           <div className='list-table-format1 title'>
             <b>Image</b>
             <b>Name</b>
-            <b>Type</b>
+            
             <b>Category</b>
             <b>Price</b>
             <b>Discount (%)</b>
@@ -91,7 +91,7 @@ export default function Home() {
               <span> <img src={item.imageUrl} alt={item.name} className='image' /></span>
              
               <h2 className='name'>{item.name}</h2>
-              <p className='category'>{item.vegOrNonVeg}</p>
+              {/* <p className='category'>{item.vegOrNonVeg}</p> */}
               <p className='category'>{item.category}</p>
               <p className='price'>₹{item.price.toFixed(2)}</p>
               <p className='discount'>{item.discount ? `${item.discount}%` : 'N/A'}</p>
@@ -108,7 +108,7 @@ export default function Home() {
                 className='cursor'
                 onClick={() => handleRemove(item._id)}
               >
-                <img src='/cross_icon.png' alt='Delete' />
+                <img src='/cross_icon.png' alt='Delete'  className='icon-delet' />
               </p>
             </div>
           ))}

@@ -3,6 +3,16 @@ import Otp from '../../../public/models/Otp';
 import User from '../../../public/models/user'; // Assuming you have a User model
 import jwt from 'jsonwebtoken';
 
+// Function to generate a random string of a given length
+const generateRandomString = (length = 8) => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomString = '';
+  for (let i = 0; i < length; i++) {
+    randomString += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return randomString;
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
@@ -45,14 +55,22 @@ export default async function handler(req, res) {
       { resendCount: 0, otp: null, lastSent: new Date() }
     );
 
-    // Find or create the user associated with the mobile number
+    // Find the user associated with the mobile number
     let user = await User.findOne({ mobileNumber });
 
     if (!user) {
-      return res.status(400).json({ error: 'User not found. Please register.' });
+      // Create a new user if not found
+      const newUser = new User({
+        mobileNumber,
+        isVerified: true, // Mark the new user as verified
+        userName: generateRandomString(10), // Assign a unique random userName
+      });
+
+      // Save the new user
+      user = await newUser.save();
     }
 
-    // Mark the user as verified if not already
+    // If user is not verified, mark as verified
     if (!user.isVerified) {
       user.isVerified = true;
       await user.save();

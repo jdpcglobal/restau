@@ -89,6 +89,7 @@
   
   .list-table-format.title {
     border-bottom: 2px solid #ddd;
+    text-align: center;
   }
   
   .table-category {
@@ -165,14 +166,18 @@
     .add-category img {
       max-width: 100px;
     }
+    .flex-row1{
+      display: block;
+      text-align: center;
+      gap: 0;
+      
+    }
   
     
     .table-category button{
       margin-top: 5px;
     }
-    .add-category input[type='text']{
-      margin-bottom: 14px;
-    }
+    
   
     .list-table-format {
       grid-template-columns: 1fr 1fr;

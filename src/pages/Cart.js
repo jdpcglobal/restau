@@ -387,6 +387,23 @@ const saveCartTotal = async () => {
       <p>₹{subtotalWithD.toFixed(2)}</p>
     </div>
     <hr />
+   {appliedCoupon ? (
+  <>
+    <div className='cart-total-details'>
+      <p>Coupon Discount</p>
+      <p>
+        -₹{
+          Math.min(
+            (subtotalWithD * appliedCoupon.rate / 100),
+            appliedCoupon.maxDiscount
+          ).toFixed(2)
+        }
+      </p>
+    </div>
+    <hr />
+  </>
+) : (
+  <>
     {subtotal > 0 && (
       <>
         <div className='cart-total-details'>
@@ -396,23 +413,11 @@ const saveCartTotal = async () => {
         <hr />
       </>
     )}
+  </>
+)}
+
     
-    {appliedCoupon && (
-      <>
-        <div className='cart-total-details'>
-          <p>Coupon Discount</p>
-          <p>
-            -₹{
-              Math.min(
-                (subtotalWithD * appliedCoupon.rate / 100),
-                appliedCoupon.maxDiscount
-              ).toFixed(2)
-            }
-          </p>
-        </div>
-        <hr />
-      </>
-    )}
+    
    
     {totalGst > 0 && (
       <>

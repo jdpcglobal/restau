@@ -19,15 +19,16 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
   const [formData, setFormData] = useState({
     mobileNumber: '',
     countryCode: '+91',
-    otp: ['', '', '', '', '', ''],
+    otp: '',
   });
   const [error, setError] = useState(null);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [otpExpiry, setOtpExpiry] = useState(0);
   const [resendAttempts, setResendAttempts] = useState(0);
+  const [isOtpFocused, setIsOtpFocused] = useState(false); // State to track OTP input focus
 
-  const otpInputRefs = useRef([]);
+  const otpInputRef = useRef(null);
 
   useEffect(() => {
     if (isOtpSent && otpExpiry > 0) {
@@ -43,49 +44,12 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleOtpChange = (index, value) => {
-    if (/^\d$/.test(value) || value === '') {
-      const updatedOtp = [...formData.otp];
-      updatedOtp[index] = value;
-      setFormData({ ...formData, otp: updatedOtp });
+  const handleOtpChange = (e) => {
+    const value = e.target.value;
 
-      if (value && index < formData.otp.length - 1) {
-        otpInputRefs.current[index + 1].focus();
-      }
-    }
-  };
-
-  const handlePaste = (e) => {
-    const pastedData = e.clipboardData.getData('Text');
-    if (/^\d{6}$/.test(pastedData)) {
-      const otpArray = pastedData.split('');
-      setFormData({ ...formData, otp: otpArray });
-      otpArray.forEach((digit, index) => {
-        if (otpInputRefs.current[index]) {
-          otpInputRefs.current[index].value = digit;
-        }
-      });
-    } else {
-      toast.error('Please paste a valid 6-digit OTP');
-    }
-  };
-
-  const handleOtpFocus = (index) => {
-    otpInputRefs.current[index].select();
-  };
-
-  const handleKeyDown = (index, e) => {
-    if (e.key === 'Backspace') {
-      const updatedOtp = [...formData.otp];
-      if (formData.otp[index] === '') {
-        if (index > 0) {
-          otpInputRefs.current[index - 1].focus();
-          updatedOtp[index - 1] = '';
-        }
-      } else {
-        updatedOtp[index] = '';
-      }
-      setFormData({ ...formData, otp: updatedOtp });
+    // Ensure only digits are entered and handle OTP length
+    if (/^\d{0,6}$/.test(value)) {
+      setFormData({ ...formData, otp: value });
     }
   };
 
@@ -120,7 +84,7 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
         setCurrentState('Verify OTP');
         toast.success('OTP sent successfully');
       } else if (currentState === 'Verify OTP') {
-        const otpCode = formData.otp.join('');
+        const otpCode = formData.otp;
 
         if (otpCode.length !== 6) {
           setError('Please enter the complete OTP');
@@ -209,15 +173,11 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
       <form className='login-popup-container' onSubmit={handleSubmit}>
         <div className='login-popup-title'>
           <h2>{currentState}</h2>
-          <img
-            onClick={() => setShowLogin(false)}
-            src='/cross_icon.png'
-            alt='Close'
-          />
+          <img onClick={() => setShowLogin(false)} src='/cross_icon.png' alt="Close" className='login-cross' />
         </div>
         {error && <p className='error'>{error}</p>}
         <div className='login-popup-inputs'>
-          {currentState === 'Enter details' && (
+          {currentState === "Enter details" && (
             <>
               <div className='country-code-dropdown'>
                 <select
@@ -238,33 +198,47 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
                     placeholder='Your mobile number'
                     value={formData.mobileNumber}
                     onChange={handleChange}
-                    disabled={isOtpSent}
+                    disabled={isOtpSent} // Disable after OTP is sent
                     required
+                    pattern="\d{10}"
+                    minLength={10}
+                    maxLength={10}
+                    title="Please enter exactly 10 digits."
                   />
                 </div>
               </div>
             </>
           )}
-          {isOtpSent && (
-            <div className='otp-container' onPaste={handlePaste}>
-              {formData.otp.map((digit, index) => (
-                <input
-                  key={index}
-                  className='otp-input'
-                  type='number'
-                  value={digit}
-                  maxLength={1}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  onFocus={() => handleOtpFocus(index)}
-                  onKeyDown={(e) => handleKeyDown(index, e)}
-                  ref={(el) => (otpInputRefs.current[index] = el)}
-                />
-              ))}
-            </div>
-          )}
+         {isOtpSent && (
+  <div
+    className='otp-input'
+    style={{
+      border: `1px solid ${isOtpFocused ? 'red' : 'gray'}`,
+      borderRadius: '4px',
+    }}
+  >
+    <input
+      type={isOtpFocused ? 'text' : 'password'} // Use 'password' to hide the dots when not focused
+      name='otp'
+      placeholder={isOtpFocused ? '' : '•  •  •  •  •  •'} // Show placeholder dots when not focused
+      value={formData.otp}
+      onChange={handleOtpChange}
+      onFocus={() => setIsOtpFocused(true)}
+      onBlur={() => setIsOtpFocused(false)}
+      required
+      style={{
+        border: 'none',
+        outline: 'none',
+        width: '100%',
+        fontSize: '16px',
+        letterSpacing: isOtpFocused ? 'normal' : '4px', // Add spacing when not focused
+      }}
+    />
+  </div>
+)}
+
         </div>
         <div className='button-container'>
-          {loading && <div className='spinner'></div>}
           {!isOtpSent && (
             <button type='submit' disabled={loading}>
               {loading ? 'Sending...' : 'Send OTP'}

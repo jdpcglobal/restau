@@ -5,6 +5,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import './orders2.css';
 import '../../app/globals.css';
+import { faLocationDot,faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -12,30 +13,23 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchOrders = async () => {
-    const token = localStorage.getItem('token'); // Get token from local storage
+  
 
-    if (!token) {
-      setError('No token found. Please log in.');
-      setLoading(false);
-      return;
-    }
+    
 
     try {
       const response = await fetch('/api/ordersList', {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          
           'Content-Type': 'application/json',
         },
       });
       const data = await response.json();
 
-      if (data.success) {
+      
         setOrders(data.orders);
-      } else {
-        console.error('Failed to fetch orders:', data.message);
-        setError('Failed to fetch orders.');
-      }
+       
     } catch (error) {
       console.error('Error fetching orders:', error);
       setError('Error fetching orders.');
@@ -49,19 +43,14 @@ const Orders = () => {
   }, []);
 
   const handleStatusChange = async (orderId, newStatus) => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      setError('No token found. Please log in.');
-      return;
-    }
+   
 
     try {
       const response = await fetch('/api/changeOrderStatus', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+         
         },
         body: JSON.stringify({ orderId, status: newStatus }),
       });
@@ -321,7 +310,9 @@ doc.line(200, yPosition - 5, 200, yPosition + 2); // x=190 for right side vertic
                     .join(', ')}
                 </p>
                 <div className='order-item-address'>
-                  <p>{order.selectedAddress.flatNo}, {order.selectedAddress.landmark}</p>
+                  <p>
+                  <FontAwesomeIcon icon={faLocationDot} className="mobile-icon" />
+                  {order.selectedAddress.flatNo}, {order.selectedAddress.landmark}</p>
                   <p>{order.selectedAddress.location}</p>
                 </div>
                 <p className='mobile-number'>
@@ -329,6 +320,8 @@ doc.line(200, yPosition - 5, 200, yPosition + 2); // x=190 for right side vertic
                   {order.user.mobileNumber}
                 </p>
                 <p className='order-item-date'>
+                <FontAwesomeIcon icon={faCalendar} className="mobile-icon" />
+
                   {new Date(order.date).toLocaleString('en-IN', {
                     year: 'numeric',
                     month: 'long',
@@ -339,6 +332,7 @@ doc.line(200, yPosition - 5, 200, yPosition + 2); // x=190 for right side vertic
                   })}
                 </p>
               </div>
+              
               <p className='order-item-total-items'>
                 Items: {order.items.length}
               </p>
