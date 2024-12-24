@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import './navbar2.css';
 import { assets } from '../../assets/assets';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
-const Navbar = ({ isLoggedIn, setShowLogin, handleLogout, setShowCart }) => {
-  const [menu, setMenu] = useState("Home");
+const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
   const [isLoading, setIsLoading] = useState(false); // State for loading spinner
   const router = useRouter();
+  const pathname = usePathname(); // Get the current pathname
 
   const handleCheckoutClick = async () => {
     setIsLoading(true); // Show spinner
@@ -29,42 +29,38 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout, setShowCart }) => {
   return (
     <nav className="navbar">
       <div className="logo">
-        <a href='/'><Image src={assets.logo} alt="Logo" /></a>
+        <a href="/"><Image src={assets.logo} alt="Logo" /></a>
       </div>
       <div className="navbar-menu">
         <ul>
           <li>
             <a 
-              href='/' 
-              onClick={() => setMenu("Home")} 
-              className={menu === "Home" ? "active" : ""}
+              href="/" 
+              className={pathname === '/' ? "active" : ""}
             >
               Home
             </a>
           </li>
           <li>
             <a 
-              href='About-us' 
-              onClick={() => setMenu("About us")} 
-              className={menu === "About us" ? "active" : ""}
+              href="/About-us" 
+              className={pathname === '/About-us' ? "active" : ""}
             >
               About us
             </a>
           </li>
           <li>
             <a 
-              href='/' 
-              onClick={() => setMenu("Blog")} 
-              className={menu === "Blog" ? "active" : ""}
+              href="/" 
+              className={pathname === '/Blog' ? "active" : ""}
             >
               Blog
             </a>
           </li>
           <li>
             <a 
-              href='#footer' 
-              onClick={() => setMenu("Contact us")} 
-              className={menu === "Contact us" ? "active" : ""}
+              href="#footer" 
+              className={pathname === '/Contact-us' ? "active" : ""}
             >
               Contact us
             </a>
@@ -76,7 +72,7 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout, setShowCart }) => {
       </div>
       <div className='navbar-search-icon'>
         {isLoading ? (
-          <div className="spinner"></div> // Show spinner when loading
+          <div className="spinner"></div> 
         ) : (
           <>
             <Image 
@@ -96,7 +92,7 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout, setShowCart }) => {
           <ul className="nav-profile-dropdown">
             <li onClick={handleOrderClick}>
               <Image src={assets.bag_icon} alt="Order" />
-              <p>Order</p>
+              <p>Orders</p>
             </li>
             <hr />
             <li onClick={handleLogout}>

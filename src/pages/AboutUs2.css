@@ -112,7 +112,7 @@ body {
   justify-content: center;
   align-items: center;
   animation: fadeIn 0.5s;
-  z-index: 2;
+  z-index: 5;
 }
 
 .popup-content {

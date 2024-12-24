@@ -148,6 +148,9 @@
   width: 24px;
   cursor: pointer;
 }
+.remove-icon:hover{
+transform: scale(1.4);
+}
 
 .cart-item-remove img:hover {
   transform: scale(1.2);

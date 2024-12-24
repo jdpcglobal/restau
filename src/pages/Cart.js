@@ -172,13 +172,11 @@ const CartPage = () => {
   
       // Apply coupon discount, if available
       const discountAmountAfterCoupon = appliedCoupon
-        ? discountAmount * (1 - appliedCoupon.rate / 100) // Coupon discount
-        : discountAmount; // If no coupon, use the discounted price directly
-  
-      // Calculate GST on the discounted price (after applying coupon)
+        ? originalPrice * (1 - appliedCoupon.rate / 100) // Coupon discount
+        : discountAmount; 
       const gstAmount = discountAmountAfterCoupon * (item.foodId.gstRate / 100) * item.quantity;
   
-      return total + gstAmount; // Accumulate the GST amount for all items
+      return total + gstAmount; 
     }
     return total;
   }, 0);
@@ -436,10 +434,24 @@ const saveCartTotal = async () => {
 
     <div className='cart-total-details'>
       <b>Total</b>
-      <b>₹{
+      {/* <b>₹{
         (subtotalWithD - 
          subtotal - 
          (appliedCoupon ? (subtotalWithD * appliedCoupon.rate / 100) : 0) + 
+         deliveryFee + 
+         totalGst
+        ).toFixed(2)
+      }</b> */}
+      <b>₹{
+        (subtotalWithD - 
+          (
+            appliedCoupon 
+              ? 0 // Subtotal becomes 0 if coupon is applied
+              : subtotal // If no coupon, show regular subtotal
+          ) - 
+          (appliedCoupon 
+            ? (subtotalWithD * appliedCoupon.rate / 100) // Apply coupon discount if available
+            : 0)  + 
          deliveryFee + 
          totalGst
         ).toFixed(2)

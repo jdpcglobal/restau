@@ -346,7 +346,7 @@ doc.line(200, yPosition - 5, 200, yPosition + 2); // x=190 for right side vertic
                 >
                   <option value='Order Processing'>Order Processing</option>
                   <option value='Accepted'>Accepted</option>
-                  <option value='Food Processing'>Food Preparing</option>
+                  <option value='Food Preparing'>Food Preparing</option>
                   <option value='Out for delivery'>Out for delivery</option>
                   <option value='Delivered'>Delivered</option>
                   <option value='Cancelled'>Cancelled</option>
