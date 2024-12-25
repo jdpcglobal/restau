@@ -16,6 +16,7 @@ import Couponlist from '../components/couponlist/couponlist1';
 import AdminNavbar from '../components/adminnavbar/adminnavbar1';
 import Headerimage from '../components/headerback/headerimage';
 import Settable from '../components/admintable/settable';
+import DeliveryFee from '../components/deliveryFee/deliveryFee';
 const AdminPanel = () => {
   const [selectedComponent, setSelectedComponent] = useState(''); // State to track the selected component
 
@@ -45,6 +46,8 @@ const AdminPanel = () => {
                 return <Headerimage />;
                 case 'Settable':
                   return <Settable />;
+                  case 'deliveryFee':
+                    return <DeliveryFee />;
       default:
         return ;
     }

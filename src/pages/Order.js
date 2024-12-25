@@ -128,45 +128,63 @@ const Order = () => {
     router.push('/');
   };
 
-  const handleCheckoutClick = async () => {
-    if (!selectedAddress) {
-      alert('Please select a delivery address.');
+ const handleCheckoutClick = async () => {
+  // Ensure a delivery address is selected before proceeding
+  if (!selectedAddress) {
+    alert('Please select a delivery address.');
+    return;
+  }
+
+  setLoading(true); // Set loading to true when the button is clicked
+
+  try {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('No token found'); // If no token, display error
+      setLoading(false); // Stop loading
       return;
     }
 
-    setLoading(true); // Set loading to true when the button is clicked
-
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setError('No token found');
-        setLoading(false); // Stop loading if no token is found
-        return;
-      }
-
-      const response = await axios.post(
-        '/api/saveCheckoutAddress',
-        {
-          addressId: selectedAddress._id,
-          cartTotalId: selectedCartTotalId,
+    // Send the request to save the selected address and cart total ID
+    const response = await axios.post(
+      '/api/saveCheckoutAddress', // Your API endpoint
+      {
+        addressId: selectedAddress._id, // Address ID selected by the user
+        cartTotalId: selectedCartTotalId, // Cart total ID for the current cart
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (response.data.success) {
-        router.push('/orderpayment');
-      } else {
-        setError(response.data.message || 'Failed to save address.');
       }
-    } catch (error) {
-      console.error('Error during checkout:', error);
-      setError(error.response?.data.message || 'Network error, please try again later.');
-    } finally {
-      setLoading(false); // Reset loading state
+    );
+
+    // Handle the API response
+    if (response.data.success) {
+      // If the response is successful, redirect to the order payment page
+      router.push('/orderpayment');
+    } else {
+      // If there's an issue, display the message from the response
+      setError(response.data.message || 'Failed to save address.');
     }
-  };
+  } catch (error) {
+    // Catch network or API errors
+    console.error('Error during checkout:', error);
+    if (error.response && error.response.data) {
+      setError(error.response.data.message || 'Network error, please try again later.');
+    } else {
+      setError('An unexpected error occurred. Please try again later.');
+    }
+  } finally {
+    setLoading(false); // Reset loading state after the process is finished
+  }
+};
+
+  
+
+
+  
   const subtotal = cartTotal ? cartTotal.subtotal : 0;
   const itemDiscount= cartTotal ? cartTotal.itemDiscount : 0;
   const  couponDiscount= cartTotal ? cartTotal.couponDiscount : 0;
@@ -174,9 +192,46 @@ const Order = () => {
   const deliveryFee = cartTotal ? cartTotal.deliveryFee : 0;
   const total = cartTotal ? cartTotal.total : 0;
 
-  const handleAddressChange = (index) => {
+  const handleAddressChange = async (index) => {
+    if (!savedAddresses[index]) {
+      console.error('Invalid address selected.');
+      return;
+    }
+  
+    const selectedLocation = savedAddresses[index].location;
+  
     setSelectedAddress(savedAddresses[index]);
+  
+    if (!adminLocation) {
+      console.error('Admin location is not defined.');
+      setCartTotal((prev) => ({ ...prev, deliveryFee: 0 }));
+      return;
+    }
+  
+    try {
+      // Show a loader or disable UI if necessary
+      const response = await axios.post('/api/calculateDeliveryFee', {
+        userLocation: selectedLocation,
+        adminLocation,
+      });
+  
+      if (response.data.success) {
+        const { fee, distance } = response.data;
+        console.log(`Delivery fee: ${fee}, Distance: ${distance} km`);
+        setCartTotal((prev) => ({ ...prev, deliveryFee: fee }));
+      } else {
+        console.warn('Delivery fee calculation failed:', response.data.message);
+        setCartTotal((prev) => ({ ...prev, deliveryFee: 0 }));
+      }
+    } catch (error) {
+      console.error('Error calculating delivery fee:', error.message || error);
+      setCartTotal((prev) => ({ ...prev, deliveryFee: 0 }));
+    } finally {
+      // Hide loader or re-enable UI
+    }
   };
+  
+  
 
   return (
     <>
@@ -241,58 +296,74 @@ const Order = () => {
               </p>
             </div>
             <div className='place-order-right'>
-              <div className="cart-bottom1">
-                <div className="cart-total">
-                  <h2>Cart Total</h2>
-                  <div className="cart-total-details">
-                    <p>Subtotal</p>
-                    <p>₹{subtotal.toFixed(2)}</p>
-                  </div>
-                  <hr />
-                  <div className="cart-total-details">
-                    <p>Item Discount</p>
-                    <p>₹{itemDiscount.toFixed(2)}</p>
-                  </div>
-                  <hr />
-                  {couponDiscount > 0 && (
-                    <>
-  <div className="cart-total-details">
-    <p>Coupon Discount</p>
-    <p>₹{Math.round(couponDiscount).toFixed(2)}</p>
-  </div>
-  <hr />
- </>
- 
-)}
+  <div className="cart-bottom1">
+    <div className="cart-total">
+      <h2>Cart Total</h2>
+      <div className="cart-total-details">
+        <p>Subtotal</p>
+        <p>₹{subtotal.toFixed(2)}</p>
+      </div>
+      <hr />
+      
+      {itemDiscount > 0 && (
+        <>
+          <div className="cart-total-details">
+            <p>Item Discount</p>
+            <p>-₹{itemDiscount.toFixed(2)}</p>
+          </div>
+          <hr />
+        </>
+      )}
+      
+      {couponDiscount > 0 && (
+        <>
+          <div className="cart-total-details">
+            <p>Coupon Discount</p>
+            <p>-₹{Math.round(couponDiscount).toFixed(2)}</p>
+          </div>
+          <hr />
+        </>
+      )}
+      
+      {totalGst > 0 && (
+        <>
+          <div className="cart-total-details">
+            <p>GST</p>
+            <p>+₹{totalGst.toFixed(2)}</p>
+          </div>
+          <hr />
+        </>
+      )}
+      
+     
+       
+          <div className="cart-total-details">
+            <p>Delivery Fee</p>
+            <p>+₹{typeof cartTotal?.deliveryFee === 'number' ? cartTotal.deliveryFee.toFixed(2) : '0'}</p>
+          </div>
+          <hr />
+   
 
-                  <div className="cart-total-details">
-                    <p>GST</p>
-                    <p>₹{totalGst.toFixed(2)}</p>
-                  </div>
-                  <hr />
-                  <div className="cart-total-details">
-                    <p>Delivery Fee</p>
-                    <p>₹{deliveryFee}</p>
-                  </div>
-                  <hr />
-                  <div className="cart-total-details">
-                    <b>Total</b>
-                   
-                    <b>₹{total.toFixed(2)}</b>
-                  </div>
-                  <div className="checkout-btn">
-                    <button
-                      onClick={handleCheckoutClick}
-                      className="checkout-button"
-                      disabled={cartItems.length === 0}
-                    >
-                     {loading ? 'Processing...' : 'Proceed to payment'.toUpperCase()}
-                     
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+      
+      <div className="cart-total-details">
+        <b>Total</b>
+        <b>₹{
+      (subtotal + totalGst + deliveryFee - itemDiscount - couponDiscount).toFixed(2)
+    }</b>
+      </div>
+      <div className="checkout-btn">
+        <button
+          onClick={handleCheckoutClick}
+          className="checkout-button"
+          disabled={cartItems.length === 0}
+        >
+          {loading ? 'Processing...' : 'Proceed to payment'.toUpperCase()}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
             {showPopup && (
                <AddressPopup

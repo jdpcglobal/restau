@@ -107,7 +107,7 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
       }
     } catch (error) {
       console.error('Error during submission:', error);
-      setError('An unexpected error occurred. Please try again later.');
+      setError('Your UTR Wrong. Please try again later.');
     } finally {
       setLoading(false); // Stop loading
     }

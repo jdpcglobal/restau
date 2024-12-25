@@ -38,6 +38,9 @@ const CartPage = () => {
     setShowPromoPopup(false);
   };
 
+
+ 
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
@@ -52,6 +55,7 @@ const CartPage = () => {
       setIsLoggedIn(true);
     } else {
       setShowLogin(true);
+      router.push('/'); // Redirect to the home page if not logged in
     }
   }, []);
   
@@ -210,7 +214,7 @@ const CartPage = () => {
     }
   }, [subtotalWithD, appliedCoupon]);
 
-  const deliveryFee = 2;
+  const deliveryFee = 0;
   const total = subtotalWithD + deliveryFee;
 
 
@@ -234,7 +238,11 @@ const CartPage = () => {
 const saveCartTotal = async () => {
   const cartData = {
     subtotal: Number(subtotalWithD.toFixed(2)), // Converts to number after applying toFixed
-    itemDiscount: Number(subtotal.toFixed(2)), // Same here
+    itemDiscount: Number (
+      appliedCoupon 
+        ? 0 // Subtotal becomes 0 if coupon is applied
+        : (subtotal.toFixed(2)) // If no coupon, show regular subtotal
+    ), // Same here
     couponDiscount: appliedCoupon
       ? Number(Math.min((subtotalWithD * appliedCoupon.rate / 100).toFixed(2), appliedCoupon.maxDiscount).toFixed(2))
       : 0, // Ensure the final value is also fixed to 2 decimal places
@@ -242,7 +250,11 @@ const saveCartTotal = async () => {
     totalGst: Number(totalGst.toFixed(2)),
     total: Number((
       (subtotalWithD) - 
-      (subtotal) - 
+      (
+        appliedCoupon 
+          ? 0 // Subtotal becomes 0 if coupon is applied
+          : subtotal // If no coupon, show regular subtotal
+      ) - 
       (appliedCoupon ? (subtotalWithD * appliedCoupon.rate / 100) : 0) + 
       (deliveryFee) + 
       (totalGst)

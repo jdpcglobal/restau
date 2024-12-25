@@ -22,7 +22,7 @@ const AddressPopup = ({
   const geocoder = useRef(null);
   const [isDeliverable, setIsDeliverable] = useState(true);
   const [errors, setErrors] = useState({ location: '', flatNo: '', landmark: '' });
-
+  const [loading, setLoading] = useState(false);
   let googleMapsLoaded = false;
 
   // Load Google Maps only once
@@ -147,9 +147,11 @@ const AddressPopup = ({
   };
 
   const handleSaveAddress = async () => {
+    setLoading(true); // Start loading state
     const newErrors = { location: '', flatNo: '', landmark: '' };
     let hasError = false;
-
+  
+    // Validate input fields
     if (!location) {
       newErrors.location = 'Please fill this field';
       hasError = true;
@@ -162,40 +164,56 @@ const AddressPopup = ({
       newErrors.landmark = 'Please fill this field';
       hasError = true;
     }
-
+  
     setErrors(newErrors);
-    if (hasError) return;
-
-    if (!isDeliverable) {
-      alert('Delivery is not available for this location');
+  
+    if (hasError) {
+      setLoading(false); // Stop loading if there are errors
       return;
     }
-
+  
+    // Check if delivery is available
+    if (!isDeliverable) {
+      alert('Delivery is not available for this location');
+      setLoading(false); // Stop loading
+      return;
+    }
+  
     const token = localStorage.getItem('token');
     if (!token) {
       alert('User not authenticated');
+      setLoading(false); // Stop loading
       return;
     }
-
+  
     const addressData = { token, location, flatNo, landmark };
-
+  
     try {
+      // API call to save the address
       const response = await axios.post('/api/address', addressData);
+  
       if (response.data.success) {
+        // Update saved addresses if the API call is successful
         const newAddress = response.data.address;
         setSavedAddresses((prev) => [newAddress, ...prev]);
+  
+        // Reset the form fields and close the popup
         setLocation('');
         setFlatNo('');
         setLandmark('');
-        setShowPopup(false);
+        setErrors({}); // Clear any previous error messages
+        setShowPopup(false); // Close the address popup
       } else {
         alert(`Error: ${response.data.message}`);
       }
     } catch (error) {
       console.error('Error saving address:', error);
       alert('An unexpected error occurred');
+    } finally {
+      setLoading(false); // Stop loading after the request is finished
     }
   };
+  
 
   return (
     <div className="popup-container">
@@ -234,7 +252,17 @@ const AddressPopup = ({
           onChange={(e) => setLandmark(e.target.value)}
           className={`input-field ${errors.landmark ? 'error-border' : ''}`}
         />
-        <button className="save-address-btn" onClick={handleSaveAddress}>Save Address</button>
+       <button 
+        className="save-address-btn" 
+        onClick={handleSaveAddress} 
+        disabled={loading} // Disable button when loading
+      >
+        {loading ? (
+          <span className="loading-spinner"></span> // Show loading spinner
+        ) : (
+          'Save Address' // Normal button text
+        )}
+      </button>
       </div>
     </div>
   );
