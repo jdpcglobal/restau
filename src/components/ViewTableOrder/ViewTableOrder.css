@@ -162,6 +162,28 @@
 
 
 
+.status-done {
+  font-size: 16px;
+  color: green;
+  font-weight: bold ;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  padding: 5px 10px;
+  background-color: #fff;
+}
+
+
+.done-icon {
+  color: green; /* Customize icon color */
+  margin-right: 5px; /* Space between the icon and the text */
+  font-size: 20px; /* Adjust the icon size */
+}
+
+
+
+
 @keyframes pulse {
   0% {
     opacity: 0.7;

@@ -5,7 +5,7 @@ import UpdatePopup from "../../components/updatetable"; // Ensure the path to Up
 import "react-toastify/dist/ReactToastify.css"; // Import styles for react-toastify
 import "./ViewTableOrder.css"; // Ensure your CSS file path is correct\\
 import BillPopup from "../../components/ViewBill/ViewBillPopup";
-
+import { FaCheckCircle } from "react-icons/fa";
 const AddTableContent = () => {
   const [tables, setTables] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -164,19 +164,30 @@ const AddTableContent = () => {
               <div>{formatDate(table.createdAt)}</div>
               <div>{table.totalPrice}</div>
               <div>
-             <select
-  value={table.status} // Binds the current status to the dropdown
-  onChange={(e) => handleStatusChange(table._id, table.tableNumber, e.target.value)} // Calls the handler on change
-  className="status-dropdown" // Adds a class for styling
->
- 
-  <option value="occupied">Occupied</option>
- <option value="reserved">Reserved</option>
-  <option value="available">Available</option>
-</select>
+  {/* Check if the status is "Available" */}
+  {table.status === "available" ? (
+    // Display "Done" icon and disable dropdown
+    
+    <div className="status-done">
+     <FaCheckCircle className="done-icon" /> Done
+    </div>
+    
+  ) : (
+    // Show the dropdown if status is not "Available"
+    <select
+      value={table.status} // Binds the current status to the dropdown
+      onChange={(e) =>
+        handleStatusChange(table._id, table.tableNumber, e.target.value)
+      } // Calls the handler on change
+      className="status-dropdown" // Adds a class for styling
+    >
+      <option value="occupied">Occupied</option>
+      <option value="reserved">Reserved</option>
+      <option value="available">Available</option>
+    </select>
+  )}
+</div>
 
-
-              </div>
               <div>
                <button
   className="btn edit-btn"

@@ -109,6 +109,28 @@ span.icon.success-icon{
   margin-left: 3px;
  
   
+
+}
+                
+.mobile-number-input {
+  border: 1px solid gray; /* Default border color */
+  border-radius: 4px; /* Rounded corners */
+  /* Space inside the container */
+  transition: border-color 0.3s ease; /* Smooth transition */
+}
+
+.mobile-number-input input {
+  border: none; /* Remove input's default border */
+  outline: none; /* Remove default focus outline */
+  /* Font size for input text */
+}
+
+.mobile-number-input:focus-within {
+  border-color:tomato; /* Change border color to red on focus */
+}
+
+.mobile-number-input input:focus{
+  border-color: tomato;
 }
 .otp-input input:focus {
   border-color: tomato; /* Border color when focused */
@@ -146,6 +168,7 @@ span.icon.success-icon{
   text-align: center;
   letter-spacing: 4px; /* Adds spacing between characters (dots effect) */
   border-radius: 4px;
+  border: 1px solid #aaa;
 }
 
 .otp-input input:focus {

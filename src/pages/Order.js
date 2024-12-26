@@ -136,7 +136,7 @@ const Order = () => {
 
  const handleCheckoutClick = async () => {
   // Ensure a delivery address is selected before proceeding
-  if (!selectedAddress) {
+  if (!selectedAddressId) {
     alert('Please select a delivery address.');
     return;
   }
@@ -156,27 +156,27 @@ const Order = () => {
     const response = await axios.post(
       '/api/saveCheckoutAddress', // Your API endpoint
       {
-        addressId: selectedAddress._id, // Address ID selected by the user
+        addressId: selectedAddressId, // Address ID selected by the user
         cartTotalId: selectedCartTotalId,
         deliveryFee : deliveryFeeS,
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Include the JWT token in the Authorization header
+          Authorization: `Bearer ${token}`, 
         },
       }
     );
 
-    // Handle the API response
+    
     if (response.data.success) {
-      // If the response is successful, redirect to the order payment page
+      
       router.push('/orderpayment');
     } else {
-      // If there's an issue, display the message from the response
+      
       setError(response.data.message || 'Failed to save address.');
     }
   } catch (error) {
-    // Catch network or API errors
+    
     console.error('Error during checkout:', error);
     if (error.response && error.response.data) {
       setError(error.response.data.message || 'Network error, please try again later.');
@@ -184,7 +184,7 @@ const Order = () => {
       setError('An unexpected error occurred. Please try again later.');
     }
   } finally {
-    setLoading(false); // Reset loading state after the process is finished
+    setLoading(false); 
   }
 };
 

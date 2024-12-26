@@ -26,7 +26,7 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
   const [loading, setLoading] = useState(false);
   const [otpExpiry, setOtpExpiry] = useState(0);
   const [resendAttempts, setResendAttempts] = useState(0);
-  const [isOtpFocused, setIsOtpFocused] = useState(false); // State to track OTP input focus
+  const [isOtpFocused, setIsOtpFocused] = useState(false);
 
   const otpInputRef = useRef(null);
 
@@ -46,12 +46,13 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
 
   const handleOtpChange = (e) => {
     const value = e.target.value;
-
-    // Ensure only digits are entered and handle OTP length
     if (/^\d{0,6}$/.test(value)) {
       setFormData({ ...formData, otp: value });
     }
   };
+
+  const isSendOtpEnabled = formData.mobileNumber.length === 10;
+  const isVerifyOtpEnabled = formData.otp.length === 6;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,12 +61,6 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
 
     try {
       if (currentState === 'Enter details') {
-        if (!/^\d{10}$/.test(formData.mobileNumber)) {
-          setError('Please enter a valid 10-digit mobile number');
-          setLoading(false);
-          return;
-        }
-
         const res = await fetch('/api/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -85,12 +80,6 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
         toast.success('OTP sent successfully');
       } else if (currentState === 'Verify OTP') {
         const otpCode = formData.otp;
-
-        if (otpCode.length !== 6) {
-          setError('Please enter the complete OTP');
-          setLoading(false);
-          return;
-        }
 
         const res = await fetch('/api/verify-otp', {
           method: 'POST',
@@ -161,23 +150,22 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     }
   };
 
-  const formatTime = (timeInSeconds) => {
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = timeInSeconds % 60;
-    return minutes > 0 ? `${minutes}m:${seconds}s` : `${seconds}s`;
-  };
-
   return (
     <div className='login-popup'>
       <ToastContainer />
       <form className='login-popup-container' onSubmit={handleSubmit}>
         <div className='login-popup-title'>
           <h2>{currentState}</h2>
-          <img onClick={() => setShowLogin(false)} src='/cross_icon.png' alt="Close" className='login-cross' />
+          <img
+            onClick={() => setShowLogin(false)}
+            src='/cross_icon.png'
+            alt='Close'
+            className='login-cross'
+          />
         </div>
         {error && <p className='error'>{error}</p>}
         <div className='login-popup-inputs'>
-          {currentState === "Enter details" && (
+          {currentState === 'Enter details' && (
             <>
               <div className='country-code-dropdown'>
                 <select
@@ -198,69 +186,45 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
                     placeholder='Your mobile number'
                     value={formData.mobileNumber}
                     onChange={handleChange}
-                    disabled={isOtpSent} // Disable after OTP is sent
                     required
-                    pattern="\d{10}"
-                    minLength={10}
-                    maxLength={10}
-                    title="Please enter exactly 10 digits."
+                    onFocus={() => setIsOtpFocused(true)}
                   />
                 </div>
               </div>
             </>
           )}
-         {isOtpSent && (
-  <div
-    className='otp-input'
-    style={{
-      border: `1px solid ${isOtpFocused ? 'red' : 'gray'}`,
-      borderRadius: '4px',
-    }}
-  >
+
+{isOtpSent && (
+  <div className="otp-input">
     <input
-      type={isOtpFocused ? 'text' : 'password'} // Use 'password' to hide the dots when not focused
-      name='otp'
-      placeholder={isOtpFocused ? '' : '•  •  •  •  •  •'} // Show placeholder dots when not focused
+      type={isOtpFocused ? "text" : "password"}
+      name="otp"
+      placeholder={isOtpFocused ? " " : "•  •  •  •  •  •"}
       value={formData.otp}
       onChange={handleOtpChange}
       onFocus={() => setIsOtpFocused(true)}
       onBlur={() => setIsOtpFocused(false)}
       required
-      style={{
-        border: 'none',
-        outline: 'none',
-        width: '100%',
-        fontSize: '16px',
-        letterSpacing: isOtpFocused ? 'normal' : '4px', // Add spacing when not focused
-      }}
     />
+  
   </div>
 )}
+
+         
 
         </div>
         <div className='button-container'>
           {!isOtpSent && (
-            <button type='submit' disabled={loading}>
+            <button type='submit' disabled={!isSendOtpEnabled || loading}>
               {loading ? 'Sending...' : 'Send OTP'}
             </button>
           )}
           {isOtpSent && (
-            <button type='submit' disabled={loading}>
+            <button type='submit' disabled={!isVerifyOtpEnabled || loading}>
               {loading ? 'Verifying...' : 'Verify OTP'}
             </button>
           )}
-          {isOtpSent && otpExpiry > 0 && (
-            <p className='otp-expiry-info'>Resend OTP in:{formatTime(otpExpiry)}</p>
-          )}
         </div>
-        {isOtpSent && otpExpiry === 0 && (
-          <p className='resend-otp'>
-            Didn’t receive code?{' '}
-            <span className='request-again' onClick={handleResendOtp}>
-              Request again
-            </span>
-          </p>
-        )}
       </form>
     </div>
   );
