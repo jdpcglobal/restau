@@ -1,5 +1,6 @@
 import dbConnect from '../../app/lib/dbconnect';
 import Order from '../../../public/models/Order'; // Adjust import path
+import CartTotal from '../../../public/models/CartTotal'; // Adjust import path
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
@@ -7,7 +8,7 @@ export default async function handler(req, res) {
     await dbConnect();
 
     try {
-      const { addressId, cartTotalId } = req.body; // Include cartTotalId in destructuring
+      const { addressId, cartTotalId, deliveryFee } = req.body; // Include deliveryFee in destructuring
 
       // Extract token from the Authorization header
       const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
@@ -16,8 +17,12 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Address ID is required.' });
       }
 
-      if (!cartTotalId) { // Check if cartTotalId is provided
+      if (!cartTotalId) {
         return res.status(400).json({ success: false, message: 'Cart Total ID is required.' });
+      }
+
+      if (!deliveryFee && deliveryFee !== 0) {
+        return res.status(400).json({ success: false, message: 'Delivery fee is required.' });
       }
 
       if (!token) {
@@ -40,19 +45,28 @@ export default async function handler(req, res) {
 
       console.log('User ID:', userId);
 
-      // Update or create order with the selected address ID and cart total ID
+      // Update or create order with the selected address ID
       let order = await Order.findOne({ user: userId });
-      
       if (!order) {
-        order = new Order({ user: userId, selectedAddress: addressId, carttotal: cartTotalId }); // Create new order with cart total
+        order = new Order({ user: userId, selectedAddress: addressId, carttotal: cartTotalId });
       } else {
-        order.selectedAddress = addressId; // Update existing order
-        order.carttotal = cartTotalId; // Update cart total
+        order.selectedAddress = addressId;
+        order.carttotal = cartTotalId;
       }
-      
       await order.save();
 
-      return res.status(200).json({ success: true, message: 'Order updated successfully.' });
+      // Update CartTotal document with deliveryFee and recalculate the total
+      const cartTotal = await CartTotal.findById(cartTotalId);
+      if (!cartTotal) {
+        return res.status(404).json({ success: false, message: 'Cart total not found.' });
+      }
+
+      cartTotal.deliveryFee = deliveryFee; 
+      cartTotal.total = 
+        cartTotal.subtotal - cartTotal.itemDiscount - cartTotal.couponDiscount + cartTotal.deliveryFee + cartTotal.totalGst;
+      await cartTotal.save();
+
+      return res.status(200).json({ success: true, message: 'Order and cart total updated successfully.' });
     } catch (error) {
       console.error('Error during checkout:', error);
       return res.status(500).json({ success: false, message: 'Server error' });

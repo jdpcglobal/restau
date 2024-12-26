@@ -28,7 +28,9 @@ const Order = () => {
   const [selectedCartTotalId, setSelectedCartTotalId] = useState(null);
   const [adminLocation, setAdminLocation] = useState('');
   const [distanceThreshold, setDistanceThreshold] = useState(12);
+  const [deliveryFeeS, setDeliveryFeeS] = useState(0);
   const router = useRouter();
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
  // Replace with actual user ID
  
  useEffect(() => {
@@ -45,6 +47,7 @@ const Order = () => {
       console.error('Error fetching admin settings:', error);
     }
   };
+  
 
   const fetchAddresses = async (token) => {
     try {
@@ -85,8 +88,10 @@ const Order = () => {
       });
 
       if (response.data.success) {
+        
         setCartTotal(response.data.cartTotal);
-        setSelectedCartTotalId(response.data.cartTotal._id); // Assuming cartTotal has an _id field
+        setSelectedCartTotalId(response.data.cartTotal._id); 
+        setSelectedAddressId(response.data.selectedAddressId);
       } else {
         setError(response.data.message);
       }
@@ -127,6 +132,7 @@ const Order = () => {
     setShowLogin(true);
     router.push('/');
   };
+  
 
  const handleCheckoutClick = async () => {
   // Ensure a delivery address is selected before proceeding
@@ -151,7 +157,8 @@ const Order = () => {
       '/api/saveCheckoutAddress', // Your API endpoint
       {
         addressId: selectedAddress._id, // Address ID selected by the user
-        cartTotalId: selectedCartTotalId, // Cart total ID for the current cart
+        cartTotalId: selectedCartTotalId,
+        deliveryFee : deliveryFeeS,
       },
       {
         headers: {
@@ -199,9 +206,10 @@ const Order = () => {
     }
   
     const selectedLocation = savedAddresses[index].location;
-  
     setSelectedAddress(savedAddresses[index]);
-  
+   
+     setSelectedAddressId(savedAddresses[index]._id);
+    
     if (!adminLocation) {
       console.error('Admin location is not defined.');
       setCartTotal((prev) => ({ ...prev, deliveryFee: 0 }));
@@ -217,6 +225,7 @@ const Order = () => {
   
       if (response.data.success) {
         const { fee, distance } = response.data;
+        setDeliveryFeeS(fee);
         console.log(`Delivery fee: ${fee}, Distance: ${distance} km`);
         setCartTotal((prev) => ({ ...prev, deliveryFee: fee }));
       } else {
@@ -273,26 +282,29 @@ const Order = () => {
               </div>
 
               {savedAddresses.length > 0 && (
-                <div className="address-list">
-                  {savedAddresses.map((addr, index) => (
-                    <div key={index} className="address-item">
-                      <input
-                        type="radio"
-                        name="saved-address"
-                        value={index}
-                        onChange={() => handleAddressChange(index)}
-                      />
-                      <span>{addr.flatNo}, {addr.location}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+  <div className="address-list">
+   {savedAddresses.map((addr, index) => (
+  <div key={index} className="address-item">
+    <input
+      type="radio"
+      name="saved-address"
+      value={index}
+      checked={addr._id === selectedAddressId} // Compare _id with selectedAddressId
+      onChange={() => handleAddressChange(index)} // Ensure this function handles selection
+    />
+    <span>{addr.flatNo}, {addr.location}</span>
+  </div>
+))}
+
+  </div>
+)}
+
 
               <p className="add-new-btn" onClick={() => setShowPopup(true)}>
                 <span>
                   <FontAwesomeIcon icon={faPlus} className="location-icon1" />
                 </span>{' '}
-                Add New Address
+              <span className='add-new'> Add New Address</span>
               </p>
             </div>
             <div className='place-order-right'>
