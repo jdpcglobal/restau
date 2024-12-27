@@ -111,6 +111,18 @@ span.icon.success-icon{
   
 
 }
+
+
+.otp-input input:focus {
+  border-color: tomato; /* Optional: Highlight border when focused */
+}
+
+.otp-input input::placeholder {
+  font-size: 18px;
+  color: gray; /* Adjust placeholder color */
+  letter-spacing: 5px; /* Add spacing to match the placeholder style */
+}
+
                 
 .mobile-number-input {
   border: 1px solid gray; /* Default border color */

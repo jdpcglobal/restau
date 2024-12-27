@@ -199,16 +199,16 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     <input
       type={isOtpFocused ? "text" : "password"}
       name="otp"
-      placeholder={isOtpFocused ? " " : "•  •  •  •  •  •"}
+      placeholder={isOtpFocused ? "" : "•  •  •  •  •  •"}
       value={formData.otp}
       onChange={handleOtpChange}
       onFocus={() => setIsOtpFocused(true)}
       onBlur={() => setIsOtpFocused(false)}
       required
     />
-  
   </div>
 )}
+
 
          
 
