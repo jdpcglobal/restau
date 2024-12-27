@@ -449,14 +449,7 @@ const saveCartTotal = async () => {
 
     <div className='cart-total-details'>
       <b>Total</b>
-      {/* <b>₹{
-        (subtotalWithD - 
-         subtotal - 
-         (appliedCoupon ? (subtotalWithD * appliedCoupon.rate / 100) : 0) + 
-         deliveryFee + 
-         totalGst
-        ).toFixed(2)
-      }</b> */}
+     
       <b>₹{
         (subtotalWithD - 
           (
@@ -469,8 +462,7 @@ const saveCartTotal = async () => {
             : 0)  + 
          deliveryFee + 
          totalGst
-        ).toFixed(2)
-      }</b>
+        ).toFixed(2)}</b>
     </div>
      <div className="checkout-button">
                 {error && <div className="error-message">{error}</div>}

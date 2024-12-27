@@ -51,7 +51,7 @@
     cursor: pointer;
     
 }
-.signInButton{
+/* .signInButton{
     background: transparent;
     font-size: 16px;
     color: #49557e;
@@ -63,7 +63,41 @@ transition: 0.3s;
 }
 .signInButton:hover{
     background-color: #fff4f2;
-}
+} */
+
+.signInButton {
+    position: relative;
+    overflow: hidden;
+    background: none;
+    border: 1px solid tomato;
+    border-radius: 50px;
+    color:#49557e; /* Text color */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1; /* Ensures text stays on top */
+  }
+  
+  .signInButton::before {
+    content: '';
+    position: absolute;
+    top: -100%; /* Start above the button */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: tomato; /* Background color on hover */
+    transition: top 0.5s ease-in-out; /* Smooth transition */
+    z-index: -1; /* Behind the text */
+  }
+  
+  .signInButton:hover::before {
+    top: 0; /* Move background into view */
+  }
+  
+  .signInButton:hover {
+    color: inherit; /* Ensure text color stays the same */
+  }
+  
 .navbar-search-icon{
     position: relative;
     cursor: pointer;
