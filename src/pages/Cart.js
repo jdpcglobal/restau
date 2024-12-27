@@ -21,7 +21,7 @@ const CartPage = () => {
   const [showPromoPopup, setShowPromoPopup] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  
 
  
  
@@ -61,28 +61,31 @@ const CartPage = () => {
   
 
   const fetchCartItems = async (token) => {
+
+  
     try {
       const response = await axios.get('/api/getCartItems', {
         headers: { Authorization: `Bearer ${token}` },
       });
-
+  
       if (response.data.success) {
         setCartItems(response.data.cartItems);
       } else if (response.data.error === 'TokenExpired') {
         handleTokenExpiration();
+        router.push('/');  // Redirect to home page
       } else {
         setError(response.data.message);
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
         handleTokenExpiration();
+        router.push('/');  // Redirect to home page
       } else {
         console.error('Error fetching cart items:', error);
         setError('Error fetching cart items');
       }
     }
   };
-
   const updateCartItem = async (itemId, newQuantity) => {
     try {
       const token = localStorage.getItem('token');

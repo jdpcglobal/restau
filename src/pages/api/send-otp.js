@@ -1,83 +1,98 @@
 import mongoose from 'mongoose';
 import User from '../../../public/models/user'; // Assuming you have a User model
 import Otp from '../../../public/models/Otp';
+import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 
-  const { mobileNumber, verifyOtp, otpToVerify } = req.body;
-
-  if (!mobileNumber) {
-    return res.status(400).json({ error: 'Mobile number is required' });
-  }
-
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
+    // Extract data from request body
+    const { mobileNumber } = req.body;
 
-    const now = new Date();
-
-    // Handle OTP verification
-    if (verifyOtp && otpToVerify) {
-      const existingOtp = await Otp.findOne({ mobileNumber });
-
-      if (
-        existingOtp &&
-        existingOtp.otp === otpToVerify &&
-        existingOtp.lastSent &&
-        now < new Date(existingOtp.lastSent.getTime() + 10 * 60 * 1000) // OTP valid for 10 minutes
-      ) {
-        await Otp.updateOne(
-          { mobileNumber },
-          { $set: { otp: null, resendCount: 0, lastSent: now } }
-        );
-        return res.status(200).json({ message: 'OTP verified successfully' });
-      } else {
-        return res.status(400).json({ error: 'Invalid or expired OTP' });
-      }
+    if (!mobileNumber) {
+      return res.status(400).json({ error: 'Mobile number is required' });
     }
 
-    // Generate a new OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    let otpRecord = await Otp.findOne({ mobileNumber });
-
-    const resendDelay = otpRecord?.resendCount < 3 ? 1 * 60 * 1000 : 15 * 60 * 1000;
-    const nextAllowedTime = otpRecord
-      ? new Date(otpRecord.lastSent.getTime() + resendDelay)
-      : null;
-
-    if (otpRecord && now < nextAllowedTime) {
-      const remainingTime = Math.ceil((nextAllowedTime - now) / 1000);
-      const minutes = Math.floor(remainingTime / 60);
-      const seconds = remainingTime % 60;
-      return res.status(429).json({
-        error: `OTP already sent. Please wait ${minutes}:${seconds.toString().padStart(2, '0')} before resending.`,
-        timeRemaining: `${minutes}:${seconds.toString().padStart(2, '0')}`,
+    // Connect to MongoDB if not already connected
+    if (!mongoose.connections[0].readyState) {
+      await mongoose.connect(process.env.MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
       });
     }
 
-    if (!otpRecord) {
+    // Generate OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const now = new Date();
+
+    // Check if OTP record exists for the mobile number
+    let otpRecord = await Otp.findOne({ mobileNumber });
+
+    if (otpRecord) {
+      const resendDelay = 1 * 60 * 1000; // 1 minute delay for resending
+      const nextAllowedTime = new Date(otpRecord.lastSent.getTime() + resendDelay);
+
+      if (now < nextAllowedTime) {
+        const remainingTime = Math.ceil((nextAllowedTime - now) / 1000);
+        return res.status(429).json({
+          error: `OTP already sent. Please wait ${remainingTime} seconds before resending.`,
+        });
+      }
+
+      // Update existing record
+      otpRecord.otp = otp;
+      otpRecord.lastSent = now;
+      otpRecord.resendCount += 1;
+    } else {
+      // Create a new OTP record
       otpRecord = new Otp({
         mobileNumber,
         otp,
-        resendCount: 1,
         lastSent: now,
+        resendCount: 1,
       });
-      await otpRecord.save();
-    } else {
-      otpRecord.otp = otp;
-      otpRecord.resendCount += 1;
-      otpRecord.lastSent = now;
-      await otpRecord.save();
     }
 
-    // You can still respond with the OTP without sending it via network.
-    return res.status(200).json({ message: 'OTP generated successfully' });
+    // Save the OTP record
+    await otpRecord.save();
 
+    // Format mobile number for the PHP API
+    const formattedMobile = mobileNumber.startsWith('91')
+      ? mobileNumber
+      : `91${mobileNumber}`;
+
+    const postData = {
+      From: 'EFLATB',
+      To: formattedMobile,
+      TemplateName: 'ContentEFBOTP',
+      VAR1: otp,
+    };
+
+    const phpApiUrl =
+      'http://2factor.in/API/V1/51a830db-c684-11e6-afa5-00163ef91450/ADDON_SERVICES/SEND/TSMS';
+
+    // Send OTP using the PHP API
+    const response = await fetch(phpApiUrl, {
+      method: 'POST',
+      body: new URLSearchParams(postData),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    const result = await response.text();
+
+    if (response.ok) {
+      return res.status(200).json({ message: 'OTP sent successfully' });
+    } else {
+      console.error('Error sending OTP:', result);
+      return res.status(500).json({ error: 'Failed to send OTP' });
+    }
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }

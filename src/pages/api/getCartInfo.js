@@ -33,13 +33,15 @@ export default async function handler(req, res) {
 
         // Fetch the latest order associated with the user
         const order = await OrderModel.findOne({ user: userId }).sort({ createdAt: -1 });
-
-        if (!order) {
-          return res.status(404).json({ success: false, message: 'No order found for the user' });
-        }
+        let selectedAddressId;
+        if (order) {
+          selectedAddressId = order.selectedAddress;
+        }else{
+          selectedAddressId = null;
+        };
 
         // Extract the selected address ID from the order
-        const selectedAddressId = order.selectedAddress;
+        
 
         // Respond with the cart total and the selected address ID
         res.status(200).json({

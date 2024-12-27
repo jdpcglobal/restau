@@ -61,6 +61,12 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
 
     try {
       if (currentState === 'Enter details') {
+        if (!/^\d{10}$/.test(formData.mobileNumber)) {
+          setError('Please enter a valid 10-digit mobile number');
+          setLoading(false);
+          return;
+        }
+
         const res = await fetch('/api/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -80,6 +86,12 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
         toast.success('OTP sent successfully');
       } else if (currentState === 'Verify OTP') {
         const otpCode = formData.otp;
+
+        if (otpCode.length !== 6) {
+          setError('Please enter the complete OTP');
+          setLoading(false);
+          return;
+        }
 
         const res = await fetch('/api/verify-otp', {
           method: 'POST',
@@ -150,26 +162,32 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
     }
   };
 
+  const formatTime = (timeInSeconds) => {
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    return minutes > 0 ? `${minutes}m:${seconds}s` : `${seconds}s`;
+  };
+
   return (
-    <div className='login-popup'>
+    <div className="login-popup">
       <ToastContainer />
-      <form className='login-popup-container' onSubmit={handleSubmit}>
-        <div className='login-popup-title'>
+      <form className="login-popup-container" onSubmit={handleSubmit}>
+        <div className="login-popup-title">
           <h2>{currentState}</h2>
           <img
             onClick={() => setShowLogin(false)}
-            src='/cross_icon.png'
-            alt='Close'
-            className='login-cross'
+            src="/cross_icon.png"
+            alt="Close"
+            className="login-cross"
           />
         </div>
-        {error && <p className='error'>{error}</p>}
-        <div className='login-popup-inputs'>
+        {error && <p className="error">{error}</p>}
+        <div className="login-popup-inputs">
           {currentState === 'Enter details' && (
             <>
-              <div className='country-code-dropdown'>
+              <div className="country-code-dropdown">
                 <select
-                  name='countryCode'
+                  name="countryCode"
                   value={formData.countryCode}
                   onChange={handleChange}
                 >
@@ -179,52 +197,63 @@ const LoginPopup = ({ setShowLogin, setIsLoggedIn }) => {
                     </option>
                   ))}
                 </select>
-                <div className='mobile-number-input'>
+                <div className="mobile-number-input">
                   <input
-                    type='number'
-                    name='mobileNumber'
-                    placeholder='Your mobile number'
+                    type="number"
+                    name="mobileNumber"
+                    placeholder="Your mobile number"
                     value={formData.mobileNumber}
                     onChange={handleChange}
+                    disabled={isOtpSent}
                     required
+                    pattern="\d{10}"
                     onFocus={() => setIsOtpFocused(true)}
+                    title="Please enter exactly 10 digits."
                   />
+                   
                 </div>
               </div>
             </>
           )}
-
-{isOtpSent && (
+        {isOtpSent && (
   <div className="otp-input">
     <input
       type={isOtpFocused ? "text" : "password"}
       name="otp"
-      placeholder={isOtpFocused ? "" : "•  •  •  •  •  •"}
+      placeholder= "•  •  •  •  •  •"
       value={formData.otp}
       onChange={handleOtpChange}
       onFocus={() => setIsOtpFocused(true)}
       onBlur={() => setIsOtpFocused(false)}
       required
     />
+  
   </div>
 )}
-
-
-         
-
         </div>
-        <div className='button-container'>
+        <div className="button-container">
           {!isOtpSent && (
             <button type='submit' disabled={!isSendOtpEnabled || loading}>
-              {loading ? 'Sending...' : 'Send OTP'}
-            </button>
+            {loading ? 'Sending...' : 'Send OTP'}
+          </button>
           )}
           {isOtpSent && (
             <button type='submit' disabled={!isVerifyOtpEnabled || loading}>
-              {loading ? 'Verifying...' : 'Verify OTP'}
-            </button>
+            {loading ? 'Verifying...' : 'Verify OTP'}
+          </button>
+          )}
+          {isOtpSent && otpExpiry > 0 && (
+            <p className="otp-expiry-info">Resend OTP in: {formatTime(otpExpiry)}</p>
           )}
         </div>
+        {isOtpSent && otpExpiry === 0 && (
+          <p className="resend-otp">
+            Didn’t receive code?{' '}
+            <span className="request-again" onClick={handleResendOtp}>
+              Request again
+            </span>
+          </p>
+        )}
       </form>
     </div>
   );
