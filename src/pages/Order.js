@@ -49,6 +49,8 @@ const Order = () => {
   };
   
 
+
+
   const fetchAddresses = async (token) => {
     try {
       const response = await axios.get('/api/getAddresses', {
@@ -240,7 +242,77 @@ const Order = () => {
     }
   };
   
-  
+
+
+
+
+// Function to calculate delivery fee using userLocation and adminLocation
+const calculateDeliveryFee = async (userLocation, adminLocation) => {
+  try {
+    // Make the API call to calculate the delivery fee
+    const response = await axios.post('/api/calculateDeliveryFee', {
+      userLocation,
+      adminLocation,
+    });
+
+    if (response.data.success) {
+      const { fee, distance } = response.data;
+      return { fee, distance };
+    } else {
+      console.warn('Delivery fee calculation failed:', response.data.message);
+      return { fee: 0, distance: 0 };
+    }
+  } catch (error) {
+    console.error('Error calculating delivery fee:', error.message || error);
+    return { fee: 0, distance: 0 };
+  }
+};
+
+useEffect(() => {
+  // Check if all necessary values are available
+  if (!savedAddresses || !adminLocation || !selectedAddressId) {
+    return; // Do nothing if values are not available
+  }
+
+  // Filter the saved addresses array to find the selected address
+  const selectedAddress = savedAddresses.find(address => address._id === selectedAddressId);
+
+  if (!selectedAddress) {
+    console.error('Selected address not found.');
+    return;
+  }
+
+  // Get the location from the selected address
+  const userLocation = selectedAddress.location;
+
+  // Call the calculateDeliveryFee function with userLocation and adminLocation
+  const calculateFee = async () => {
+    try {
+      const response = await axios.post('/api/calculateDeliveryFee', {
+        userLocation,
+        adminLocation,
+      });
+
+      if (response.data.success) {
+        const { fee, distance } = response.data;
+        setDeliveryFeeS(fee);
+        console.log(`Delivery fee: ${fee}, Distance: ${distance} km`);
+        setCartTotal((prev) => ({ ...prev, deliveryFee: fee }));
+      } else {
+        console.warn('Delivery fee calculation failed:', response.data.message);
+        setCartTotal((prev) => ({ ...prev, deliveryFee: 0 }));
+      }
+    } catch (error) {
+      console.error('Error calculating delivery fee:', error.message || error);
+      setCartTotal((prev) => ({ ...prev, deliveryFee: 0 }));
+    }
+  };
+
+  // Call the function to calculate the delivery fee
+  calculateFee();
+
+}, [savedAddresses, adminLocation, selectedAddressId]);
+
 
   return (
     <>
