@@ -228,7 +228,7 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
                   className='submit-button1'
                   disabled={loading} // Disable button during loading
                 >
-                  {loading ? 'Processing...' : 'Proceed to Submit'}
+                  {loading ? 'Processing...' : 'PLACE ORDER'}
                 </button>
               )}
               {error && <p className='error-message'>{error}</p>}

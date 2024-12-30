@@ -185,7 +185,7 @@ transform: scale(1.4);
 }
 
 .cart-total button {
-  background: tomato;
+  background: #fb641b;
   color: white;
   border: none;
   border-radius: 4px;
@@ -354,8 +354,8 @@ transform: scale(1.4);
 }
 
 .payment-container button {
-  background-color: tomato;
-  color: white;
+  background-color: #fb641b;
+  color: #fff;
   border: none;
   border-radius: 4px;
   padding: 12px 20px;

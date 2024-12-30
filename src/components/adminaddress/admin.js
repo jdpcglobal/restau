@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './adminaddres.css';
-// import '../orders/orders.css';
 
 const AdminPage = () => {
   const [adminLocation, setAdminLocation] = useState('');
@@ -45,13 +46,21 @@ const AdminPage = () => {
         distanceThreshold,
       });
       if (response.data.success) {
-        
+        toast.success('Address saved successfully!', {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
-        alert('Error updating settings');
+        toast.error('Error updating settings');
       }
     } catch (error) {
       console.error('Error updating settings:', error);
-      alert('An unexpected error occurred');
+      toast.error('An unexpected error occurred');
     }
     setIsSaving(false);  // Stop saving
   };
@@ -75,17 +84,18 @@ const AdminPage = () => {
           <label>
             Distance Threshold (km):
             <input
-        type="number"
-        placeholder="Distance Threshold (km)"
-        value={distanceThreshold}
-        onChange={(e) => setDistanceThreshold(e.target.value)}
-      />
+              type="number"
+              placeholder="Distance Threshold (km)"
+              value={distanceThreshold}
+              onChange={(e) => setDistanceThreshold(e.target.value)}
+            />
           </label>
           <button onClick={handleSaveSettings} disabled={isSaving}>
             {isSaving ? 'Saving...' : 'Save Address'}
           </button>
         </>
       )}
+      <ToastContainer />
     </div>
   );
 };

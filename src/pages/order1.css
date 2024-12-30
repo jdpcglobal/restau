@@ -82,7 +82,7 @@ span.add-new:hover{
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid tomato;
+  border: 2px solid #fb641b;
   outline: none;
   cursor: pointer;
   margin-right: 10px;
@@ -97,7 +97,7 @@ span.add-new:hover{
   left: 50%;
   width: 8px;
   height: 8px;
-  background-color: tomato;
+  background-color: #fb641b;
   border-radius: 50%;
   transform: translate(-50%, -50%);
 }
@@ -212,7 +212,7 @@ span.add-new:hover{
 
 .locate-me-btn {
   width: 40%; /* Adjusted to full width */
-  background-color: white;
+  background-color: #fff;
   color: #ff6347;
   padding: 12px;
   border: 1px solid #ff6347;
@@ -232,7 +232,7 @@ span.add-new:hover{
 }
 
 .not-deliverable {
-  color: red;
+  color: #fb641b;
   font-size: 14px;
   text-align: center;
   margin-top: 10px;

@@ -441,7 +441,7 @@ useEffect(() => {
           className="checkout-button"
           disabled={cartItems.length === 0}
         >
-          {loading ? 'Processing...' : 'Proceed to payment'.toUpperCase()}
+          {loading ? 'Processing...' : 'Proceed to Payment'.toUpperCase()}
         </button>
       </div>
     </div>
