@@ -7,7 +7,7 @@ import fs from 'fs';
 // Configure Multer storage and file filter
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = path.join(process.cwd(), 'uploads/categories');
+    const uploadDir = path.join(process.cwd(), 'public/uploads/categories');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -47,9 +47,8 @@ export default async function handler(req, res) {
         const newCategory = new Category({
           name,
           imageUrl: `/uploads/categories/${req.file.filename}`, // Store image path
-          
         });
-        
+
         await newCategory.save();
 
         res.status(201).json({ message: 'Category added successfully', category: newCategory });
