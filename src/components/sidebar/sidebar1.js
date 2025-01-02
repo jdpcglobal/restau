@@ -185,7 +185,7 @@ const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
   <circle cx="18.5" cy="18.5" r="2.5" />
 </svg>
 
-  <p>DeliveryFee</p>
+  <p>Delivery Fee</p>
 </div>
 
         <div

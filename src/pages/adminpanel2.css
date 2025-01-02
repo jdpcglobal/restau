@@ -56,29 +56,7 @@
     padding: 20px;
   }
 
-  @media (max-width: 900px) {
-    .sidebar {
-        width: 60px; /* Compact width for smaller screens */
-    }
-
-    .sidebar-option p {
-        display: none;
-    }
-
-    .sidebar-options {
-        padding-left: 10%;
-    }
-
-    .sidebar-option {
-        justify-content: center; /* Center icon in compact view */
-        padding: 12px;
-    }
-
-    .sidebar-option img {
-        width: 28px;
-        height: 28px;
-    }
-}
+ 
 
 .sidebar {
   width: 18%;
@@ -150,7 +128,8 @@
   }
 
   .sidebar-option p {
-      display: none;
+      font-size: 8px;
+      text-align: center;
   }
 
   .sidebar-options {
@@ -158,6 +137,7 @@
   }
 
   .sidebar-option {
+    display: inline-block;
       justify-content: center; /* Center icon in compact view */
       padding: 12px;
   }

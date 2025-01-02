@@ -106,7 +106,8 @@
     }
 
     .sidebar-option p {
-        display: none;
+        font-size: 8px;
+        text-align: center;
     }
 
     .sidebar-options {
@@ -114,6 +115,7 @@
     }
 
     .sidebar-option {
+        display: inline-block;
         justify-content: center; /* Center icon in compact view */
         padding: 12px;
     }
