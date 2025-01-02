@@ -59,8 +59,6 @@ const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
           <line x1="1" y1="10" x2="23" y2="10" />
           <line x1="16" y1="14" x2="16" y2="14" />
         </svg>
-{/* <img src='/payment.png' alt="Orders Items" /> */}
-          {/* <FontAwesomeIcon icon={faCreditCard} className='icon1' />  */}
           <p>Payment</p>
         </div>
         <div

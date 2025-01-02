@@ -18,6 +18,21 @@
     left:6vw;
     animation: fadeIn 3s;
 }
+.header.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: tomato;
+  }
+  
+  .header.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: tomato;
+  }
 .header-contents h2{
     font-weight:500 ;
     color: white;

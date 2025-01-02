@@ -67,7 +67,9 @@ export default function Home() {
   return (
     <div className='list add1 flex-col'>
       <ToastContainer />
+      <div className='list-item-title'>
       <p>All Food List</p>
+      </div>
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
