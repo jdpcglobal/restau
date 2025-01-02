@@ -7,7 +7,7 @@ import fs from 'fs';
 // Configure Multer storage and file filter
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = path.join(process.cwd(), 'public/uploads/categories');
+    const uploadDir = path.join(process.cwd(), 'uploads/categories');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
