@@ -7,7 +7,7 @@ import Exploremenu from '../components/explormenu/exploremenu1.js';
 import FoodDisplay from '../components/fooddisplay/fooddisplay1.js';
 import Footer from '../components/footer/footer1.js';
 import LoginPopup from '../components/loginpopup/loginpopup1.js';
-import CartPopup from '../components/cartpopup/cartpopup1.js';
+
 
 const Page = () => {
   const [showLogin, setShowLogin] = useState(false);
