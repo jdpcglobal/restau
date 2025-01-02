@@ -49,15 +49,97 @@ const CartPage = () => {
   };
 
   useEffect(() => {
+    // Function to handle token expiration
+    const handleTokenExpiration = () => {
+      localStorage.removeItem('token');
+      setIsLoggedIn(false);
+      setShowLogin(true); // Show login popup
+      router.push('/'); // Redirect to the home page
+    };
+
+    // Fetch admin settings
+    const fetchAdminSettings = async () => {
+      try {
+        const response = await axios.get('/api/adminSettings');
+        if (response.data.success) {
+          setAdminLocation(response.data.adminLocation);
+          setDistanceThreshold(response.data.distanceThreshold);
+        } else {
+          console.error('Failed to fetch admin settings');
+        }
+      } catch (error) {
+        console.error('Error fetching admin settings:', error.message);
+      }
+    };
+
+    // Fetch saved addresses
+    const fetchAddresses = async (token) => {
+      try {
+        const response = await axios.get('/api/getAddresses', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.data.success) {
+          setSavedAddresses(response.data.deliveries);
+        }
+      } catch (error) {
+        if (error.response?.status === 401) handleTokenExpiration();
+        else console.error('Error fetching saved addresses:', error.message);
+      }
+    };
+
+    // Fetch cart items
+    const fetchCartItems = async (token) => {
+      try {
+        const response = await axios.get('/api/getCartItems', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response.data.success) {
+          setCartItems(response.data.cartItems);
+        } else {
+          console.error('Failed to fetch cart items');
+        }
+      } catch (error) {
+        if (error.response?.status === 401) handleTokenExpiration();
+        else console.error('Error fetching cart items:', error.message);
+      }
+    };
+
+    // Fetch cart total
+    const fetchCartTotal = async (token) => {
+      try {
+        const response = await axios.get('/api/getCartInfo', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.data.success) {
+          setCartTotal(response.data.cartTotal);
+          setSelectedCartTotalId(response.data.cartTotal._id);
+          setSelectedAddressId(response.data.selectedAddressId);
+        } else {
+          console.error('Failed to fetch cart total');
+        }
+      } catch (error) {
+        if (error.response?.status === 401) handleTokenExpiration();
+        else console.error('Error fetching cart total:', error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Validate token and fetch necessary data
     const token = localStorage.getItem('token');
     if (token) {
-      fetchCartItems(token);
       setIsLoggedIn(true);
+      fetchAddresses(token);
+      fetchCartItems(token);
+      fetchCartTotal(token);
     } else {
-      setShowLogin(true);
-      router.push('/'); // Redirect to the home page if not logged in
+      handleTokenExpiration(); // Handle missing or invalid token
     }
-  }, []);
+
+    // Fetch admin settings
+    fetchAdminSettings();
+  }, [router]);
   
 
   const fetchCartItems = async (token) => {
@@ -285,7 +367,7 @@ const saveCartTotal = async () => {
   
       const data = await response.json();
       if (data.success) {
-        console.log('Cart total saved successfully:', data.cartTotal);
+        // console.log('Cart total saved successfully:', data.cartTotal);
       } else {
         console.error('Failed to save cart total:', data.message);
       }

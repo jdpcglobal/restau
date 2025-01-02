@@ -26,31 +26,47 @@ const OrderPayment = ({ cartItems = [], totalAmount, selectedAddress, userId }) 
   const router = useRouter();
 
   useEffect(() => {
+    const handleTokenExpiration = () => {
+     
+      localStorage.removeItem('token');
+      setIsLoggedIn(false);
+      setShowLogin(true);
+      router.push('/'); // Redirect to the home page
+    };
+
     const fetchPayments = async () => {
       try {
-        const response = await axios.get('/api/paymentshow');
+        const response = await axios.get('/api/paymentshow', {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
         if (response.data.success) {
           setPayments(response.data.data || []);
+        } else if (response.data.error === 'Token expired') {
+          handleTokenExpiration();
         } else {
           console.error('Failed to fetch payment methods:', response.data.message);
         }
       } catch (error) {
-        console.error('Error fetching payment methods:', error.message);
+        if (error.response?.status === 401) {
+          handleTokenExpiration();
+        } else {
+          console.error('Error fetching payment methods:', error.message);
+        }
       }
     };
-
-    fetchPayments();
 
     if (typeof window !== 'undefined') {
       const localStorageToken = localStorage.getItem('token');
       if (localStorageToken) {
         setToken(localStorageToken);
         setIsLoggedIn(true);
+        fetchPayments();
       } else {
         setShowLogin(true);
+        router.push('/');
       }
     }
-  }, []);
+  }, [token, router]);
 
   const handleOptionChange = (option) => {
     setSelectedOption(option);

@@ -33,7 +33,17 @@ const Order = () => {
   const [selectedAddressId, setSelectedAddressId] = useState(null);
  // Replace with actual user ID
  
+
+
  useEffect(() => {
+  const handleTokenExpiration = () => {
+   
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setShowLogin(true);
+    router.push('/'); // Redirect to the home page
+  };
+
   const fetchAdminSettings = async () => {
     try {
       const response = await axios.get('/api/adminSettings');
@@ -44,12 +54,9 @@ const Order = () => {
         console.error('Failed to fetch admin settings');
       }
     } catch (error) {
-      console.error('Error fetching admin settings:', error);
+      console.error('Error fetching admin settings:', error.message);
     }
   };
-  
-
-
 
   const fetchAddresses = async (token) => {
     try {
@@ -60,7 +67,11 @@ const Order = () => {
         setSavedAddresses(response.data.deliveries);
       }
     } catch (error) {
-      console.error('Error fetching saved addresses:', error);
+      if (error.response?.status === 401) {
+        handleTokenExpiration();
+      } else {
+        console.error('Error fetching saved addresses:', error.message);
+      }
     }
   };
 
@@ -75,31 +86,33 @@ const Order = () => {
         setError(response.data.message);
       }
     } catch (error) {
-      console.error('Error fetching cart items:', error);
-      setError('Error fetching cart items');
+      if (error.response?.status === 401) {
+        handleTokenExpiration();
+      } else {
+        console.error('Error fetching cart items:', error.message);
+      }
     }
   };
 
-  const fetchCartTotal = async () => {
+  const fetchCartTotal = async (token) => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) throw new Error('No token found');
-
       const response = await axios.get('/api/getCartInfo', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.data.success) {
-        
         setCartTotal(response.data.cartTotal);
-        setSelectedCartTotalId(response.data.cartTotal._id); 
+        setSelectedCartTotalId(response.data.cartTotal._id);
         setSelectedAddressId(response.data.selectedAddressId);
       } else {
         setError(response.data.message);
       }
     } catch (error) {
-      console.error('Error fetching cart total:', error);
-      setError('Error fetching cart total');
+      if (error.response?.status === 401) {
+        handleTokenExpiration();
+      } else {
+        console.error('Error fetching cart total:', error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -111,13 +124,13 @@ const Order = () => {
     setIsLoggedIn(true);
     fetchAddresses(token);
     fetchCartItems(token);
+    fetchCartTotal(token);
   } else {
-    setShowLogin(true);
+    handleTokenExpiration();
   }
 
-  fetchCartTotal();
   fetchAdminSettings();
-}, []);
+}, [router]);
 
 
   const handleSaveAddress = (newAddress) => {
@@ -228,7 +241,7 @@ const Order = () => {
       if (response.data.success) {
         const { fee, distance } = response.data;
         setDeliveryFeeS(fee);
-        console.log(`Delivery fee: ${fee}, Distance: ${distance} km`);
+        // console.log(`Delivery fee: ${fee}, Distance: ${distance} km`);
         setCartTotal((prev) => ({ ...prev, deliveryFee: fee }));
       } else {
         console.warn('Delivery fee calculation failed:', response.data.message);
@@ -296,7 +309,7 @@ useEffect(() => {
       if (response.data.success) {
         const { fee, distance } = response.data;
         setDeliveryFeeS(fee);
-        console.log(`Delivery fee: ${fee}, Distance: ${distance} km`);
+        // console.log(`Delivery fee: ${fee}, Distance: ${distance} km`);
         setCartTotal((prev) => ({ ...prev, deliveryFee: fee }));
       } else {
         console.warn('Delivery fee calculation failed:', response.data.message);

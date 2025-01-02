@@ -27,6 +27,7 @@ const CartPage = () => {
 
   const router = useRouter();
 
+ 
   useEffect(() => {
     const checkLoginStatus = async () => {
       const token = localStorage.getItem('token');
@@ -34,7 +35,7 @@ const CartPage = () => {
         setIsLoggedIn(true);
         await fetchOrders(token);
       } else {
-        setShowLogin(true);
+        handleTokenExpiration();
       }
     };
 
@@ -48,18 +49,32 @@ const CartPage = () => {
           setOrders(response.data.orderPayments);
           setTotal(calculateTotal(response.data.orderPayments));
         } else {
-          setError(response.data.message);
-          setShowLogin(true);
+          handleTokenExpiration();
         }
       } catch (error) {
-        console.error('Error fetching orders:', error.response || error.message);
-        setError('Error fetching orders');
-        setShowLogin(true);
+        if (error.response?.status === 401) {
+          handleTokenExpiration();
+        } else {
+          console.error('Error fetching orders:', error.response || error.message);
+          setError('Error fetching orders');
+        }
       }
     };
 
+    const calculateTotal = (orders) => {
+      return orders.reduce((acc, order) => acc + order.amount, 0);
+    };
+
+    const handleTokenExpiration = () => {
+     
+      localStorage.removeItem('token');
+      setIsLoggedIn(false);
+      setShowLogin(true);
+      router.push('/'); // Redirects to the home page
+    };
+
     checkLoginStatus();
-  }, []);
+  }, [router]);
 
   const handleStatusUpdate = async (orderId) => {
     try {

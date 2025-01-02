@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import './navbar2.css';
 import { assets } from '../../assets/assets';
@@ -9,11 +9,37 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
   const [isLoading, setIsLoading] = useState(false); // State for loading spinner
   const router = useRouter();
   const pathname = usePathname(); // Get the current pathname
+  const [token, setToken] = useState(null); // State to monitor token
+
+  useEffect(() => {
+    const checkToken = () => {
+      const storedToken = localStorage.getItem('token');
+      if (!storedToken) {
+        handleTokenExpiration();
+      } else {
+        setToken(storedToken);
+      }
+    };
+
+    const handleTokenExpiration = () => {
+      localStorage.removeItem('token');
+      setToken(null);
+      setShowLogin(true); // Show the login popup
+      router.push('/'); // Redirect to the home page
+    };
+
+    // Check token on component mount
+    checkToken();
+
+    // Optional: Poll or listen for token changes
+    const interval = setInterval(checkToken, 5000); // Adjust interval as needed
+    return () => clearInterval(interval);
+  }, [router, setShowLogin]);
 
   const handleCheckoutClick = async () => {
     setIsLoading(true); // Show spinner
     setTimeout(async () => { // Simulate a delay for loading
-      if (!isLoggedIn) {
+      if (!token) {
         setShowLogin(true); // Show login popup if not logged in
       } else {
         await router.push('/Cart'); // Redirect to cart page if logged in
@@ -23,7 +49,11 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
   };
 
   const handleOrderClick = () => {
-    router.push('/MyOrder'); // Replace '/order' with the actual path to your order page
+    if (token) {
+      router.push('/MyOrder'); // Replace '/order' with the actual path to your order page
+    } else {
+      setShowLogin(true); // Show login popup if not logged in
+    }
   };
 
   return (
@@ -86,7 +116,7 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
         )}
       </div>
 
-      {isLoggedIn ? (
+      {token ? (
         <div className="navbar-profile">
           <Image src={assets.profile_icon} alt="Profile" />
           <ul className="nav-profile-dropdown">
