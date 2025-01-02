@@ -47,8 +47,9 @@ export default async function handler(req, res) {
         const newCategory = new Category({
           name,
           imageUrl: `/uploads/categories/${req.file.filename}`, // Store image path
+          
         });
-
+        
         await newCategory.save();
 
         res.status(201).json({ message: 'Category added successfully', category: newCategory });
