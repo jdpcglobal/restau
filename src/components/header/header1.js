@@ -28,27 +28,33 @@ const Header = () => {
   }, []);
 
   if (loading) {
+    // Skeleton or loading state
     return (
-      <div className="header loading">
-        <p>Loading...</p>
+      <div className="header animate-pulse bg-gray-500">
+        <div className="header-contents w-full h-72 p-4">
+          <div className="h-10 bg-gray-500 rounded w-1/2 my-4"></div>
+          <div className="h-6 bg-gray-500 rounded w-3/4 my-4"></div>
+          <div className="h-10 bg-gray-500 rounded w-1/6 my-4"></div>
+        </div>
       </div>
     );
   }
 
   if (error) {
-    return (
-      <div className="header error">
-        <p className="error">{error}</p>
-      </div>
-    );
+    // Error state
+    return <div className="header-error">Error: {error}</div>;
   }
 
+  // Main content when data is loaded
   return (
-    <div className="header" style={{ backgroundImage: `url(${headerImage ? headerImage.imagePath : ''})` }}>
+    <div
+      className="header"
+      style={{ backgroundImage: `url(${headerImage ? headerImage.imagePath : ''})` }}
+    >
       <div className="header-contents">
-        <h2>{headerImage ? headerImage.title : 'Image Loaded'}</h2>
-        <p>{headerImage ? headerImage.description : 'Description loaded'}</p>
-        <a href={headerImage ? headerImage.url : '#'}>
+        <h2>{headerImage.title}</h2>
+        <p>{headerImage.description}</p>
+        <a href={headerImage.url}>
           <button>View Menu</button>
         </a>
       </div>
