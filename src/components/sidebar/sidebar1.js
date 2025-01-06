@@ -263,8 +263,11 @@ const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
   <p>Manage Table</p>
 </div>
  
-        
+<div className='space-bottom'>
+
+</div>
       </div>
+
     </div>
   );
 };

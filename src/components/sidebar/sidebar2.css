@@ -119,6 +119,9 @@
         justify-content: center; /* Center icon in compact view */
         padding: 12px;
     }
+    .space-bottom{
+        margin-bottom: 80px;
+      }
 
     .sidebar-option img {
         width: 28px;
@@ -133,4 +136,7 @@
   .sidebar-option.active {
     background-color:tomato;
     font-weight: bold;
+  }
+  .space-bottom{
+    margin-bottom: 65px;
   }

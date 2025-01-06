@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLock, faKey, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import './adminlogin.css'; // Ensure this file exists and is correctly styled
+import './adminlogin.css';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -11,6 +11,17 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  // State to store the previous page URL
+  const [redirectUrl, setRedirectUrl] = useState('/AdminPanel'); // Default to /AdminPanel
+
+  useEffect(() => {
+    // Capture the redirect query parameter if it exists
+    const redirect = router.query.redirect;
+    if (redirect) {
+        setRedirectUrl(redirect); // Save the redirect URL
+    }
+}, [router.query.redirect]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,11 +40,10 @@ const LoginPage = () => {
       const result = await response.json();
 
       if (response.ok) {
-        // Store adminId in a cookie
-        document.cookie = `adminId=${result.token}; path=/; max-age=3600`;
-  
-        // Redirect to Admin Panel
-        router.push('/AdminPanel'); // Redirect to the Admin Panel
+        document.cookie = `adminId=${result.token}; path=/; max-age=3600`; // Store adminId in a cookie
+
+        // Redirect to the stored redirect URL
+        router.push(redirectUrl);
       } else {
         setError(result.message || 'Invalid credentials.');
       }
@@ -50,13 +60,12 @@ const LoginPage = () => {
 
   return (
     <div className="login">
-      <img src="login-bg.png" alt="Login Background" className="login__img" />
+      <img src="food7.jpg" alt="Login Background" className="login__img" />
 
       <form onSubmit={handleLogin} className="login__form">
         <h1 className="login__title">Admin Login</h1>
 
         <div className="login__content">
-          {/* Username Input */}
           <div className="login__box">
             <FontAwesomeIcon icon={faLock} className="login__icon" />
             <div className="login__box-input">
@@ -64,7 +73,6 @@ const LoginPage = () => {
                 type="text"
                 required
                 className={`login__input ${username ? "filled" : ""}`}
-               
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
@@ -74,7 +82,6 @@ const LoginPage = () => {
             </div>
           </div>
 
-          
           <div className="login__box">
             <FontAwesomeIcon icon={faKey} className="login__icon" />
             <div className="login__box-input">
@@ -82,11 +89,10 @@ const LoginPage = () => {
                 type={showPassword ? 'text' : 'password'}
                 required
                 className={`login__input ${password ? "filled" : ""}`}
-               
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <label htmlFor="" className={`login__label ${password? "hidden" : ""}`}>
+              <label htmlFor="" className={`login__label ${password ? "hidden" : ""}`}>
                 Password
               </label>
               <FontAwesomeIcon
@@ -98,10 +104,8 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Error Message */}
         {error && <p className="error-message">{error}</p>}
 
-        {/* Submit Button */}
         <button type="submit" className="login__button" disabled={loading}>
           {loading ? (
             <div className="spinner-login">

@@ -2,49 +2,27 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    const adminId = request.cookies.get("adminId")?.value || "";  // Check for admin login
-    const userId = request.cookies.get("userId")?.value || "";  // Check for table order user login
+    const adminId = request.cookies.get("adminId")?.value || "";
 
-    // Logic for AdminPanel
-    if (request.nextUrl.pathname.startsWith('/AdminPanel')) {
-        // If the user is already logged in as admin and tries to access the login page, redirect to AdminPanel
-        if (adminId && request.nextUrl.pathname === '/login') {
-            return NextResponse.redirect(new URL('/AdminPanel', request.url));
-        }
-
-        // If the user is not logged in as admin, redirect to login page
-        if (!adminId) {
-            return NextResponse.redirect(new URL('/login', request.url));
-        }
+    // Handle unauthenticated access to protected pages
+    if (!adminId && (request.nextUrl.pathname.startsWith('/AdminPanel') || request.nextUrl.pathname.startsWith('/Table-Order'))) {
+        const loginUrl = new URL('/login', request.url);
+        // Add the current pathname as the redirect parameter
+        loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
+        return NextResponse.redirect(loginUrl);
     }
 
-    // Logic for Table-Order
-    if (request.nextUrl.pathname.startsWith('/Table-Order')) {
-        // If the user is already logged in as a table order user and tries to access the login page, redirect to Table-Order
-        if (userId && request.nextUrl.pathname === '/login-table') {
-            return NextResponse.redirect(new URL('/Table-Order', request.url));
-        }
-
-        // If the user is not logged in as table order user, redirect to login-table page
-        if (!userId) {
-            return NextResponse.redirect(new URL('/login-table', request.url));
-        }
-    }
-
-    // If the user is logged in and tries to access the login pages, redirect to appropriate dashboard
+    // Handle authenticated users trying to access the login page
     if (adminId && request.nextUrl.pathname === '/login') {
-        return NextResponse.redirect(new URL('/AdminPanel', request.url));
+        // Get the redirect parameter or fallback to the homepage
+        const redirectUrl = request.nextUrl.searchParams.get('redirect' ) || 'AdminPanel';
+        return NextResponse.redirect(new URL(redirectUrl, request.url));
     }
 
-    if (userId && request.nextUrl.pathname === '/login-table') {
-        return NextResponse.redirect(new URL('/Table-Order', request.url));
-    }
-
-    // Allow access to other routes
-    return NextResponse.next();
+    return NextResponse.next(); // Allow access to other pages
 }
 
-// Matching paths for both AdminPanel and Table-Order
+// Matching paths for AdminPanel, Table-Order, and login page
 export const config = {
-  matcher: ['/AdminPanel/:path*', '/login', '/Table-Order/:path*', '/login-table'],
+    matcher: ['/AdminPanel/:path*', '/Table-Order/:path*', '/login'],
 };
