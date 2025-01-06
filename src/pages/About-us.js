@@ -17,7 +17,7 @@ const TermsAndConditions = () => {
 
   const foodItems = [
     { name: 'Sandwich', description: 'Stone-baked to perfection.', image: '/food_14.png' },
-    { name: 'Rolls', description: 'A burger that melts in your mouth.', image: '/food_7.png' },
+    { name: 'Rolls', description: 'A rolls that melts in your mouth.', image: '/food_7.png' },
     { name: 'Pasta', description: 'A perfect blend of Italian flavors.', image: '/food_26.png' },
     { name: 'Ice Cream ', description: 'A treat for every sweet tooth.', image: '/food_12.png' },
   ];
@@ -66,14 +66,14 @@ const TermsAndConditions = () => {
         <div className='app'>
         <div className="about-container">
       <header className="about-header">
-        <h1>Welcome to Foodie Haven</h1>
+        <h1>Welcome to Tomato</h1>
         <p>Where every meal is an experience, and every bite is a delight!</p>
       </header>
 
       <section className="about-content">
         <h2>Our Story</h2>
         <p>
-          Foodie Haven was born from a passion for good food and great company. From humble beginnings to becoming a favorite 
+          Tomato was born from a passion for good food and great company. From humble beginnings to becoming a favorite 
           destination for food lovers, we remain committed to providing exceptional dishes with an unforgettable dining experience.
         </p>
         <p>

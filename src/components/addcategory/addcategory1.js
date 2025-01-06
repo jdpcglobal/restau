@@ -126,7 +126,7 @@ const AddCategory = () => {
       <div className='category-list'>
         <h3>Category List</h3>
         {loading ? (
-          <p>Loading...</p>
+          <p className='loading'>Loading...</p>
         ) : error ? (
           <p>{error}</p>
         ) : (

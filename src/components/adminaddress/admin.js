@@ -69,7 +69,7 @@ const AdminPage = () => {
     <div className='order-admin'>
       <h1>Admin Address</h1>
       {isLoading ? (
-        <p>Loading settings...</p>
+        <p className='loading'>Loading settings...</p>
       ) : (
         <>
           <label>

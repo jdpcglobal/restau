@@ -71,7 +71,7 @@ export default function Home() {
       <p>All Food List</p>
       </div>
       {loading ? (
-        <p>Loading...</p>
+        <p className='loading'>Loading...</p>
       ) : error ? (
         <p>{error}</p>
       ) : (

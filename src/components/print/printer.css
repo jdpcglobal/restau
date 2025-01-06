@@ -1,0 +1,79 @@
+/* Container */
+.printer-container {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ff6347, #ff8261); /* Tomato gradient */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+  }
+  
+  /* Title */
+  .printer-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in-out;
+    color: #fff; /* White for contrast */
+  }
+  
+  /* Dropdown */
+  .printer-select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #ff6347; /* Tomato color for text */
+    background: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .printer-select:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 99, 71, 0.8); /* Tomato shadow */
+    transform: scale(1.05);
+  }
+  
+  /* Printer Info */
+  .printer-info {
+    margin-top: 20px;
+    font-size: 1rem;
+    animation: fadeIn 1.5s ease-in-out;
+    color: #fff; /* White text for visibility */
+  }
+  
+  /* Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive */
+  @media (max-width: 480px) {
+    .printer-container {
+        padding: 15px;
+        margin: 20px 20px;
+    }
+  
+    .printer-title {
+      font-size: 1.2rem;
+    }
+  
+    .printer-select {
+      font-size: 0.9rem;
+    }
+  
+    .printer-info {
+      font-size: 0.9rem;
+    }
+  }
+  

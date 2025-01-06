@@ -106,7 +106,7 @@ const CouponList = () => {
       <h1>All Available Coupons</h1>
       
       {loading ? (
-        <p>Loading...</p>
+        <p className='loading'>Loading...</p>
       ) : error ? (
         <p>Error: {error}</p>
       ) : (

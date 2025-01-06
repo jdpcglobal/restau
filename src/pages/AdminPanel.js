@@ -17,8 +17,9 @@ import AdminNavbar from '../components/adminnavbar/adminnavbar1';
 import Headerimage from '../components/headerback/headerimage';
 import Settable from '../components/admintable/settable';
 import DeliveryFee from '../components/deliveryFee/deliveryFee';
+import Printer from '../components/print/printer';
 const AdminPanel = () => {
-  const [selectedComponent, setSelectedComponent] = useState(''); // State to track the selected component
+  const [selectedComponent, setSelectedComponent] = useState('Orders'); // State to track the selected component
 
   const renderComponent = () => {
     <ToastContainer/>
@@ -48,6 +49,8 @@ const AdminPanel = () => {
                   return <Settable />;
                   case 'deliveryFee':
                     return <DeliveryFee />;
+                    case 'printer':
+                      return <Printer/>;
       default:
         return ;
     }

@@ -1,10 +1,10 @@
 import React from 'react';
 import './sidebar2.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCreditCard ,faMapMarkerAlt,faFileInvoiceDollar,faTag} from '@fortawesome/free-solid-svg-icons';
+
 
 
 const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
+  
   return (
     <div className='sidebar'>
       <div className='sidebar-options'>
@@ -185,6 +185,37 @@ const Sidebar = ({ setSelectedComponent, selectedComponent }) => {
 
   <p>Delivery Fee</p>
 </div>
+
+<div
+  className={`sidebar-option ${selectedComponent === 'printer' ? 'active' : ''}`}
+  onClick={() => setSelectedComponent('printer')}
+>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width="24"
+  height="24"
+  fill="none"
+  stroke="currentColor"
+  strokeWidth="2"
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  className="feather feather-printer"
+>
+  <path d="M6 9h12V5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v4z" />
+  <path d="M6 18h12" />
+  <path d="M6 14h12v4H6z" />
+  <path d="M5 14h2v4H5z" />
+  <path d="M17 14h2v4h-2z" />
+  <path d="M7 19h10v2H7z" />
+  <circle cx="8.5" cy="19.5" r="1.5" />
+  <circle cx="15.5" cy="19.5" r="1.5" />
+</svg>
+
+ <p>Print</p>
+</div>
+
+
 
         <div
   className={`sidebar-option ${selectedComponent === 'headerimage' ? 'active' : ''}`}

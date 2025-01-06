@@ -292,12 +292,13 @@ doc.line(200, yPosition - 5, 200, yPosition + 2); // x=190 for right side vertic
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <p className='loading'>Loading...</p>
       ) : error ? (
         <p className='error'>{error}</p>
       ) : (
         <div className='order-list-admin'>
-          {orders.slice().reverse().map((order) => (
+          
+            {orders && Array.isArray(orders) && orders.slice().reverse().map((order) => (
             <div key={order._id} className='order-item'>
               <div className='order-item-header'>
                 <img src='/parcel_icon.png' alt='parcel icon' className='order-item-icon' />

@@ -110,7 +110,7 @@ const Payment = () => {
 
       <div className="payment-list">
         <h3>Payment List</h3>
-        {loadingPayments ? <p>Loading payments...</p> : (
+        {loadingPayments ? <p className='loading'>Loading payments...</p> : (
           items.length > 0 ? (
             <ul className="list-table">
               <li className="list-table-header">

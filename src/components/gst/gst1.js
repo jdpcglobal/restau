@@ -96,7 +96,7 @@ const Gst = () => {
       <div className="gst-list">
         <h3>GST List</h3>
         {isLoading ? (
-          <p>Loading...</p> // Display a loading indicator
+          <p className='loading'>Loading...</p> // Display a loading indicator
         ) : (
           <ul>
             {gstList.map((gst) => (

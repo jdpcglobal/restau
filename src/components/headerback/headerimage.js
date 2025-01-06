@@ -89,10 +89,12 @@ const HeaderImage = () => {
   };
 
   return (
-    <div className=''>
-      
+    <div className='header-back'>
+      <div className='header-back-title'>
+       <h3> Header Image </h3>
+      </div>
       {isLoading ? (
-        <div className="loading-message">Loading...</div>
+        <div className="loading">Loading...</div>
       ) : (
         <>
         <div className="header-container">

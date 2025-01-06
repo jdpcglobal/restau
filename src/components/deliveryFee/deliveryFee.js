@@ -139,7 +139,7 @@ const DeliveryFee = () => {
         <h3 className="title-delivery1">Defined Ranges and Fees</h3>
         <ul className="ranges-list">
           {loading ? (
-            <li className="loading">Loading...</li>
+            <p className="loading">Loading...</p>
           ) : (
             ranges.map((range, index) => (
               <li key={index} className="range-item">
