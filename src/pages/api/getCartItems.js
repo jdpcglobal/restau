@@ -1,6 +1,6 @@
 import dbConnect from '../../app/lib/dbconnect';
 import Cart from '../../../public/models/Cart';
-import Item from '../../../public/models/item';
+import Item from '../../../public/models/Item';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
@@ -37,11 +37,20 @@ export default async function handler(req, res) {
       return res.status(401).json({ success: false, message: 'Invalid token payload' });
     }
 
-    // Fetch cart items
+    // Fetch cart items for the user and populate foodId with Item details
     const cartItems = await Cart.find({ userId })
-      .populate('foodId', 'name price discount imageUrl gstRate');
+      .populate({
+        path: 'foodId', 
+        select: 'name price discount imageUrl gstRate', // Populate fields from Item model
+        model: 'Item', // Ensure to reference the Item model
+      });
 
-    // Return cart items
+    // If no cart items found
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(404).json({ success: false, message: 'No cart items found for this user' });
+    }
+
+    // Return the populated cart items
     return res.status(200).json({ success: true, cartItems });
   } catch (error) {
     console.error('Error handling cart API:', error);
