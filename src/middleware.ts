@@ -15,7 +15,7 @@ export function middleware(request: NextRequest) {
     // Handle authenticated users trying to access the login page
     if (adminId && request.nextUrl.pathname === '/login') {
         // Get the redirect parameter or fallback to the homepage
-        const redirectUrl = request.nextUrl.searchParams.get('redirect' ) || 'AdminPanel';
+        const redirectUrl = request.nextUrl.searchParams.get('redirect' ) || '/AdminPanel';
         return NextResponse.redirect(new URL(redirectUrl, request.url));
     }
 
