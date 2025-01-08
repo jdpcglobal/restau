@@ -1,30 +1,27 @@
 import dbConnect from '../../app/lib/dbconnect';
 import Item from '../../../public/models/item';
 import multer from 'multer';
-import path from 'path';
+import AWS from 'aws-sdk';
 import fs from 'fs';
 
-// Configure Multer storage and file filter
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = path.join(process.cwd(), 'public/uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+// Configure AWS SDK
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID, 
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION, // e.g., 'us-east-1'
 });
 
+const s3 = new AWS.S3();
+
+// Configure Multer storage to store files in memory
+const storage = multer.memoryStorage(); // Store the file in memory before uploading to S3
+
 const fileFilter = (req, file, cb) => {
-  // Optionally add file type filtering if needed
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-  if (allowedTypes.includes(file.mimetype)) {
+  // Validate file type (optional)
+  if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Only JPEG, PNG, and GIF are allowed.'), false);
+    cb(new Error('Invalid file type. Only images are allowed.'));
   }
 };
 
@@ -54,26 +51,39 @@ export default async function handler(req, res) {
           return res.status(400).json({ message: 'All fields are required' });
         }
 
-        // // Validate that the type is either "veg" or "non-veg"
-        // if (vegOrNonVeg !== 'veg' && vegOrNonVeg !== 'non-veg') {
-        //   return res.status(400).json({ message: 'Invalid vegOrNonVeg. Must be "veg" or "non-veg".' });
-        // }
+        // Upload the image to S3
+        
+        const params = {
+          Bucket: process.env.AWS_BUCKET_NAME, // Your S3 bucket name
+          Key: `items/${Date.now()}-${req.file.originalname}`, // File key in S3 bucket
+          Body: req.file.buffer, // File data
+          ContentType: req.file.mimetype, // MIME type
+        };
 
-        // Create new item with the image path and other details
-        const newItem = new Item({
-          name,
-          description,
-          price,
-          discount,
-          category,
-          gstRate,
-          vegOrNonVeg,
-          imageUrl: req.file ? `/uploads/${req.file.filename}` : undefined, // Store image path if provided
-        });
+        try {
+          // Upload the file to S3
+          const s3Response = await s3.upload(params).promise();
 
-        await newItem.save();
+          const { name, description, price, discount, category, gstRate, vegOrNonVeg } = req.body;
+          
+          // Create new item with the image URL from S3
+          const newItem = new Item({
+            name,
+            description,
+            price,
+            discount,
+            category,
+            gstRate,
+            vegOrNonVeg,
+            imageUrl: s3Response.Location, // The image URL returned by S3
+          });
 
-        res.status(201).json({ message: 'Item added successfully', item: newItem });
+          await newItem.save();
+
+          res.status(201).json({ message: 'Item added successfully', item: newItem });
+        } catch (uploadError) {
+          res.status(500).json({ message: 'Error uploading image to S3', error: uploadError.message });
+        }
       });
     } catch (error) {
       res.status(500).json({ message: 'Internal server error', error: error.message });

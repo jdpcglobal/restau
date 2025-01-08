@@ -1,28 +1,31 @@
 import dbConnect from '../../app/lib/dbconnect';
 import Payment from '../../../public/models/Payment'; // Adjust the path if necessary
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+import AWS from 'aws-sdk';
 
-// Configure Multer storage and file filter
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = path.join(process.cwd(), 'public/uploads/payments');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+// Configure AWS SDK
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION, // e.g., 'us-east-1'
 });
 
+const s3 = new AWS.S3();
+
+// Configure Multer storage to store files in memory
+const storage = multer.memoryStorage(); // Store the file in memory before uploading to S3
+
 const fileFilter = (req, file, cb) => {
-  cb(null, true); // Accept all file types
+  cb(null, true); // Accept all file types, but you can validate further if needed
 };
 
 const upload = multer({ storage, fileFilter });
+
+export const config = {
+  api: {
+    bodyParser: false, // Disables the default body parser
+  },
+};
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -41,16 +44,33 @@ export default async function handler(req, res) {
           return res.status(400).json({ message: 'All fields and an image are required' });
         }
 
-        // Save the Payment with the image path and title
-        const newPayment = new Payment({
-          name,
-          title, // Include title
-          imageUrl: `/uploads/payments/${req.file.filename}`, // Store image path
-        });
+        // Upload the image to S3
+        const params = {
+          Bucket: process.env.AWS_BUCKET_NAME, // Your S3 Bucket name
+          Key: `payments/${Date.now()}-${req.file.originalname}`, // Key is the file path on S3
+          Body: req.file.buffer, // The file buffer
+          ContentType: req.file.mimetype, // Mime type
+           
+        };
+        
 
-        await newPayment.save();
+        try {
+          // Upload the file to S3
+          const s3Response = await s3.upload(params).promise();
 
-        res.status(201).json({ message: 'Payment added successfully', Payment: newPayment });
+          // Create new payment with the image URL from S3
+          const newPayment = new Payment({
+            name,
+            title, // Include title
+            imageUrl: s3Response.Location, // The image URL returned by S3
+          });
+
+          await newPayment.save();
+
+          res.status(201).json({ message: 'Payment added successfully', Payment: newPayment });
+        } catch (uploadError) {
+          res.status(500).json({ message: 'Error uploading image to S3', error: uploadError.message });
+        }
       });
     } catch (error) {
       res.status(500).json({ message: 'Internal server error', error });
@@ -84,9 +104,3 @@ export default async function handler(req, res) {
     res.status(405).json({ message: 'Method not allowed' });
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false, // Disables the default body parser
-  },
-};

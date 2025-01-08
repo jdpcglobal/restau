@@ -2,8 +2,6 @@ import dbConnect from '../../app/lib/dbconnect';
 import Category from '../../../public/models/category';
 import multer from 'multer';
 import AWS from 'aws-sdk';
-import path from 'path';
-import fs from 'fs';
 
 // Configure AWS SDK
 AWS.config.update({
@@ -18,8 +16,12 @@ const s3 = new AWS.S3();
 const storage = multer.memoryStorage(); // Store the file in memory before uploading to S3
 
 const fileFilter = (req, file, cb) => {
-  // You can add filters here if needed (e.g., check file type)
-  cb(null, true);
+  // Validate file type (optional)
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only images are allowed.'));
+  }
 };
 
 const upload = multer({ storage, fileFilter });
@@ -29,10 +31,10 @@ export default async function handler(req, res) {
     try {
       await dbConnect();
 
-      // Use multer to parse form data
+      // Use Multer to parse the incoming form data
       upload.single('image')(req, res, async (err) => {
         if (err) {
-          return res.status(500).json({ message: 'Error uploading image', error: err.message });
+          return res.status(400).json({ message: 'Error uploading image', error: err.message });
         }
 
         const { name } = req.body;
@@ -43,18 +45,17 @@ export default async function handler(req, res) {
 
         // Upload the image to S3
         const params = {
-          Bucket: process.env.AWS_BUCKET_NAME, // Your S3 Bucket name
-          Key: `categories/${Date.now()}-${req.file.originalname}`, // The file's key in the S3 bucket
-          Body: req.file.buffer, // The file data
-          ContentType: req.file.mimetype, // MIME type of the file
-          ACL: 'public-read', // Optional: Set the ACL for the file to be publicly readable
+          Bucket: process.env.AWS_BUCKET_NAME, // Your S3 bucket name
+          Key: `categories/${Date.now()}-${req.file.originalname}`, // File key in S3 bucket
+          Body: req.file.buffer, // File data
+          ContentType: req.file.mimetype, // MIME type
         };
 
         try {
           // Upload the file to S3
           const uploadResult = await s3.upload(params).promise();
 
-          // Save the category with the image URL returned by S3
+          // Save the category to the database with the S3 image URL
           const newCategory = new Category({
             name,
             imageUrl: uploadResult.Location, // S3 URL of the uploaded image
@@ -64,10 +65,12 @@ export default async function handler(req, res) {
 
           res.status(201).json({ message: 'Category added successfully', category: newCategory });
         } catch (uploadError) {
+          console.error('Error uploading to S3:', uploadError);
           return res.status(500).json({ message: 'Error uploading to S3', error: uploadError.message });
         }
       });
     } catch (error) {
+      console.error('Internal server error:', error);
       res.status(500).json({ message: 'Internal server error', error });
     }
   } else {
@@ -75,8 +78,9 @@ export default async function handler(req, res) {
   }
 }
 
+// Disable the default body parser to allow Multer to handle file uploads
 export const config = {
   api: {
-    bodyParser: false, // Disables the default body parser
+    bodyParser: false,
   },
 };

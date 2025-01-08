@@ -91,7 +91,7 @@ const HeaderImage = () => {
   return (
     <div className='header-back'>
       <div className='header-back-title'>
-       <h3> Header Image </h3>
+       <h2> Header Image </h2>
       </div>
       {isLoading ? (
         <div className="loading">Loading...</div>
@@ -130,7 +130,7 @@ const HeaderImage = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter a description"
-            rows="3"
+            rows="6"
             className="description-input"
           />
           <button className='submit-btn' onClick={handleSubmit} disabled={isSaving}>

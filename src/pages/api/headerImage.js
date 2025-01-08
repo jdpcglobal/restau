@@ -1,25 +1,21 @@
-import HeaderImage from '../../../public/models/headerImageModel'; // Adjust the import as necessary
 import dbConnect from '../../app/lib/dbconnect'; // Adjust the path if necessary
+import HeaderImage from '../../../public/models/headerImageModel'; // Adjust the path if necessary
 import multer from 'multer';
+import AWS from 'aws-sdk';
 import path from 'path';
-import fs from 'fs';
 
-// Configure Multer storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = path.join(process.cwd(), 'public/uploads/header');
-    // Ensure the upload directory exists
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+// Configure AWS SDK with your credentials (ensure you have the correct IAM permissions for S3)
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION, // e.g., 'us-east-1'
 });
 
-// File filter for allowed file types
+const s3 = new AWS.S3();
+
+// Configure Multer storage to store files in memory (for S3 upload)
+const storage = multer.memoryStorage();
+
 const fileFilter = (req, file, cb) => {
   const filetypes = /jpeg|jpg|png|gif/; // Allowed file types
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -33,6 +29,12 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ storage, fileFilter });
+
+export const config = {
+  api: {
+    bodyParser: false, // Disables the default body parser to allow multer to handle file uploads
+  },
+};
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -49,20 +51,34 @@ export default async function handler(req, res) {
         return res.status(400).json({ message: 'All fields and an image are required' });
       }
 
+      // Ensure AWS_BUCKET_NAME is correctly defined
+      if (!process.env.AWS_BUCKET_NAME) {
+        return res.status(500).json({ message: 'AWS_BUCKET_NAME is not set' });
+      }
+
+      // Upload the image to AWS S3
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME, // Make sure AWS_BUCKET_NAME is set correctly
+        Key: `header-images/${Date.now()}-${req.file.originalname}`, // S3 object key (unique path)
+        Body: req.file.buffer, // The file buffer
+        ContentType: req.file.mimetype, // Mime type
+      };
+
       try {
+        const s3Response = await s3.upload(params).promise();
+
+        // Create new HeaderImage entry in MongoDB with the S3 URL
         const newHeaderImage = new HeaderImage({
           title,
           description,
           url,
-          imagePath: `/uploads/header/${req.file.filename}`,
+          imagePath: s3Response.Location, // The URL returned by S3
         });
 
         await newHeaderImage.save();
         res.status(201).json({ message: 'Header Image added successfully', headerImage: newHeaderImage });
-      } catch (saveError) {
-        // Cleanup the uploaded file if saving fails
-        fs.unlink(req.file.path, () => {});
-        res.status(500).json({ message: 'Error saving image information', error: saveError.message });
+      } catch (uploadError) {
+        res.status(500).json({ message: 'Error uploading image to S3', error: uploadError.message });
       }
     });
   } else if (req.method === 'GET') {
@@ -88,8 +104,16 @@ export default async function handler(req, res) {
         };
 
         if (req.file) {
-          // If a new file is uploaded, update the image path
-          updatedData.imagePath = `/uploads/header/${req.file.filename}`;
+          // If a new file is uploaded, update the image path in S3
+          const params = {
+            Bucket: process.env.AWS_BUCKET_NAME, // Ensure the correct bucket is passed here
+            Key: `header-images/${Date.now()}-${req.file.originalname}`,
+            Body: req.file.buffer,
+            ContentType: req.file.mimetype,
+          };
+
+          const s3Response = await s3.upload(params).promise();
+          updatedData.imagePath = s3Response.Location; // Update with new image URL from S3
         }
 
         const updatedHeaderImage = await HeaderImage.findByIdAndUpdate(id, updatedData, { new: true });
@@ -107,9 +131,3 @@ export default async function handler(req, res) {
     res.status(405).json({ message: 'Method not allowed' });
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false, // Disables the default body parser to allow multer to handle file uploads
-  },
-};
