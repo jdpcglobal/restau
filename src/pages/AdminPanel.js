@@ -17,7 +17,7 @@ import AdminNavbar from '../components/adminnavbar/adminnavbar1';
 import Headerimage from '../components/headerback/headerimage';
 import Settable from '../components/admintable/settable';
 import DeliveryFee from '../components/deliveryFee/deliveryFee';
-import Printer from '../components/print/printer';
+import Printer from '../pages/printer/printer';
 const AdminPanel = () => {
   const [selectedComponent, setSelectedComponent] = useState('Orders'); // State to track the selected component
 
