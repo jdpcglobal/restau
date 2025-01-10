@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Printer.css'; // Import the CSS file for styles
+import '../../pages/print/printer.css'; // Import the CSS file for styles
 
 const Printer = () => {
   const [printers, setPrinters] = useState([]);
