@@ -1,7 +1,7 @@
 // pages/api/getCartPrice.js
 
 import dbConnect from '../../app/lib/dbconnect'; // Adjust the path as needed
-import Coupon from '../../../public/models/Coupon'; // Adjust the path as needed
+import Coupon from '../../models/Coupon'; // Adjust the path as needed
 
 export default async function handler(req, res) {
   await dbConnect();

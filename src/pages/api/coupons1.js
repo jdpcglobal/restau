@@ -1,6 +1,6 @@
 // Next.js API route example
 import dbConnect from '../../app/lib/dbconnect'; // Assuming you're using a utility for MongoDB connection
-import Coupon from '../../../public/models/Coupon'; // Coupon model
+import Coupon from '../../models/Coupon'; // Coupon model
 
 export default async function handler(req, res) {
   await dbConnect();

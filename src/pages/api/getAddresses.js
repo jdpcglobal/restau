@@ -1,8 +1,8 @@
 // pages/api/delivery/getAddresses.js
 import dbConnect from '../../app/lib/dbconnect';
-import Address from '../../../public/models/Address';
+import Address from '../../models/Address';
 import jwt from 'jsonwebtoken';
-import AdminSettings from '../../../public/models/AdminSettings';
+import AdminSettings from '../../models/AdminSettings';
 import axios from 'axios';
 
 export default async function handler(req, res) {

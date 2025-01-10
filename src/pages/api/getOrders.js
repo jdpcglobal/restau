@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect'; 
-import OrderPayment from '../../../public/models/OrderPayment'; 
+import OrderPayment from '../../models/OrderPayment'; 
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {

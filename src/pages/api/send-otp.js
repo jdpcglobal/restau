@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import User from '../../../public/models/user'; // Assuming you have a User model
-import Otp from '../../../public/models/Otp';
+import User from '../../models/user'; // Assuming you have a User model
+import Otp from '../../models/Otp';
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {

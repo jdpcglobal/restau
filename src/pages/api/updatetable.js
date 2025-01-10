@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Tablesave from "../../../public/models/tablesave"; // Adjust the path if necessary
+import Tablesave from "../../models/tablesave"; // Adjust the path if necessary
 
 // Ensure mongoose connection is established
 async function connectToDatabase() {

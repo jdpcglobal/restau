@@ -1,4 +1,4 @@
-import Coupon from '../../../public/models/Coupon';
+import Coupon from '../../models/Coupon';
 import dbConnect from '../../app/lib/dbconnect'; // Ensure this path is correct
 
 export default async function handler(req, res) {

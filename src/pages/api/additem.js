@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect';
-import Item from '../../../public/models/item';
+import Item from '../../models/item';
 import multer from 'multer';
 import AWS from 'aws-sdk';
 import fs from 'fs';

@@ -1,5 +1,5 @@
 import dbConnect from '../../../app/lib/dbconnect'; // Adjust the path to your dbConnect
-import Gst from '../../../../public/models/Gst'; // Adjust the path to your Gst model
+import Gst from '../../../models/Gst'; // Adjust the path to your Gst model
 
 
 export default async function handler(req, res) {

@@ -1,6 +1,6 @@
 // API Route: /api/updateOrderStatus.js
 import dbConnect from '../../app/lib/dbconnect'; // A utility to connect to your MongoDB
-import OrderPayment from '../../../public/models/OrderPayment';
+import OrderPayment from '../../models/OrderPayment';
 // Import your OrderPayment model
 
 export default async function handler(req, res) {

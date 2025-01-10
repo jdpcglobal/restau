@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect';
-import DeliveryRange from '../../../public/models/DeliveryRange';
+import DeliveryRange from '../../models/DeliveryRange';
 import axios from 'axios';
 
 export default async function handler(req, res) {

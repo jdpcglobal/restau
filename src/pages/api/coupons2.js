@@ -1,5 +1,5 @@
-import Coupon from '../../../public/models/Coupon';
-import CartTotal from '../../../public/models/CartTotal';
+import Coupon from '../../models/Coupon';
+import CartTotal from '../../models/CartTotal';
 import dbConnect from '../../app/lib/dbconnect';
 import jwt from 'jsonwebtoken'; // Install this library with `npm install jsonwebtoken`
 

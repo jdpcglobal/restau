@@ -1,6 +1,6 @@
 import dbConnect from "../../app/lib/dbconnect";
-import Tablesave from "../../../public/models/tablesave";
-import Table from "../../../public/models/Table";
+import Tablesave from "../../models/tablesave";
+import Table from "../../models/Table";
 
 const handler = async (req, res) => {
   if (req.method === "GET") {

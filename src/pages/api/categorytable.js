@@ -1,5 +1,5 @@
 // pages/api/categories.js
-import Category from '../../../public/models/category';
+import Category from '../../models/category';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {

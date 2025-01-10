@@ -1,6 +1,6 @@
 import dbConnect from '../../app/lib/dbconnect';  // Function to connect to MongoDB
-import Cart from '../../../public/models/Cart';
-import Item from '../../../public/models/item';
+import Cart from '../../models/Cart';
+import Item from '../../models/item';
 
 export default async function handler(req, res) {
   await dbConnect();

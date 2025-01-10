@@ -1,6 +1,6 @@
 // pages/api/adminSettings.js
 import dbConnect from '../../app/lib/dbconnect';  // Ensure the correct path for dbConnect
-import AdminSettings from '../../../public/models/AdminSettings';  // Import AdminSettings from the correct location
+import AdminSettings from '../../models/AdminSettings';  // Import AdminSettings from the correct location
 
 export default async function handler(req, res) {
   await dbConnect();

@@ -1,6 +1,6 @@
 import dbConnect from '../../app/lib/dbconnect';
-import Order from '../../../public/models/Order'; // Adjust import path
-import CartTotal from '../../../public/models/CartTotal'; // Adjust import path
+import Order from '../../models/Order'; // Adjust import path
+import CartTotal from '../../models/CartTotal'; // Adjust import path
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {

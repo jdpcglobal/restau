@@ -1,7 +1,7 @@
 // pages/api/cart/saveCartTotal.js
 
 import dbConnect from '../../app/lib/dbconnect'; // Adjust path as necessary
-import CartTotal from '../../../public/models/CartTotal'; // Adjust to your CartTotal model
+import CartTotal from '../../models/CartTotal'; // Adjust to your CartTotal model
 import jwt from 'jsonwebtoken'; // Import the JWT library
 
 // Replace with your actual secret used to sign the JWT

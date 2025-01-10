@@ -1,5 +1,5 @@
 import dbConnect from "../../app/lib/dbconnect"; // Utility to connect to MongoDB
-import Item from "../../../public/models/item"; // Mongoose model for Item
+import Item from "../../models/item"; // Mongoose model for Item
 
 export default async function handler(req, res) {
   await dbConnect(); // Ensure database connection is established

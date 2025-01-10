@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect';
-import Category from '../../../public/models/category';
+import Category from '../../models/category';
 import multer from 'multer';
 import AWS from 'aws-sdk';
 

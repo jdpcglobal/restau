@@ -1,10 +1,10 @@
 import dbConnect from '../../app/lib/dbconnect';
-import OrderPayment from '../../../public/models/OrderPayment';
-import Cart from '../../../public/models/Cart';
-import Address from '../../../public/models/Address';
-import Order from '../../../public/models/Order';
-import CartTotal from '../../../public/models/CartTotal';
-import Item from '../../../public/models/item'
+import OrderPayment from '../../models/OrderPayment';
+import Cart from '../../models/Cart';
+import Address from '../../models/Address';
+import Order from '../../models/Order';
+import CartTotal from '../../models/CartTotal';
+import Item from '../../models/item'
 import jwt from 'jsonwebtoken';
 import { Console } from 'console';
 

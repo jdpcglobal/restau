@@ -1,6 +1,6 @@
 // pages/api/getcategories.js
 import dbConnect from '../../app/lib/dbconnect'; // Adjust the path to your DB connection
-import Category from '../../../public/models/category'; // Adjust the path to your category model
+import Category from '../../models/category'; // Adjust the path to your category model
 
 export default async function handler(req, res) {
   await dbConnect();

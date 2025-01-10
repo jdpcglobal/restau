@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect';
-import Payment from '../../../public/models/Payment'; // Adjust the path if necessary
+import Payment from '../../models/Payment'; // Adjust the path if necessary
 import multer from 'multer';
 import AWS from 'aws-sdk';
 

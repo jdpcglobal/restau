@@ -1,6 +1,6 @@
 import dbConnect from '../../../app/lib/dbconnect';
-import Cart from '../../../../public/models/Cart';
-import User from '../../../../public/models/user';
+import Cart from '../../../models/Cart';
+import User from '../../../models/user';
 import jwt from 'jsonwebtoken';
 
 

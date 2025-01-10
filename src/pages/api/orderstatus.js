@@ -1,5 +1,5 @@
 import dbConnect from "../../app/lib/dbconnect";
-import Table from "../../../public/models/Table";
+import Table from "../../models/Table";
 
 const updateTableStatus = async (req, res) => {
   if (req.method === "PUT") {

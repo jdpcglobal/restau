@@ -1,5 +1,5 @@
 import dbConnect from "../../app/lib/dbconnect";
-import Tablesave from "../../../public/models/tablesave";
+import Tablesave from "../../models/tablesave";
 
 export default async function handler(req, res) {
   await dbConnect();

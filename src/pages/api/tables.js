@@ -1,6 +1,6 @@
 // pages/api/tables.js
 import dbConnect from "../../app/lib/dbconnect"; // Correct path to the database utility
-import Table from "../../../public/models/Table"; // Correct path to the Table model
+import Table from "../../models/Table"; // Correct path to the Table model
 
 export default async function handler(req, res) {
   await dbConnect(); // Establish database connection

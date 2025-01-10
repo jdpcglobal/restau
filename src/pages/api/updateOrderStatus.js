@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect'; // A utility to connect to your MongoDB
-import OrderPayment from '../../../public/models/OrderPayment'; // Import your Order model
+import OrderPayment from '../../models/OrderPayment'; // Import your Order model
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

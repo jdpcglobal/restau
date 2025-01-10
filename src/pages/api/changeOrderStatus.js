@@ -1,6 +1,6 @@
 // pages/api/changeOrderStatus.js
 import dbConnect from '../../app/lib/dbconnect'; // Ensure this is the correct path
-import OrderPayment from '../../../public/models/OrderPayment'; // Ensure this is the correct path
+import OrderPayment from '../../models/OrderPayment'; // Ensure this is the correct path
 
 export default async function handler(req, res) {
   await dbConnect();

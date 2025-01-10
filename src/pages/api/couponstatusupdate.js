@@ -1,7 +1,7 @@
 // pages/api/cart/updateCartTotal.js
 
 import dbConnect from '../../app/lib/dbconnect';
-import CartTotal from '../../../public/models/CartTotal'; // Adjust the import path as necessary
+import CartTotal from '../../models/CartTotal'; // Adjust the import path as necessary
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET; // Ensure you have a JWT secret in your environment variables

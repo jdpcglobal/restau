@@ -1,5 +1,5 @@
 // api/gettotal.js
-import Order from '../../../public/models/Order'; // Import your Order model
+import Order from '../../models/Order'; // Import your Order model
 import connectDB from '../../app/lib/dbconnect'; // DB connection utility
 import jwt from 'jsonwebtoken';
 

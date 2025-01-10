@@ -1,6 +1,6 @@
 // pages/api/reviews/[orderId].js
 import dbConnect from '../../../app/lib/dbconnect';
-import Review from '../../../../public/models/Review';
+import Review from '../../../models/Review';
 
 export default async function handler(req, res) {
   const {

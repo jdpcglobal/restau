@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect'; // Utility to connect to the database
-import Coupon from '../../../public/models/Coupon';     // Mongoose model for Coupon
+import Coupon from '../../models/Coupon';     // Mongoose model for Coupon
 
 // Connect to the database
 dbConnect();

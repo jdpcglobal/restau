@@ -1,6 +1,6 @@
 import { sign } from 'jsonwebtoken';
 import { serialize } from 'cookie';
-import loginadmin from '../../../public/models/loginadmin';
+import loginadmin from '../../models/loginadmin';
 import dbConnect from '../../app/lib/dbconnect'; // Ensure your DB connection file exists
 
 export default async function handler(req, res) {

@@ -1,5 +1,5 @@
 import dbConnect from '../../../app/lib/dbconnect';
-import Gst from '../../../../public/models/Gst';
+import Gst from '../../../models/Gst';
 
 
 

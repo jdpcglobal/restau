@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect'; // Utility to connect to MongoDB
-import Tablesave from '../../../public/models/tablesave'; // MongoDB model for your table schema
+import Tablesave from '../../models/tablesave'; // MongoDB model for your table schema
 
 export default async function handler(req, res) {
   await dbConnect(); // Ensure database connection

@@ -1,6 +1,6 @@
 // pages/api/saveOrder.js
 import mongoose from 'mongoose';
-import Order from '../../../public/models/Order'; // Adjust path as needed
+import Order from '../../models/Order'; // Adjust path as needed
 
 async function connectToDatabase() {
   if (mongoose.connection.readyState >= 1) {

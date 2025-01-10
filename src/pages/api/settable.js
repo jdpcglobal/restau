@@ -1,4 +1,4 @@
-import Table from '../../../public/models/Table';
+import Table from '../../models/Table';
 import dbConnect from '../../app/lib/dbconnect';
 
 dbConnect();

@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect';
-import Address from '../../../public/models/Address';
+import Address from '../../models/Address';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {

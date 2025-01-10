@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect';
-import Order from '../../../public/models/Order';
+import Order from '../../models/Order';
 
 export default async function handler(req, res) {
   await dbConnect();

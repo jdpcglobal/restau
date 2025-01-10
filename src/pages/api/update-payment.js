@@ -1,6 +1,6 @@
 // pages/api/update-payment.js
 import dbConnect from '../../app/lib/dbconnect';
-import Payment from '../../../public/models/Payment'; // Adjust the path if necessary
+import Payment from '../../models/Payment'; // Adjust the path if necessary
 
 export default async function handler(req, res) {
   if (req.method === 'PUT') {

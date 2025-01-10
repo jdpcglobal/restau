@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect'; // Adjust the path if necessary
-import HeaderImage from '../../../public/models/headerImageModel'; // Adjust the path if necessary
+import HeaderImage from '../../models/headerImageModel'; // Adjust the path if necessary
 import multer from 'multer';
 import AWS from 'aws-sdk';
 import path from 'path';

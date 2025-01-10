@@ -1,7 +1,7 @@
 // pages/api/payments.js
 
 import dbConnect from '../../app/lib/dbconnect';
-import Payment from '../../../public/models/Payment';
+import Payment from '../../models/Payment';
 
 export default async function handler(req, res) {
   await dbConnect();

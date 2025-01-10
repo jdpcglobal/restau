@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect';
-import CartTotalModel from '../../../public/models/CartTotal';
+import CartTotalModel from '../../models/CartTotal';
 import jwt from 'jsonwebtoken'; // Import the JWT library
 
 export default async function handler(req, res) {

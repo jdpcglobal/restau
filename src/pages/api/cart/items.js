@@ -1,5 +1,5 @@
 import dbConnect from '../../../app/lib/dbconnect';
-import Cart from '../../../../public/models/Cart';
+import Cart from '../../../models/Cart';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import dbConnect from '../../app/lib/dbconnect'; // Adjust the path as needed
-import Cart from '../../../public/models/Cart'; // Adjust the path as needed
-import User from '../../../public/models/user'; // Adjust the path as needed
+import Cart from '../../models/Cart'; // Adjust the path as needed
+import User from '../../models/user'; // Adjust the path as needed
 
 export default async function handler(req, res) {
   const { method } = req;

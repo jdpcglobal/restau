@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import Otp from '../../../public/models/Otp';
-import User from '../../../public/models/user'; // Assuming you have a User model
+import Otp from '../../models/Otp';
+import User from '../../models/user'; // Assuming you have a User model
 import jwt from 'jsonwebtoken';
 
 // Function to generate a random string of a given length

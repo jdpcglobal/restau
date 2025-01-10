@@ -1,7 +1,7 @@
 // pages/api/data.js
 
 import dbConnect from '../../app/lib/dbconnect';
-import Item from '../../../public/models/item';
+import Item from '../../models/item';
 
 export default async function handler(req, res) {
     try {

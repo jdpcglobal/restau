@@ -1,8 +1,8 @@
 import dbConnect from '../../app/lib/dbconnect'; 
 import OrderPayment from '../../models/OrderPayment'; 
-import User from '../../models/User'; 
+import User from '../../models/user'; 
 import Address from '../../models/Address';
-import Item from '../../models/Item';
+import Item from '../../models/item';
 
 export default async function handler(req, res) {
   await dbConnect();

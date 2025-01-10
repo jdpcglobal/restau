@@ -1,5 +1,5 @@
 import dbConnect from '../../app/lib/dbconnect';
-import OrderPayments from '../../../public/models/OrderPayment'; // Ensure this matches your model file
+import OrderPayments from '../../models/OrderPayment'; // Ensure this matches your model file
 
 export default async function handler(req, res) {
   await dbConnect();

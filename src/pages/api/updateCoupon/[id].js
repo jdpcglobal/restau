@@ -1,6 +1,6 @@
 // pages/api/updateCoupon/[id].js
 import dbConnect from '../../../app/lib/dbconnect'; // Utility to connect to the database
-import Coupon from '../../../../public/models/Coupon'; 
+import Coupon from '../../../models/Coupon'; 
 
 export default async (req, res) => {
   await dbConnect();

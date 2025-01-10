@@ -1,5 +1,5 @@
 import dbConnect from "../../app/lib/dbconnect"; // Adjust the path based on your project structure
-import Table from "../../../public/models/Table"; // Adjust the model path
+import Table from "../../models/Table"; // Adjust the model path
 
 export default async function handler(req, res) {
   await dbConnect();

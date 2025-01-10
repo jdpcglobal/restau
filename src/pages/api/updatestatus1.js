@@ -1,5 +1,5 @@
 import dbConnect from "../../app/lib/dbconnect";
-import Table from "../../../public/models/Table"; // Ensure the correct path
+import Table from "../../models/Table"; // Ensure the correct path
 
 export default async function handler(req, res) {
   if (req.method === "PATCH") {
