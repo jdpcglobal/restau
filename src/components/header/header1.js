@@ -50,8 +50,9 @@ const Header = () => {
     <div
       className="header"
       style={{
-        backgroundImage: `url(${headerImage?.imagePath || '/public/header_img.png'})`, // Fallback image
+        backgroundImage: `url(${headerImage?.imagePath || '/header_img.png'})`, // Fallback image
       }}
+      
     >
       <div className="header-contents">
         <h2>{headerImage?.title || 'Default Title'}</h2>
