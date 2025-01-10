@@ -1,6 +1,6 @@
 import dbConnect from '../../app/lib/dbconnect';
 import Cart from '../../../public/models/Cart';
-// import Item from '../../../public/models/Item';
+import Item from '../../../public/models/Item';
 import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
