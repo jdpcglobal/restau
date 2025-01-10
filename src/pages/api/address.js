@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
     const { token, location, flatNo, landmark } = req.body;
 
-    console.log('Request body:', req.body);
+   
 
     // Validate request body
     if (!token || !location || !flatNo) {
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
     return res.status(201).json({ success: true, message: 'Delivery information saved successfully!',address: newAddress});
   } catch (error) {
-    console.error('Error in saveDelivery API:', error);
+   
     return res.status(500).json({ success: false, message: 'Failed to save delivery information. Please try again later.' });
   }
 }

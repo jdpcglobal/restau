@@ -6,7 +6,7 @@ import Order from '../../models/Order';
 import CartTotal from '../../models/CartTotal';
 import Item from '../../models/item'
 import jwt from 'jsonwebtoken';
-import { Console } from 'console';
+
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
 
     // Get the user's latest order
     const existingOrder = await Order.findOne({ user: userId }).sort({ date: -1 });
-console.log( existingOrder);
+
     if (!existingOrder || !existingOrder.selectedAddress) {
       return res.status(400).json({ success: false, message: 'No address found for the user.' });
     }
@@ -61,10 +61,10 @@ console.log( existingOrder);
     // Verify that the cart total exists
     const cartTotal = await CartTotal.findById(cartTotalId);
     if (!cartTotal) {
-      console.error(`CartTotal with ID ${cartTotalId} not found.`);
+     
       return res.status(400).json({ success: false, message: `CartTotal with ID ${cartTotalId} not found.` });
     }
-console.log("cartTotal",cartTotal);
+
     const totalAmount = cartTotal. total; // Correctly access the total amount
     const itemDiscount = cartTotal. itemDiscount;
     const couponDiscount = cartTotal. couponDiscount;
@@ -122,7 +122,7 @@ console.log("cartTotal",cartTotal);
     });
 
   } catch (error) {
-    console.error('Error in order payment API:', error);
+   
     return res.status(500).json({
       success: false,
       message: 'Failed to create order payment. Please try again later.',
