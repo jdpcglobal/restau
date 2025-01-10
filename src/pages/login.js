@@ -60,7 +60,7 @@ const LoginPage = () => {
 
   return (
     <div className="login">
-      <img src="food7.jpg" alt="Login Background" className="login__img" />
+      <img src="food8.jpg" alt="Login Background" className="login__img" />
 
       <form onSubmit={handleLogin} className="login__form">
         <h1 className="login__title">Admin Login</h1>
