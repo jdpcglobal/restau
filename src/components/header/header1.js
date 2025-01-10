@@ -9,20 +9,24 @@ const Header = () => {
   useEffect(() => {
     const fetchHeaderImages = async () => {
       try {
-        const response = await fetch('/api/headerImage'); // Adjust this path if necessary
+        const response = await fetch('/api/headerImage');
         const data = await response.json();
-
-        // Assuming the data is an array and you want the first image
+    
+        // Assuming the image is hosted externally, update the image URL
         if (data.length > 0) {
-          setHeaderImage(data[0]); // Set the first header image
+          setHeaderImage(data[0]);
         }
       } catch (error) {
-        setError('Error fetching header images'); // Set error state if fetch fails
+        setError('Error fetching header images');
         console.error('Error fetching header images:', error);
       } finally {
-        setLoading(false); // Set loading to false once data is fetched or if there is an error
+        setLoading(false);
       }
     };
+    
+    // Use image from CDN
+    const imageUrl = `https://cdn.example.com/images/${headerImage?.imagePath}`;
+    
 
     fetchHeaderImages();
   }, []);
