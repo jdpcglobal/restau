@@ -5,6 +5,7 @@ const ExploreMenu = ({ category, setCategory }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true); // Track loading state
   const [error, setError] = useState(null); // Error state
+  
 
   useEffect(() => {
     const fetchCategories = async () => {
