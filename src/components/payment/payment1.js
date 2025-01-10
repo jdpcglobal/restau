@@ -118,14 +118,26 @@ const Payment = () => {
               </li>
               {items.map(item => (
                 <li key={item._id} className={`payment-item ${item.status}`}>
-                  <img src={item.imageUrl} alt="Payment" />
-                  <p>{item.name}</p>
-                  <p>{item.title}</p>
+                  <b>
+                  <img className='img-scen' src={item.imageUrl} alt="Payment" />
+                  </b>
+                  <b>{item.name}</b>
+                  <b>{item.title}</b>
+                  <b>
                   <label className="switch">
                     <input type="checkbox" checked={item.status === 'Active'} onChange={() => handleUpdateStatus(item._id, item.status)} />
                     <span className="slider"></span>
                   </label>
-                  <button className="delete" onClick={() => handleDelete(item._id)}>Delete</button>
+                  </b>
+                  <span>
+                  <img
+  src="/bin.png" /* Path to your delete icon image */
+  alt="Delete"
+  className="delete-icon"
+  onClick={() => handleDelete(item._id)}
+/>
+</span>
+
                 </li>
               ))}
             </ul>

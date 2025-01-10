@@ -10,7 +10,7 @@ const AddItem = () => {
     name: "",
     description: "",
     price: "",
-    category: "Salad",
+    category: "",
     discount: "",
     vegOrNonVeg: "",
     gstRate: "", 

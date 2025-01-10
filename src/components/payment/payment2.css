@@ -115,6 +115,7 @@ button.add-item-btn:hover:not(:disabled) {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   gap: 10px;
+  text-align: center;
   padding: 10px;
   align-items: center;
   border-bottom: 1px solid #e0e0e0;
@@ -125,6 +126,9 @@ button.add-item-btn:hover:not(:disabled) {
   height: 60px;
   border-radius: 10px;
   object-fit: cover;
+}
+img .img-scan{
+  text-align: center;
 }
 
 .switch {
@@ -171,20 +175,7 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
-button.delete {
-  background-color: tomato;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  padding: 8px 12px;
-  transition: background-color 0.3s;
-  margin-top: 0px !important;
-}
 
-button.delete:hover {
-  background-color:rgb(243, 43, 7);
-}
 
 .error {
   color: #ff4d4d;
@@ -205,4 +196,15 @@ button.delete:hover {
   .payment-item p {
     margin: 0;
   }
+}
+img.delete-icon {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: transform 0.2s ease;
+}
+
+.delete-icon:hover {
+  transform: scale(1.4);
 }

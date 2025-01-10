@@ -81,6 +81,7 @@
     display: grid;
     grid-template-columns: 1fr 2fr 0.5fr;
     gap: 10px;
+    text-align: center;
     padding: 10px;
     background-color: #f4f4f4;
     font-weight: bold;
@@ -126,15 +127,20 @@
     display: grid;
     grid-template-columns: 1fr 2fr 0.5fr;
     gap: 10px;
+    text-align: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;
     align-items: center;
+  }
+  span img.category-image{
+    text-align: center;
   }
   
   .table-category .category-image {
     max-width: 100px;
     height: auto;
     border-radius: 5px;
+   
   }
   
   .table-category span {
@@ -179,9 +185,10 @@
     }
   
     .table-category li {
-      grid-template-columns: 1fr 2fr 0.5fr;
+      grid-template-columns: 1fr 2fr 1fr;
       font-size: 0.9rem;
     }
+   
   }
   
   @media (max-width: 480px) {
@@ -205,13 +212,23 @@
     
   
     .list-table-format {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       font-size: 0.8rem;
     }
   
     .table-category li {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       font-size: 0.8rem;
     }
   }
+  .delete-icon {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: transform 0.2s ease;
+  }
   
+  .delete-icon:hover {
+    transform: scale(1.4);
+  }

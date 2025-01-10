@@ -7,12 +7,13 @@ import 'react-toastify/dist/ReactToastify.css';
 const AddCategory = () => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({ name: "", image: null });
-  const [loading, setLoading] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [loadingAddCategory, setLoadingAddCategory] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
-      setLoading(true);
+      setLoadingCategories(true);
       try {
         const response = await fetch('/api/getcategories');
         if (response.ok) {
@@ -26,25 +27,20 @@ const AddCategory = () => {
         setError(error.message);
         toast.error('An error occurred while fetching categories');
       } finally {
-        setLoading(false);
+        setLoadingCategories(false);
       }
     };
 
     fetchCategories();
   }, []);
 
-  const handleCategoryImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setNewCategory((prevState) => ({ ...prevState, image: file }));
-    }
-  };
-
   const handleAddCategory = async () => {
     if (!newCategory.name || !newCategory.image) {
       toast.error('Please provide a category name and image.');
       return;
     }
+
+    setLoadingAddCategory(true);
 
     const formData = new FormData();
     formData.append('name', newCategory.name);
@@ -67,6 +63,8 @@ const AddCategory = () => {
     } catch (error) {
       console.error('Error:', error);
       toast.error('An error occurred while adding the category');
+    } finally {
+      setLoadingAddCategory(false);
     }
   };
 
@@ -92,6 +90,17 @@ const AddCategory = () => {
     document.getElementById('category-file-input').click();
   };
 
+  // Define the missing function
+  const handleCategoryImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setNewCategory((prevState) => ({
+        ...prevState,
+        image: file,
+      }));
+    }
+  };
+
   return (
     <div className='category1'>
       <div className='add-category'>
@@ -100,7 +109,6 @@ const AddCategory = () => {
           <img
             src={newCategory.image ? URL.createObjectURL(newCategory.image) : '/upload_area.png'}
             alt='Upload Preview'
-              accept='image/png, image/jpeg, image/jpg'
             onClick={handleIconClick}
             style={{ cursor: 'pointer' }}
           />
@@ -110,23 +118,28 @@ const AddCategory = () => {
             accept='image/png, image/jpeg, image/jpg'
             onChange={handleCategoryImageChange}
             style={{ display: 'none' }}
-            required
           />
           <p>
-          <input
-            type='text'
-            placeholder='Category Name'
-            value={newCategory.name}
-            onChange={(e) => setNewCategory((prevState) => ({ ...prevState, name: e.target.value }))}
-            required
-          /></p>
+            <input
+              type='text'
+              placeholder='Category Name'
+              value={newCategory.name}
+              onChange={(e) => setNewCategory((prevState) => ({ ...prevState, name: e.target.value }))}
+            />
+          </p>
         </div>
-        <button className='add-item-btn1' onClick={handleAddCategory}>Add Category</button>
+        <button
+          className='add-item-btn1'
+          onClick={handleAddCategory}
+          disabled={loadingAddCategory}
+        >
+          {loadingAddCategory ? 'Adding...' : 'Add Category'}
+        </button>
       </div>
       <div className='category-list'>
         <h3>Category List</h3>
-        {loading ? (
-          <p className='loading'>Loading...</p>
+        {loadingCategories ? (
+          <p className='loading'>Loading categories...</p>
         ) : error ? (
           <p>{error}</p>
         ) : (
@@ -141,13 +154,22 @@ const AddCategory = () => {
                 {categories.length > 0 ? (
                   categories.map((category) => (
                     <li key={category._id}>
+                      <span>
                       <img
                         src={category.imageUrl || '/default_image.png'}
                         alt={category.name}
                         className='category-image'
                       />
+                      </span>
                       <span>{category.name}</span>
-                      <button onClick={() => handleDeleteCategory(category.name)}>Delete</button>
+                      <span>
+                      <img
+    src="/bin.png"
+    alt="Delete"
+    className="delete-icon"
+    onClick={() => handleDeleteCategory(category.name)}
+  />
+  </span>
                     </li>
                   ))
                 ) : (
@@ -164,3 +186,5 @@ const AddCategory = () => {
 };
 
 export default AddCategory;
+
+

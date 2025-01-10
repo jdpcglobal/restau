@@ -110,7 +110,7 @@ export default function Home() {
                 className='cursor'
                 onClick={() => handleRemove(item._id)}
               >
-                <img src='/cross_icon.png' alt='Delete'  className='icon-delet' />
+                <img src='/bin.png' alt='Delete'  className='icon-delet' />
               </p>
             </div>
           ))}

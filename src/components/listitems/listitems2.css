@@ -111,8 +111,8 @@
   
   .cursor img {
     margin-top: 10px;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
   }
   .cursor img:hover{
 transform: scale(1.5);
