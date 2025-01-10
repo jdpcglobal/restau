@@ -93,3 +93,41 @@
     height: 80px;
   }
 }
+/* Center the loader in the screen */
+.explore-menu-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20vh;
+  background-color: #f4f4f4; /* Light background color while loading */
+}
+
+/* Loader animation */
+.loader {
+  border: 8px solid #f3f3f3; /* Light gray */
+  border-top: 8px solid tomato; /* Blue color */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Error state styling */
+.explore-menu-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: red;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+

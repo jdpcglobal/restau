@@ -11,10 +11,11 @@ const Header = () => {
       try {
         const response = await fetch('/api/headerImage');
         const data = await response.json();
-    
-        // Assuming the image is hosted externally, update the image URL
+
         if (data.length > 0) {
           setHeaderImage(data[0]);
+        } else {
+          setError('No header images found');
         }
       } catch (error) {
         setError('Error fetching header images');
@@ -23,30 +24,26 @@ const Header = () => {
         setLoading(false);
       }
     };
-    
-    // Use image from CDN
-    const imageUrl = `https://cdn.example.com/images/${headerImage?.imagePath}`;
-    
 
     fetchHeaderImages();
   }, []);
 
   if (loading) {
-    // Skeleton or loading state
+    // Skeleton or loading state with centered animation
     return (
-      <div className="header animate-pulse bg-gray-500">
-        <div className="header-contents w-full h-72 p-4">
-          <div className="h-10 bg-gray-500 rounded w-1/2 my-4"></div>
-          <div className="h-6 bg-gray-500 rounded w-3/4 my-4"></div>
-          <div className="h-10 bg-gray-500 rounded w-1/6 my-4"></div>
-        </div>
+      <div className="header-loader">
+        <div className="loader"></div>
       </div>
     );
   }
 
   if (error) {
-    // Error state
-    return <div className="header-error">Error: {error}</div>;
+    // Error state when no data is found
+    return (
+      <div className="header-error">
+        <h3>{error}</h3>
+      </div>
+    );
   }
 
   // Main content when data is loaded
@@ -56,7 +53,6 @@ const Header = () => {
       style={{
         backgroundImage: `url(${headerImage?.imagePath || '/header_img.png'})`, // Fallback image
       }}
-      
     >
       <div className="header-contents">
         <h2>{headerImage?.title || 'Default Title'}</h2>
