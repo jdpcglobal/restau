@@ -1,79 +1,147 @@
-/* Container */
-.printer-container {
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #ff6347, #ff8261); /* Tomato gradient */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    font-family: 'Roboto', sans-serif;
-    color: #fff;
+/* General container styles */
+.printer-container1 {
+  font-family: 'Arial', sans-serif;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.printer-title1 {
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Columns container */
+.printer-columns1 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .printer-columns1 {
+    flex-direction: row;
   }
+}
+
+/* Column styles */
+.printer-column1 {
+  flex: 1;
+  padding: 15px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.column-title1 {
+  font-size: 18px;
+  color: #444;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Printer row styles */
+.printer-row1 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.printer-row1:hover {
+  transform: scale(1.02);
   
-  /* Title */
-  .printer-title {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    animation: fadeIn 1s ease-in-out;
-    color: #fff; /* White for contrast */
+}
+
+.selected1 {
+  background: #e0f7fa;
+  border: 1px solid #81d4fa;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.printer-label1 {
+  font-size: 14px;
+  color: #555;
+  flex: 1;
+}
+
+.printer-name1 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-right: 10px;
+}
+
+.delete-icon1 {
+  cursor: pointer;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-icon-image1 {
+  width: 16px;
+  height: 16px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.delete-icon-image1:hover {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
+
+/* Select dropdown styles */
+.printer-select1 {
+  flex: 1;
+  padding: 5px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.printer-select1:focus {
+  outline: none;
+  border-color: #81d4fa;
+  box-shadow: 0 0 5px rgba(129, 212, 250, 0.5);
+}
+
+/* Smooth animations for adding/deleting */
+.printer-row1.added {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.printer-row1.removed {
+  animation: fadeOut 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
   }
-  
-  /* Dropdown */
-  .printer-select {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    color: #ff6347; /* Tomato color for text */
-    background: #fff;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-  .printer-select:focus {
-    outline: none;
-    box-shadow: 0 0 8px rgba(255, 99, 71, 0.8); /* Tomato shadow */
-    transform: scale(1.05);
+}
+
+@keyframes fadeOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-  /* Printer Info */
-  .printer-info {
-    margin-top: 20px;
-    font-size: 1rem;
-    animation: fadeIn 1.5s ease-in-out;
-    color: #fff; /* White text for visibility */
+  to {
+    transform: translateY(-10px);
+    opacity: 0;
   }
-  
-  /* Animation */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Responsive */
-  @media (max-width: 480px) {
-    .printer-container {
-        padding: 15px;
-        margin: 20px 20px;
-    }
-  
-    .printer-title {
-      font-size: 1.2rem;
-    }
-  
-    .printer-select {
-      font-size: 0.9rem;
-    }
-  
-    .printer-info {
-      font-size: 0.9rem;
-    }
-  }
-  
+}

@@ -99,10 +99,20 @@ const Orders = () => {
     // Left Column: User Details
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
-    const userAddressText = `${order.selectedAddress.flatNo}, ${order.selectedAddress.landmark},${order.selectedAddress.location}`;
-    const wrappedUserAddress = doc.splitTextToSize(userAddressText, 67);
-    doc.text(wrappedUserAddress, 10,56);
-    doc.text(`${order.user.mobileNumber}`, 10, 72);
+    const userAddressText = `${order.selectedAddress.flatNo}, ${order.selectedAddress.landmark}, ${order.selectedAddress.location}`;
+    const wrappedUserAddress = doc.splitTextToSize(userAddressText, 67); // Wrap address text to fit within 67 units
+    
+    // Dynamically adjust the height based on the number of lines in the wrapped address
+    let currentYPosition = 56;
+    wrappedUserAddress.forEach((line) => {
+        doc.text(line, 10, currentYPosition); // Draw each line of the address
+        currentYPosition += 6; // Move down for the next line (adjust spacing as needed)
+    });// Add mobile number below the address, dynamically positioned
+    const minimumGap = 12;
+    currentYPosition += Math.max(minimumGap - (wrappedUserAddress.length * 6), 0);
+    
+    // Render the mobile number
+    doc.text(`${order.user.mobileNumber}`, 10, currentYPosition);
     const currentDateTime = new Date().toLocaleString(); // Get current date and time
     doc.text(`Invoice Date: ${currentDateTime}`, 120, 62);
     doc.text(`Order Date: ${new Date(order.date).toLocaleString()}`, 120, 56);
@@ -181,7 +191,7 @@ const Orders = () => {
     doc.line(200, yPosition - 5, 200, yPosition + 2); 
     yPosition += 7;
 
-
+    if (order.itemDiscount > 0) {
     doc.text('ITEM DISCOUNT:', 122, yPosition);
 doc.text(`- ${order.itemDiscount.toFixed(2)}`, 168, yPosition);
 
@@ -194,6 +204,7 @@ doc.line(120, yPosition - 5, 120, yPosition + 2); // x=150 for left side vertica
 doc.line(200, yPosition - 5, 200, yPosition + 2); 
   
 yPosition += 7;
+    }
 if (order.couponDiscount > 0) {
   // Display coupon discount text and value
   doc.text('COUPON DISCOUNT:', 122, yPosition);
