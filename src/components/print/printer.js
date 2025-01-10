@@ -8,7 +8,7 @@ const Printer = () => {
   const [kitchenBillPrinters, setKitchenBillPrinters] = useState([]);
 
   useEffect(() => {
-    
+    // Mock fetching printers (replace this with real API or Electron function)
     setPrinters(['Printer 1', 'Printer 2', 'Printer 3']);
   }, []);
 
