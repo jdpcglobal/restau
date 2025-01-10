@@ -49,12 +49,14 @@ const Header = () => {
   return (
     <div
       className="header"
-      style={{ backgroundImage: `url(${headerImage ? headerImage.imagePath : ''})` }}
+      style={{
+        backgroundImage: `url(${headerImage?.imagePath || '/public/header_img.png'})`, // Fallback image
+      }}
     >
       <div className="header-contents">
-        <h2>{headerImage.title}</h2>
-        <p>{headerImage.description}</p>
-        <a href={headerImage.url}>
+        <h2>{headerImage?.title || 'Default Title'}</h2>
+        <p>{headerImage?.description || 'Default Description'}</p>
+        <a href={headerImage?.url || '#'}>
           <button>View Menu</button>
         </a>
       </div>
