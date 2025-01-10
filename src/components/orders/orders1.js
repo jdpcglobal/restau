@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSyncAlt, faPhone,faFilePdf } from '@fortawesome/free-solid-svg-icons';
-import jsPDF from 'jspdf';
+
 import html2canvas from 'html2canvas';
 import './orders2.css';
 import '../../app/globals.css';
