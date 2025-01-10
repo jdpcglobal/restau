@@ -51,7 +51,7 @@ const Printer = () => {
     <div className="printer-container1">
       <h3 className="printer-title1">Select Printers for Delivery, Table, and Kitchen Bills</h3>
       <div className="printer-columns1">
-        {/* Delivery Bill Column */}
+        
         <div className="printer-column1">
           <h4 className="column-title1">Delivery Bill</h4>
           {deliveryBillPrinters.map((selectedPrinter, index) => (
