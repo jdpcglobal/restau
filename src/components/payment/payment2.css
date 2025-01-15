@@ -119,7 +119,10 @@ button.add-item-btn:hover:not(:disabled) {
   padding: 10px;
   align-items: center;
   border-bottom: 1px solid #e0e0e0;
+  
+
 }
+
 
 .payment-item img {
   width: 60px;

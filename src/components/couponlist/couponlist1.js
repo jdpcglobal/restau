@@ -154,7 +154,13 @@ const CouponList = () => {
                 <button className='button-copuon' onClick={() => handleEdit(coupon)}>Edit</button>
               </td>
               <td>
-                <button className='button-copuon' onClick={() => handleDelete(coupon._id)}>Delete</button>
+              <img 
+  src="/bin.png" 
+  alt="Delete" 
+  className="coupon-image" 
+  onClick={() => handleDelete(coupon._id)} 
+/>
+               
               </td>
             </tr>
           ))}

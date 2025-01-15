@@ -107,7 +107,14 @@ const TableList = () => {
                   <button onClick={() => handleEdit(table._id)} className="btn-edit">Edit</button>
                 </span>
                 <span className="settable-actions">
-                  <button onClick={() => handleDelete(table._id)} className="btn-delete">Delete</button>
+                <img 
+  src="/bin.png" 
+  alt="Delete" 
+  className="delete-image" 
+  onClick={() => handleDelete(table._id)}
+/>
+
+                  
                 </span>
               </div>
             ))}

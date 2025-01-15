@@ -1,10 +1,4 @@
-/* Global Styles */
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
-}
+
 
 h1 {
   text-align: center;
@@ -69,9 +63,7 @@ h1 {
   border-bottom: 1px solid #e0e0e0;
 }
 
-.list-coupon tr:hover {
-  background-color: #f7f7f7;
-}
+
 
 .button-copuon {
   padding: 6px 12px;
@@ -208,4 +200,17 @@ input:checked + .slider::before {
 
 .popup-content::-webkit-scrollbar-track {
   background: #f1f1f1;
+}
+
+.coupon-image {
+  width: 24px; /* Adjust the size as needed */
+  height: 24px;
+  cursor: pointer; /* Makes it look clickable */
+  display: inline-block;
+  margin-left: 8px; /* Add spacing if necessary */
+}
+
+.coupon-image:hover {
+  opacity: 0.8;
+  transform: scale(1.1); /* Slight opacity on hover for a nice effect */
 }

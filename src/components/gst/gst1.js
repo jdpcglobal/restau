@@ -103,7 +103,13 @@ const Gst = () => {
               <li key={gst._id}>
                 {gst.gstName} - {gst.gstRate}%
                 <p className='delete1'>
-                <button onClick={() => handleDelete(gst._id)} className="delete-button">Delete</button>
+                <img 
+  src="/bin.png" 
+  alt="Delete" 
+  className="delete-image" 
+  onClick={() => handleDelete(gst._id)} 
+/>
+
           </p>    </li>
             ))}
           </ul>
