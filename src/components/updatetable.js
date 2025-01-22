@@ -15,8 +15,10 @@ const UpdatePopup = ({ table, onClose, onUpdate }) => {
   const [mobileNumber, setMobileNumber] = useState(table.mobileNumber || "");
   const [seatNumber, setSeatNumber] = useState(table.seatNumber || "");
   const [loading, setLoading] = useState(false);
-
-  // Fetch categories
+ const [description, setDescription] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [previousOrderItems, setPreviousOrderItems] = useState(orderItems);
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -177,8 +179,19 @@ const UpdatePopup = ({ table, onClose, onUpdate }) => {
   
       if (response.ok) {
         toast.success("Order updated successfully!", { autoClose: 3000 });
-        onUpdate(result.table); // Update parent component state with the latest data
-        onClose(); // Close the popup
+        const isNewItemAdded = orderItems.length > previousOrderItems.length;
+
+        if (isNewItemAdded) {
+          // Print the bill only when new items are added
+          printBill();
+        }
+  
+        // After success, update the previous order items to the current state
+        setPreviousOrderItems(orderItems);
+        onUpdate(result.table);
+        
+        onClose(); 
+        
       } else {
         console.error(result.message || "Failed to update the order");
       }
@@ -187,7 +200,126 @@ const UpdatePopup = ({ table, onClose, onUpdate }) => {
       console.error("Error updating order:", error);
     }
   };
+ 
+  const printBill = () => {
+    const newOrderItems = orderItems.filter(item => 
+      !previousOrderItems.some(prevItem => prevItem.name === item.name)
+    ); // Filter to get only the new items
   
+    if (newOrderItems.length === 0) {
+      console.log("No new items to print.");
+      return; // If no new items, don't print
+    }
+    const currentDate = new Date();
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+    const year = currentDate.getFullYear();
+    let hours = currentDate.getHours();
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+  
+    // Determine AM or PM
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+  
+    // Convert 24-hour format to 12-hour format
+    hours = hours % 12;
+    hours = hours ? String(hours).padStart(2, '0') : '12'; // The hour '0' should be '12'
+  
+    const formattedDate = `${day}/${month}/${year}`;
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
+
+    const billContent = `
+    <div style="font-family: Arial, sans-serif; font-size: 14px; padding: 0; line-height: 1.4; max-width: 300px; margin: 0 auto; margin-left:-6px; margin-right:10px;">
+      <h2 style="text-align: center; margin-bottom: 2px;">Tomato Restaurant</h2>
+     
+  
+    
+      <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #333; font-weight: bold;">
+         <div>
+      Kitchen Slip
+    </div>
+        <div>Table: ${table.tableNumber}</div>
+     
+
+
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px;">
+    <div>Date: ${formattedDate}</div>
+        <div>Time: ${formattedTime}</div>
+    </div>
+    
+  
+      <div style="border-bottom: 1px dotted #000; margin-bottom: 10px;"></div>
+  
+      <div style="font-weight: bold; font-size: 12px;">
+        <div style="display: flex; justify-content: space-between; text-align: center;">
+          <span style="flex: 3; text-align: left;">Item Name</span>
+          <span style="flex: 1;text-align:right;">Qty</span>
+        </div>
+      </div>
+  
+      <div style="border-bottom: 1px dotted #000; margin-bottom: 10px;"></div>
+  
+      
+       ${newOrderItems.map(item => `
+        <div style="display: flex; justify-content: space-between; text-align: center;">
+          <span style="flex: 1; text-align: left;">${item.name}</span>
+          <span style="flex: 1;text-align:right;">${item.quantity}</span>
+        </div>
+      `).join('')}
+          <div style="flex: 1; border-top: 1px dotted #000;margin-top: 7px;"></div>
+ <div style="margin-bottom: 4px; margin-top: 8px;line-height: 1.6;">
+ 
+ Note:   ${description || "No remarks entered."}
+ </div>
+
+    <div style="flex: 1; border-top: 1px dotted #000;"></div>
+      <div style="display: flex; align-items: center; font-weight: bold; font-size: 14px; margin-top: 10px; margin-bottom: 20px;">
+        <div style="flex: 1; border-top: 1px dotted #000;"></div>
+        <div style="padding: 0 10px; text-align: center;">
+        Items Prepared Quickly
+        </div>
+        <div style="flex: 1; border-top: 1px dotted #000;"></div>
+      </div>
+
+
+    </div>
+  `;
+  
+  // Open a new window for printing
+  const printWindow = window.open( 'width=350,height=600');
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bill</title>
+      </head>
+      <body>
+        ${billContent}
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+  printWindow.print();
+  }; 
+  
+  const handleRemarkClose = () => {
+    // Close the remark popup and reset the description
+    setShowPopup(false);
+   
+  };
+  const handleRemark = () => {
+    // Show the popup or handle the remark functionality
+    setShowPopup(true);
+  };
+
+  
+  const handleSave = () => {
+    // Save the remark and close the popup
+    console.log("Remark Saved:", description);
+    setShowPopup(false); // Close the popup after saving
+  };
 
   return (
     <div className="popup-overlay">
@@ -274,8 +406,36 @@ const UpdatePopup = ({ table, onClose, onUpdate }) => {
         </div>
         <div className="bottom-row">
           <button onClick={onClose}>Close</button>
+          <button onClick={handleRemark}>Remark</button>
           <button onClick={handleUpdateOrder}>{loading ? "Updating..." : `Update Order (₹${calculateTotalPrice()})`}</button>
         </div>
+        {showPopup && (
+        <div className="popup-remake">
+          <div className="popup-content-remake">
+            <div className="popup-header-remake">
+              <h3>Remark</h3>
+            </div>
+            <div className="popup-body-remake">
+              <label htmlFor="description">Note:</label>
+              <textarea
+  id="description"
+  value={description}
+  onChange={(e) => setDescription(e.target.value)}
+  placeholder="Enter your remark here"
+  rows={5}  // This will make the textarea 5 rows high
+  style={{ width: '100%', padding: '8px', fontSize: '14px', border: '1px solid #ccc', borderRadius: '4px' }}
+/>
+            </div>
+            <div className="popup-footer-remake">
+           
+            <button onClick={handleRemarkClose}>Close</button>
+              <button onClick={handleSave}>Save</button>
+                
+              
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

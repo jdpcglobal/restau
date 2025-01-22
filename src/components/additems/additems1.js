@@ -192,8 +192,12 @@ const AddItem = () => {
               value={data.category}
               required
             >
+               <option value="" disabled>
+      Choose categories
+    </option>
               {categories.length > 0 ? (
                 categories.map((category) => (
+                  
                   <option key={category.name} value={category.name}>
                     {category.name}
                   </option>

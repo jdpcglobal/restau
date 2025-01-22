@@ -4,12 +4,14 @@ import Image from 'next/image';
 import './navbar2.css';
 import { assets } from '../../assets/assets';
 import { useRouter, usePathname } from 'next/navigation';
+import SearchPopup from '../../components/search/search';
 
 const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
   const [isLoading, setIsLoading] = useState(false); // State for loading spinner
   const router = useRouter();
   const pathname = usePathname(); // Get the current pathname
   const [token, setToken] = useState(null); // State to monitor token
+  const [showSearchPopup, setShowSearchPopup] = useState(false);
 
   useEffect(() => {
     const checkToken = () => {
@@ -97,14 +99,15 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
           </li>
         </ul>
       </div>
-      <div className="navbar-right">
-        <Image src={assets.search_icon} alt="Search" className="searchButton" />
+      <div className="navbar-right basket">
+        <Image  onClick={() => setShowSearchPopup(true)} src={assets.search_icon} alt="Search" className="searchButton" />
       </div>
       <div className='navbar-search-icon'>
         {isLoading ? (
           <div className="spinner"></div> 
         ) : (
           <>
+          <div className='basket'>
             <Image 
               src={assets.basket_icon} 
               alt='Cart' 
@@ -112,6 +115,7 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
               className="basketIcon"
             />
             <div className='dot'></div>
+            </div>
           </>
         )}
       </div>
@@ -133,6 +137,9 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
         </div>
       ) : (
         <button onClick={() => setShowLogin(true)} className="signInButton">Sign In</button>
+      )}
+      {showSearchPopup && (
+        <SearchPopup setShowSearchPopup={setShowSearchPopup} />
       )}
     </nav>
   );

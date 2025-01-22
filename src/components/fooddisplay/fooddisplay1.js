@@ -1,3 +1,4 @@
+// fooddisplay.js
 import React, { useState, useEffect } from 'react';
 import './fooddisplay2.css';
 

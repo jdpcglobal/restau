@@ -170,7 +170,7 @@ const ViewBillPopup = ({ table, onClose }) => {
     `;
 
     // Open a new window for printing
-    const printWindow = window.open('', '', 'width=350,height=600');
+    const printWindow = window.open( 'width=350,height=600');
     printWindow.document.write(`<!DOCTYPE html>
     <html lang="en">
     <head>
