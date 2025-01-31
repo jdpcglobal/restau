@@ -4,7 +4,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Configure Multer storage and file filter
+// Configure Multer storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadDir = path.join(process.cwd(), 'public/uploads');
@@ -18,16 +18,8 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter to accept only PNG images
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/png') {
-    cb(null, true);
-  } else {
-    cb(new Error('Only PNG files are allowed'), false);
-  }
-};
-
-const upload = multer({ storage, fileFilter });
+// No file filter (accept all file types)
+const upload = multer({ storage });
 
 export default async function handler(req, res) {
   if (req.method === 'PUT') {
@@ -37,7 +29,7 @@ export default async function handler(req, res) {
       // Use multer to parse form data
       upload.single('image')(req, res, async (err) => {
         if (err) {
-          return res.status(500).json({ message: 'Error uploading image', error: err.message });
+          return res.status(500).json({ message: 'Error uploading file', error: err.message });
         }
 
         // Destructure the request body to get item details
@@ -61,7 +53,7 @@ export default async function handler(req, res) {
         item.discount = discount || item.discount;
         item.gstRate = gstRate || item.gstRate;
         item.vegOrNonVeg = vegOrNonVeg || item.vegOrNonVeg; // Update Veg or Non-Veg
-        if (req.file) item.imageUrl = `/uploads/${req.file.filename}`; // Update image URL if new image is provided
+        if (req.file) item.imageUrl = `/uploads/${req.file.filename}`; // Update file URL if new file is provided
 
         // Save the updated item
         await item.save();

@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import './fooddisplay2.css';
 
-const FoodDisplay = ({ category, setCartItems, cartItems, setShowCart, isLoggedIn, setShowLogin }) => {
+const FoodDisplay = ({ category, setShowCart, isLoggedIn, setShowLogin }) => {
   const [foodItems, setFoodItems] = useState([]);
   const [itemCounts, setItemCounts] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+   const [cartItems, setCartItems] = useState([]);
+    const [items, setItems] = useState([]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -30,84 +32,18 @@ const FoodDisplay = ({ category, setCartItems, cartItems, setShowCart, isLoggedI
   const filteredFoodList = category === 'All' ? foodItems : foodItems.filter(item => item.category === category);
 
   const handleAddClick = async (food) => {
-    if (!isLoggedIn) {
-      setShowLogin(true); // Show the login popup
-      return;
-    }
+    if (checkTokenExpiration()) return; // Check token expiration
 
-    const newCount = (itemCounts[food._id] || 0) + 1;
-
-    setItemCounts(prevCounts => ({
-      ...prevCounts,
-      [food._id]: newCount
-    }));
-
-    const updatedCartItems = [...cartItems];
-    const existingItemIndex = updatedCartItems.findIndex(item => item._id === food._id);
+    const existingItemIndex = cartItems.findIndex(item => item.foodId._id === food._id);
+    let updatedCartItems;
 
     if (existingItemIndex > -1) {
-      updatedCartItems[existingItemIndex].count = newCount;
-    } else {
-      updatedCartItems.push({ ...food, count: newCount });
-    }
-
-    setCartItems(updatedCartItems);
-
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No token found. Please log in first.');
-      }
-
-      const response = await fetch('/api/cart/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token,
-          foodId: food._id,
-          quantity: newCount,
-          imageUrl: food.imageUrl,
-          name: food.name,
-          price: food.price
-        }),
-      });
-
-      const result = await response.json();
-      if (!response.ok || !result.success) {
-        console.error('Failed to add item to cart:', result.message);
-      }
-    } catch (error) {
-      console.error('Error adding item to cart:', error);
-    }
-  };
-
-  const handleRemoveClick = async (food) => {
-    if (!isLoggedIn) {
-      setShowLogin(true); // Show the login popup
-      return;
-    }
-
-    const currentCount = itemCounts[food._id] || 0;
-
-    if (currentCount > 1) {
-      const newCount = currentCount - 1;
-
-      setItemCounts(prevCounts => ({
-        ...prevCounts,
-        [food._id]: newCount
-      }));
-
-      const updatedCartItems = [...cartItems];
-      const existingItemIndex = updatedCartItems.findIndex(item => item._id === food._id);
-
-      if (existingItemIndex > -1) {
-        updatedCartItems[existingItemIndex].count = newCount;
-      }
-
+      // Item already exists in the cart, call the update API to increase quantity
+      updatedCartItems = [...cartItems];
+      updatedCartItems[existingItemIndex].quantity += 1;
       setCartItems(updatedCartItems);
 
+      // Call the update API
       try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -116,13 +52,11 @@ const FoodDisplay = ({ category, setCartItems, cartItems, setShowCart, isLoggedI
 
         const response = await fetch('/api/cart/update', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             token,
             foodId: food._id,
-            quantity: newCount,
+            quantity: updatedCartItems[existingItemIndex].quantity,
           }),
         });
 
@@ -134,41 +68,113 @@ const FoodDisplay = ({ category, setCartItems, cartItems, setShowCart, isLoggedI
         console.error('Error updating item quantity:', error);
       }
     } else {
-      setItemCounts(prevCounts => ({
-        ...prevCounts,
-        [food._id]: 0
-      }));
-
-      const updatedCartItems = cartItems.filter(item => item._id !== food._id);
-
+      // Item is new, call the add API to add the item with quantity 1
+      updatedCartItems = [...cartItems, { foodId: food, quantity: 1 }];
       setCartItems(updatedCartItems);
 
+      // Call the add API
       try {
         const token = localStorage.getItem('token');
         if (!token) {
           throw new Error('No token found. Please log in first.');
         }
 
-        const response = await fetch('/api/cart/remove', {
+        const response = await fetch('/api/cart/add', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             token,
             foodId: food._id,
+            quantity: 1,
+            imageUrl: food.imageUrl,
+            name: food.name,
+            price: food.price,
           }),
         });
 
         const result = await response.json();
         if (!response.ok || !result.success) {
-          console.error('Failed to remove item from cart:', result.message);
+          console.error('Failed to add item to cart:', result.message);
         }
       } catch (error) {
-        console.error('Error removing item from cart:', error);
+        console.error('Error adding item to cart:', error);
       }
     }
   };
+
+  const handleRemoveClick = async (food) => {
+    if (checkTokenExpiration()) return; // Check token expiration
+
+    const existingItemIndex = cartItems.findIndex(item => item.foodId._id === food._id);
+    let updatedCartItems;
+
+    if (existingItemIndex > -1) {
+      const updatedItem = { ...cartItems[existingItemIndex] };
+
+      if (updatedItem.quantity > 1) {
+        // Decrease the quantity and update the cart
+        updatedItem.quantity -= 1;
+        updatedCartItems = [...cartItems];
+        updatedCartItems[existingItemIndex] = updatedItem;
+
+        setCartItems(updatedCartItems);
+
+        // Update the quantity via the API
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            throw new Error('No token found. Please log in first.');
+          }
+
+          const response = await fetch('/api/cart/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              token,
+              foodId: food._id,
+              quantity: updatedItem.quantity,
+            }),
+          });
+
+          const result = await response.json();
+          if (!response.ok || !result.success) {
+            console.error('Failed to update item quantity:', result.message);
+          }
+        } catch (error) {
+          console.error('Error updating item quantity:', error);
+        }
+      } else {
+        // Remove the item from the cart entirely
+        updatedCartItems = cartItems.filter(item => item.foodId._id !== food._id);
+        setCartItems(updatedCartItems);
+
+        // Call the remove API
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            throw new Error('No token found. Please log in first.');
+          }
+
+          const response = await fetch('/api/cart/remove', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              token,
+              foodId: food._id,
+            }),
+          });
+
+          const result = await response.json();
+          if (!response.ok || !result.success) {
+            console.error('Failed to remove item from cart:', result.message);
+          }
+        } catch (error) {
+          console.error('Error removing item from cart:', error);
+        }
+      }
+    }
+  };
+  
 
   const calculateDiscountedPrice = (price, discount) => {
     const discount1 =  price * (discount / 100);
@@ -182,6 +188,57 @@ const FoodDisplay = ({ category, setCartItems, cartItems, setShowCart, isLoggedI
       )
     );
   };
+  useEffect(() => {
+    const fetchCartData = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('No token found. Please log in.');
+        setLoading(false);
+        return;
+      }
+  
+      try {
+        const response = await fetch('/api/cart/get', {
+          method: 'GET',
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+          setCartItems(data.cartItems || []);
+          setError('');
+        } else {
+          setError(data.message || 'Failed to fetch cart data');
+        }
+      } catch (error) {
+        console.error('Error fetching cart:', error);
+        setError('Error fetching cart data');
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchCartData();
+  }, []);
+   const checkTokenExpiration = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const decoded = jwt_decode(token); // Decode the JWT token without verifying
+          if (decoded && decoded.exp * 1000 < Date.now()) {
+            localStorage.removeItem('token'); // Remove the expired token
+            setShowSearchPopup(false); // Close the search popup
+            setShowLoginPopup(true); // Show the login popup
+            return true;
+          }
+        } catch (error) {
+          console.error('Error decoding token:', error);
+        }
+      }
+      return false;
+    };
+  
+  
 
   return (
    
@@ -241,30 +298,33 @@ const FoodDisplay = ({ category, setCartItems, cartItems, setShowCart, isLoggedI
                           </svg>
                         )}
                       </div>
-                      {!itemCounts[food._id] || itemCounts[food._id] === 0 ? (
-                        <img
-                          className="add-icon cursor-pointer mt-2"
-                          onClick={() => handleAddClick(food)}
-                          src="add_icon_white.png"
-                          alt="Add"
-                        />
-                      ) : (
-                        <div className="food-item-counter flex items-center justify-center mt-2">
-                          <img
-                            onClick={() => handleRemoveClick(food)}
-                            src="remove_icon_red.png"
-                            alt="Remove"
-                            className="cursor-pointer"
-                          />
-                          <p className="mx-2">{itemCounts[food._id]}</p>
-                          <img
-                            onClick={() => handleAddClick(food)}
-                            src="add_icon_green.png"
-                            alt="Add"
-                            className="cursor-pointer"
-                          />
-                        </div>
-                      )}
+                      {cartItems.some((cartItem) => cartItem.foodId && cartItem.foodId._id === food._id) ? (
+  <div className="food-item-counter flex items-center justify-center mt-2">
+    <img
+      onClick={() => handleRemoveClick(food)}
+      src="remove_icon_red.png"
+      alt="Remove"
+      className="cursor-pointer"
+    />
+    <p className="mx-2">
+      {cartItems.find((cartItem) => cartItem.foodId._id === food._id)?.quantity || 0}
+    </p>
+    <img
+      onClick={() => handleAddClick(food)}
+      src="add_icon_green.png"
+      alt="Add"
+      className="cursor-pointer"
+    />
+  </div>
+) : (
+  <img
+    className="add-icon cursor-pointer mt-2"
+    onClick={() => handleAddClick(food)}
+    src="add_icon_white.png"
+    alt="Add"
+  />
+)}
+
                     </div>
                     <div className="name-reting mt-4">
                       <h2 className="food-name font-semibold text-lg">{food.name}</h2>

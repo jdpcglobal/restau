@@ -79,7 +79,7 @@
   
   .list-table-format {
     display: grid;
-    grid-template-columns: 1fr 2fr 0.5fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 10px;
     text-align: center;
     padding: 10px;
@@ -125,7 +125,7 @@
   
   .table-category li {
     display: grid;
-    grid-template-columns: 1fr 2fr 0.5fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 10px;
     text-align: center;
     padding: 10px;
@@ -180,12 +180,12 @@
     }
   
     .list-table-format {
-      grid-template-columns: 1fr 2fr 0.5fr;
+      grid-template-columns: 1fr 1fr ;
       font-size: 0.9rem;
     }
   
     .table-category li {
-      grid-template-columns: 1fr 2fr 1fr;
+      grid-template-columns: 1fr  1fr;
       font-size: 0.9rem;
     }
    
@@ -212,12 +212,12 @@
     
   
     .list-table-format {
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr ;
       font-size: 0.8rem;
     }
   
     .table-category li {
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr ;
       font-size: 0.8rem;
     }
   }
@@ -231,4 +231,17 @@
   
   .delete-icon:hover {
     transform: scale(1.4);
+  }
+  .edit-category{
+    background-color: tomato;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 6px !important;
+  }
+  .edit-category:hover{
+    background-color: rgb(247, 45, 10);
   }

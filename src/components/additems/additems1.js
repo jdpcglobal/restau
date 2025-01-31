@@ -108,7 +108,7 @@ const AddItem = () => {
           description: "",
           price: "",
           discount: "",
-          category: "Salad",
+          category: "",
           vegOrNonVeg: "",
           gstRate: "", 
         });

@@ -12,6 +12,9 @@
      
     transition: transform 0.3s ease-in; 
   }
+  .searchButton.disabled {
+    opacity: 1; /* Optional: Make it look less clickable */
+  }
   
   
   .basket:hover {

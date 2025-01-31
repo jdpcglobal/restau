@@ -58,6 +58,16 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
     }
   };
 
+  const handleSearchClick = () => {
+    if (pathname === '/') { // Only allow search on the home page
+      if (!token) {
+        setShowLogin(true); // Show login popup if not logged in
+      } else {
+        setShowSearchPopup(true); // Open the search popup if logged in
+      }
+    }
+  };
+
   return (
     <nav className="navbar">
       <div className="logo">
@@ -100,21 +110,27 @@ const Navbar = ({ isLoggedIn, setShowLogin, handleLogout }) => {
         </ul>
       </div>
       <div className="navbar-right basket">
-        <Image  onClick={() => setShowSearchPopup(true)} src={assets.search_icon} alt="Search" className="searchButton" />
+        <Image 
+          onClick={handleSearchClick} 
+          src={assets.search_icon} 
+          alt="Search" 
+          className={`searchButton ${pathname !== '/' ? 'disabled' : ''}`} 
+          style={pathname !== '/' ? { cursor: 'not-allowed' } : {}} // Disable search icon on non-home pages
+        />
       </div>
       <div className='navbar-search-icon'>
         {isLoading ? (
           <div className="spinner"></div> 
         ) : (
           <>
-          <div className='basket'>
-            <Image 
-              src={assets.basket_icon} 
-              alt='Cart' 
-              onClick={handleCheckoutClick}
-              className="basketIcon"
-            />
-            <div className='dot'></div>
+            <div className='basket'>
+              <Image 
+                src={assets.basket_icon} 
+                alt='Cart' 
+                onClick={handleCheckoutClick}
+                className="basketIcon"
+              />
+              <div className='dot'></div>
             </div>
           </>
         )}

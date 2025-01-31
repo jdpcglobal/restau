@@ -35,7 +35,11 @@
 
 .close-icon {
   cursor: pointer;
-  font-size: 24px;
+  font-size: 30px;
+  color: tomato;
+}
+.close-icon:hover{
+  transform: scale(1.2);
 }
 
 .text-form3 {
